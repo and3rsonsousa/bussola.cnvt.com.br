@@ -48,7 +48,7 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function LayoutBase({ children }: { children: React.ReactNode }) {
-	const [theme] = useTheme();
+	let [theme] = useTheme();
 
 	const data = useLoaderData<typeof loader>();
 
@@ -77,6 +77,7 @@ export function LayoutBase({ children }: { children: React.ReactNode }) {
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	const data = useLoaderData<typeof loader>();
+
 	return (
 		<ThemeProvider specifyedTheme={data.theme}>
 			<LayoutBase>{children}</LayoutBase>
