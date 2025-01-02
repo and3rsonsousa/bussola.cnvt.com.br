@@ -52,7 +52,7 @@ export default function CreateAction({
 	const matches = useMatches()[3];
 	const location = useLocation();
 
-	const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState(true);
 	const submit = useSubmit();
 	const { toast } = useToast();
 
@@ -189,19 +189,28 @@ export default function CreateAction({
 					</ButtonCNVT>
 				)}
 			</PopoverTrigger>
-			<PopoverContent className="glass mr-4 w-[90dvw] shadow-2xl md:max-w-[500px] md:px-6">
+			<PopoverContent className="glass  w-[90dvw] shadow-2xl md:max-w-[500px] md:px-6 max-w-[90vw] mr-[5vw]">
 				{/* Título */}
-				<textarea
-					defaultValue={action.title}
-					className="text-foreground placeholder:text-muted-foreground mb-1 w-full resize-none bg-transparent text-2xl font-semibold tracking-tighter outline-hidden"
-					rows={1}
-					onChange={(event) => {
-						setAction({ ...action, title: event.target.value });
-					}}
-					// @ts-ignore
-					style={{ fieldSizing: "content" }}
-					placeholder="Qual o nome da sua ação?"
-				/>
+				<div className="relative">
+					<textarea
+						defaultValue={action.title}
+						className="text-foreground field-sizing-content placeholder:text-muted-foreground mb-1 w-full resize-none overflow-hidden bg-transparent text-3xl pr-2 font-medium tracking-tighter outline-hidden"
+						rows={1}
+						onChange={(event) => {
+							setAction({ ...action, title: event.target.value });
+						}}
+						placeholder="Qual o nome da sua ação?"
+					/>
+					<div
+						className={`absolute text-xs ${
+							action.title.length > 60
+								? "text-error"
+								: "text-foreground/50"
+						} top-0 right-0`}
+					>
+						{action.title.length > 0 ? action.title.length : ""}
+					</div>
+				</div>
 				<textarea
 					defaultValue={action.description || ""}
 					className="font-regular placeholder:text-muted-foreground relative field-sizing-content w-full resize-none bg-transparent text-sm outline-hidden"
@@ -217,7 +226,7 @@ export default function CreateAction({
 
 				<hr className="-mx-4 my-2 border-t p-1 md:-mx-6" />
 				<div className="flex flex-col">
-					<div className="flex items-center gap-2">
+					<div className="flex items-center gap-2 justify-between">
 						{/* Partners */}
 						<PartnersDropdown
 							partners={action.partners}
@@ -337,7 +346,7 @@ export default function CreateAction({
 							</DropdownMenu>
 						) : null}
 					</div>
-					<div className="flex w-full items-center justify-between gap-2 overflow-hidden p-1">
+					<div className="flex w-full items-center justify-between gap-2 overflow-hidden pt-1 pr-1">
 						<DateTimeAndInstagramDate
 							action={action}
 							onChange={({ date, instagram_date, time }) => {

@@ -354,64 +354,67 @@ function Title({
 				}
 			/>
 
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button
-						className={`h-7 w-7 p-1 ${
-							isWorking &&
-							fetcher.formData?.get("intent") === "carousel" &&
-							"animate-colors"
-						}`}
-						variant="ghost"
-					>
-						<SparklesIcon />
-					</Button>
-				</DropdownMenuTrigger>
+			<div className="pr-1">
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button
+							className={`h-7 w-7 p-1 ${
+								isWorking &&
+								fetcher.formData?.get("intent") ===
+									"carousel" &&
+								"animate-colors"
+							}`}
+							variant="ghost"
+						>
+							<SparklesIcon />
+						</Button>
+					</DropdownMenuTrigger>
 
-				<DropdownMenuContent className="glass">
-					<DropdownMenuItem
-						className="bg-item"
-						onSelect={async () => {
-							fetcher.submit(
-								{
-									title: getCleanTitle(action.title),
-									description: action.description,
-									context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-									intent: "title",
-									voice: partner.voice,
-								},
-								{
-									action: "/handle-openai",
-									method: "post",
-								}
-							);
-						}}
-					>
-						3 Princípios
-					</DropdownMenuItem>
-					<DropdownMenuItem
-						className="bg-item"
-						onSelect={async () => {
-							fetcher.submit(
-								{
-									title: getCleanTitle(action.title),
-									description: action.description,
-									context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-									intent: "title",
-									model: "viral",
-									voice: partner.voice,
-								},
-								{
-									action: "/handle-openai",
-									method: "post",
-								}
-							);
-						}}
-					>
-						Headlines Virais
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
+					<DropdownMenuContent className="glass">
+						<DropdownMenuItem
+							className="bg-item"
+							onSelect={async () => {
+								fetcher.submit(
+									{
+										title: getCleanTitle(action.title),
+										description: action.description,
+										context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+										intent: "title",
+										voice: partner.voice,
+									},
+									{
+										action: "/handle-openai",
+										method: "post",
+									}
+								);
+							}}
+						>
+							3 Princípios
+						</DropdownMenuItem>
+						<DropdownMenuItem
+							className="bg-item"
+							onSelect={async () => {
+								fetcher.submit(
+									{
+										title: getCleanTitle(action.title),
+										description: action.description,
+										context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+										intent: "title",
+										model: "viral",
+										voice: partner.voice,
+									},
+									{
+										action: "/handle-openai",
+										method: "post",
+									}
+								);
+							}}
+						>
+							Headlines Virais
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</div>
 		</div>
 	);
 }
