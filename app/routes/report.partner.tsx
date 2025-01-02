@@ -73,7 +73,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 			  ];
 
 	const action = searchParams.get("action");
-	const slug = params["slug"];
+	const slug = params["partner"];
 
 	if (!slug) {
 		return redirect("/dashboard");

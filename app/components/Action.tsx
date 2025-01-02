@@ -885,7 +885,7 @@ export function ListOfActions({
 							: columns === 3
 							? "grid sm:grid-cols-2 md:grid-cols-3"
 							: "grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6"
-					} @container gap-x-4 gap-y-1 h-full overflow-y-auto`}
+					} @container gap-x-4 gap-y-1 h-full overflow-y-auto p-1`}
 				>
 					{actions?.slice(0, fold).map((action) => (
 						<ActionLine
@@ -1958,7 +1958,7 @@ export function getNewDateValues(
 					"yyyy-MM-dd HH:mm:ss"
 				),
 			};
-			console.log("Corrigindo", { values });
+			// console.log("Corrigindo", { values });
 		}
 	}
 

@@ -4,7 +4,12 @@ import Header from "./Header";
 import Search from "./Search";
 import Loader from "./Loader";
 import { Toaster } from "./ui/toaster";
-import { useNavigate, useOutletContext } from "react-router";
+import {
+	useLocation,
+	useNavigate,
+	useNavigation,
+	useOutletContext,
+} from "react-router";
 
 export default function Layout({ children }: { children: ReactNode }) {
 	const navigate = useNavigate();
@@ -14,13 +19,15 @@ export default function Layout({ children }: { children: ReactNode }) {
 	const { isTransitioning, setTransitioning } =
 		useOutletContext() as ContextType;
 
+	const useLenisHere = !/\/dashboard\/action\//.test(useLocation().pathname);
+
 	useEffect(() => {
 		const keyDown = (event: KeyboardEvent) => {
 			if (event.shiftKey && event.code === "KeyH" && event.metaKey) {
 				event.preventDefault();
 				event.stopPropagation();
 				setTransitioning(true);
-				navigate("/dashboard", { viewTransition: true });
+				navigate("/dashboard");
 			}
 		};
 
@@ -34,16 +41,19 @@ export default function Layout({ children }: { children: ReactNode }) {
 	return (
 		<div
 			id="layout"
-			className={`bg-background relative mx-auto flex h-[100dvh] flex-col lg:overflow-hidden`}
+			className={`bg-background relative mx-auto flex h-[100dvh] flex-col`}
 		>
 			<Header setOpen={setOpen} />
-
-			<ReactLenis
-				root={false}
-				className="flex flex-col overflow-auto h-full"
-			>
-				{children}
-			</ReactLenis>
+			{useLenisHere ? (
+				<ReactLenis
+					root={false}
+					className="flex flex-col overflow-auto h-full"
+				>
+					{children}
+				</ReactLenis>
+			) : (
+				children
+			)}
 			{/* </div> */}
 			<div
 				className={`${

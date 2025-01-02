@@ -96,7 +96,6 @@ export default function Header({
 			<div className="flex items-center gap-1">
 				<Link
 					to="/dashboard"
-					viewTransition
 					className="ring-ring ring-offset-background rounded px-4 py-2 outline-hidden focus:ring-2"
 				>
 					<Bussola className="md:hidden" size="md" short />
@@ -105,7 +104,6 @@ export default function Header({
 				{/* Atrasados */}
 				{lateActions.length > 0 && (
 					<Link
-						viewTransition
 						to={`/dashboard/${
 							partner ? partner.slug.concat("/") : ""
 						}late/`}
