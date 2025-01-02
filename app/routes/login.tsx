@@ -45,8 +45,8 @@ export const meta: MetaFunction = () => {
 export default function Login() {
 	const actionData = useActionData<typeof action>();
 	return (
-		<div className="bg-black text-white grid h-[100dvh] place-content-center">
-			<div className="w-full min-w-80 p-8 md:w-96">
+		<div className="bg-black text-white flex justify-center md:justify-end items-center h-[100dvh] ">
+			<div className="w-full p-8 md:w-96">
 				<div className="mb-8 flex">
 					<Bussola />
 				</div>
@@ -56,7 +56,8 @@ export default function Login() {
 						<div>{actionData.errors.email}</div>
 					</div>
 				)}
-				<form className="" method="post">
+
+				<form method="post">
 					<Label className="mb-4 block w-full">
 						<span className="mb-2 block w-full font-medium">
 							E-mail
@@ -64,7 +65,7 @@ export default function Login() {
 
 						<Input
 							name="email"
-							className="bg-black text-white h-auto px-6 py-3 text-xl font-medium tracking-tight border-3 border-white focus-visible:ring-2 focus-visible:ring-offset-2 ring-white ring-offset-black"
+							className="bg-black text-white h-auto px-6 py-3 text-xl font-medium focus-visible:ring-offset-0 tracking-tight  border-2 border-white focus-visible:border-primary"
 						/>
 					</Label>
 					<Label className="mb-4 block w-full">
@@ -75,7 +76,7 @@ export default function Login() {
 						<Input
 							type="password"
 							name="password"
-							className="bg-black text-white h-auto px-6 py-3 text-xl font-medium tracking-tight border-3 border-white focus-visible:ring-2 focus-visible:ring-offset-2 ring-white ring-offset-black"
+							className="bg-black text-white h-auto px-6 py-3 text-xl font-medium focus-visible:ring-offset-0 tracking-tight  border-2 border-white focus-visible:border-primary"
 						/>
 					</Label>
 

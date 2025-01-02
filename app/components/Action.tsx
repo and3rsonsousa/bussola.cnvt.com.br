@@ -609,7 +609,6 @@ export function ActionBlock({
 	sprint,
 }: {
 	action: Action;
-
 	sprint?: Boolean;
 }) {
 	const buttonRef = useRef<HTMLButtonElement>(null);
@@ -830,11 +829,6 @@ export function ActionBlock({
 								•<div>{action.time.toString().concat("m")}</div>
 							</div>
 						</div>
-						{/* {isSprint(action.id, sprints) && sprint && (
-            <div className="ring-background bg-primary text-primary-foreground absolute -top-2 right-2 grid size-6 place-content-center rounded-full ring-2">
-              <RabbitIcon className="size-4" />
-            </div>
-          )} */}
 					</div>
 				</div>
 			</ContextMenuTrigger>

@@ -28,7 +28,7 @@ import {
 	Rows3Icon,
 	SendIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import invariant from "tiny-invariant";
 import {
 	Avatar,
@@ -58,8 +58,18 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 		searchParams.get("range") !== null
 			? searchParams.get("range")!.split("---")
 			: [
-					format(startOfWeek(startOfMonth(new Date())), "yyyy-MM-dd"),
-					format(endOfWeek(endOfMonth(new Date())), "yyyy-MM-dd"),
+					format(
+						startOfWeek(
+							startOfMonth(new Date().toLocaleString("pt-BR"))
+						),
+						"yyyy-MM-dd"
+					),
+					format(
+						endOfWeek(
+							endOfMonth(new Date().toLocaleString("pt-BR"))
+						),
+						"yyyy-MM-dd"
+					),
 			  ];
 
 	const action = searchParams.get("action");
@@ -119,6 +129,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 			supabase.from("states").select(),
 		]);
 
+		invariant(partner, "O Parceiro não foi encontrado");
+
 		return {
 			actions,
 			partner,
@@ -145,11 +157,9 @@ export default function ReportPage() {
 	invariant(partner, "partner");
 	actions = actions || [];
 
-	let View = action ? (
-		<ActionReport action={action} partner={partner} />
-	) : null;
+	let View = <ActionReport action={action as Action} partner={partner} />;
 
-	categories = categories || [];
+	// categories = categories || [];
 	if (!action && range) {
 		switch (view) {
 			case "calendar":
@@ -571,7 +581,10 @@ const InstagramReportView = ({
 	actions: Action[];
 	partner: Partner;
 }) => {
-	const instagramActions = getInstagramFeed({ actions: actions?.reverse() });
+	const [instagramActions, setInstagramActions] = useState<Action[]>(actions);
+	useEffect(() => {
+		setInstagramActions(getInstagramFeed({ actions: actions?.reverse() }));
+	}, []);
 
 	return (
 		<div className="mx-auto max-w-lg px-4">

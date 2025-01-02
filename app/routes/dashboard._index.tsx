@@ -9,6 +9,8 @@ import {
 	formatRelative,
 	isSameDay,
 	isToday,
+	parse,
+	parseISO,
 	startOfMonth,
 	startOfWeek,
 	subDays,
@@ -146,6 +148,11 @@ export const meta: MetaFunction = () => {
 	];
 };
 
+///
+///
+///
+///
+
 export default function DashboardIndex() {
 	let { actions } = useLoaderData<typeof loader>();
 	const matches = useMatches();
@@ -206,9 +213,8 @@ export default function DashboardIndex() {
 			<Sprint />
 
 			{/* Ações em Atraso */}
-			{lateActions?.length > 0 && (
-				<DelayedActions actions={lateActions} />
-			)}
+
+			<DelayedActions actions={lateActions} />
 
 			{/* Hoje */}
 			<TodayViews actions={actions as Action[]} />
@@ -224,6 +230,11 @@ export default function DashboardIndex() {
 		</div>
 	);
 }
+
+///
+///
+///
+///
 
 function TodayViews({ actions }: { actions: Action[] }) {
 	const [todayView, setTodayView] = useState<
@@ -577,7 +588,7 @@ function DelayedActions({ actions }: { actions: Action[] }) {
 		}
 	}, [query, actions]);
 
-	return (
+	return actions.length > 0 ? (
 		<>
 			<div className="border-b"></div>
 			<div className="px-2 py-8 md:px-8 lg:py-24">
@@ -696,7 +707,7 @@ function DelayedActions({ actions }: { actions: Action[] }) {
 				)}
 			</div>
 		</>
-	);
+	) : null;
 }
 
 function Partners({ actions }: { actions?: Action[] }) {

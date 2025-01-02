@@ -3,6 +3,8 @@ import { Link, useFetchers, useMatches } from "react-router";
 // @ts-ignore
 import Color from "color";
 import {
+	compareAsc,
+	differenceInMilliseconds,
 	endOfDay,
 	endOfWeek,
 	format,
@@ -357,16 +359,17 @@ export function getInstagramFeed({
 	actions,
 }: {
 	actions?: Action[] | RawAction[] | null;
-}) {
+}): Action[] {
 	return actions
-		? actions
+		? (actions
 				.filter((action) => isInstagramFeed(action.category))
-				.sort(
-					(a, b) =>
-						new Date(b.instagram_date).getTime() -
-						new Date(a.instagram_date).getTime()
-				)
-		: [];
+				.sort((a, b) =>
+					compareAsc(b.instagram_date, a.instagram_date)
+				) as Action[])
+		: // .sort((a, b) =>
+		  // 	differenceInMilliseconds(b.instagram_date, a.instagram_date)
+		  // ) as Action[])
+		  [];
 }
 
 const iconsList: { [key: string]: LucideIcon } = {

@@ -9,6 +9,7 @@ import {
 import { useMatches, useSubmit } from "react-router";
 import { INTENTS } from "~/lib/constants";
 import { BlockOfActions, ListOfActions } from "./Action";
+import { useId } from "react";
 
 export default function Kanban({
 	actions,
@@ -19,6 +20,7 @@ export default function Kanban({
 }) {
 	const matches = useMatches();
 	const submit = useSubmit();
+	const id = useId();
 
 	const { states } = matches[1].data as DashboardRootType;
 
@@ -56,24 +58,22 @@ export default function Kanban({
 
 	return (
 		<div className="overflow-hidden pb-4">
-			<div>
-				<div className="flex w-full gap-2">
-					<DndContext onDragEnd={handleDragEnd} sensors={sensors}>
-						{states.map((state) => {
-							const stateActions = actions.filter(
-								(action) => action.state === state.slug
-							);
-							return (
-								<KanbanColumn
-									key={state.id}
-									state={state}
-									actions={stateActions}
-									list={list}
-								/>
-							);
-						})}
-					</DndContext>
-				</div>
+			<div className="flex w-full gap-2">
+				<DndContext onDragEnd={handleDragEnd} sensors={sensors} id={id}>
+					{states.map((state) => {
+						const stateActions = actions.filter(
+							(action) => action.state === state.slug
+						);
+						return (
+							<KanbanColumn
+								key={state.id}
+								state={state}
+								actions={stateActions}
+								list={list}
+							/>
+						);
+					})}
+				</DndContext>
 			</div>
 		</div>
 	);
