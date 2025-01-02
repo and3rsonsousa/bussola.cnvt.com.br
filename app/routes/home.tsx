@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { FlickeringGrid } from "~/components/Backgrounds";
+import { FlickeringGrid, Waves } from "~/components/Backgrounds";
 import Button from "~/components/Button";
 import { Bussola } from "~/lib/helpers";
 import type { Route } from "./+types/home";
@@ -20,11 +20,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 		<div className="relative grid h-dvh w-full place-content-center overflow-hidden bg-black">
 			<FlickeringGrid
 				className="absolute top-1/2 left-1/2 z-0 size-full -translate-x-1/2 -translate-y-1/2 scale-110"
-				squareSize={96}
-				gridGap={12}
+				squareSize={124}
+				gridGap={2}
 				color="#333"
-				maxOpacity={1}
-				flickerChance={0.2}
+				maxOpacity={0.2}
+				flickerChance={1}
 			/>
 
 			<div className="z-10 flex flex-col items-center p-8 text-center text-white lg:px-24">

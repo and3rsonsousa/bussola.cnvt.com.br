@@ -176,10 +176,7 @@ export default function ActionPage() {
 			if (fetcher.formData?.get("intent") === "title") {
 				setAction(() => ({
 					...action,
-					title: (action.title.indexOf(" | ") >= 0
-						? action.title.substring(0, action.title.indexOf(" | "))
-						: action.title
-					)
+					title: getCleanTitle(action.title)
 						.concat(" | ")
 						.concat((fetcher.data as { message: string }).message),
 				}));
@@ -357,32 +354,64 @@ function Title({
 				}
 			/>
 
-			<Button
-				className={`mr-1 h-12 w-12 rounded p-1 ${
-					isWorking &&
-					fetcher.formData?.get("intent") === "title" &&
-					"animate-colors"
-				}`}
-				variant="ghost"
-				title="Gerar título"
-				onClick={async () => {
-					fetcher.submit(
-						{
-							title: action.title,
-							description: action.description,
-							context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-							intent: "title",
-							voice: partner.voice,
-						},
-						{
-							action: "/handle-openai",
-							method: "post",
-						}
-					);
-				}}
-			>
-				<SparklesIcon className="size-4" />
-			</Button>
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<Button
+						className={`h-7 w-7 p-1 ${
+							isWorking &&
+							fetcher.formData?.get("intent") === "carousel" &&
+							"animate-colors"
+						}`}
+						variant="ghost"
+					>
+						<SparklesIcon />
+					</Button>
+				</DropdownMenuTrigger>
+
+				<DropdownMenuContent className="glass">
+					<DropdownMenuItem
+						className="bg-item"
+						onSelect={async () => {
+							fetcher.submit(
+								{
+									title: getCleanTitle(action.title),
+									description: action.description,
+									context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+									intent: "title",
+									voice: partner.voice,
+								},
+								{
+									action: "/handle-openai",
+									method: "post",
+								}
+							);
+						}}
+					>
+						3 Princípios
+					</DropdownMenuItem>
+					<DropdownMenuItem
+						className="bg-item"
+						onSelect={async () => {
+							fetcher.submit(
+								{
+									title: getCleanTitle(action.title),
+									description: action.description,
+									context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+									intent: "title",
+									model: "viral",
+									voice: partner.voice,
+								},
+								{
+									action: "/handle-openai",
+									method: "post",
+								}
+							);
+						}}
+					>
+						Headlines Virais
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
 		</div>
 	);
 }
@@ -1065,7 +1094,7 @@ function RightSide({
 						caption: event.target.value,
 					})
 				}
-				className={`w-full text-base font-normal field-sizing-content min-h-screen lg:min-h-auto outline-hidden transition ${
+				className={`w-full text-base lg:text-sm font-normal field-sizing-content min-h-screen lg:min-h-auto outline-hidden transition ${
 					isInstagramFeed(action.category)
 						? "border-0 focus-within:ring-0"
 						: ""
@@ -1382,10 +1411,20 @@ export const TriggersSelect = ({
 		</SelectTrigger>
 		<SelectContent className="glass">
 			{TRIGGERS.map((trigger) => (
-				<SelectItem key={trigger.value} value={trigger.value}>
+				<SelectItem
+					className="bg-select-item"
+					key={trigger.value}
+					value={trigger.value}
+				>
 					{trigger.value}
 				</SelectItem>
 			))}
 		</SelectContent>
 	</Select>
 );
+
+function getCleanTitle(title: string) {
+	return title.indexOf(" | ") >= 0
+		? title.substring(0, title.indexOf(" | "))
+		: title;
+}
