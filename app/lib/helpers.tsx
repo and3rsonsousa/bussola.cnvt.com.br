@@ -358,12 +358,14 @@ export function getActionsForThisDay({
 
 export function getInstagramFeed({
 	actions,
+	stories,
 }: {
 	actions?: Action[] | RawAction[] | null;
+	stories?: boolean;
 }): Action[] {
 	return actions
 		? (actions
-				.filter((action) => isInstagramFeed(action.category))
+				.filter((action) => isInstagramFeed(action.category, stories))
 				.sort((a, b) =>
 					compareAsc(b.instagram_date, a.instagram_date)
 				) as Action[])

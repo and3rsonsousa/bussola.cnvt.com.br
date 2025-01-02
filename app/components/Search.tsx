@@ -15,6 +15,8 @@ import {
 	CommandList,
 } from "./ui/command";
 import Loader from "./Loader";
+import ReactLenis from "lenis/react";
+import { DialogTitle } from "./ui/dialog";
 
 type CommandItemType = {
 	name: string;
@@ -248,13 +250,14 @@ export default function Search({
 
 	return (
 		<CommandDialog open={search.open} onOpenChange={search.setOpen}>
+			<DialogTitle className="hidden">Buscar</DialogTitle>
 			<CommandInput
 				className={`text-xl font-medium`}
 				value={value}
 				onValueChange={setValue}
 			/>
 
-			<CommandList className="pb-2">
+			<CommandList className="pb-2 outline-none scrollbars">
 				<CommandEmpty>Nenhum resultado encontrado. 😬</CommandEmpty>
 				{loading && (
 					<CommandLoading className="flex justify-center p-4">
@@ -273,7 +276,7 @@ export default function Search({
 										else if (item.click) item.click();
 										search.setOpen(false);
 									}}
-									className="flex justify-between gap-8 overflow-hidden"
+									className="flex justify-between gap-8"
 								>
 									<div className="line-clamp-1 text-xl font-medium tracking-tight">
 										{item.title}
