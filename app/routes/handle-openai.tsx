@@ -224,8 +224,6 @@ MODELO: ${template}
 CONTENT: ${title} - ${description}
 TOM DE VOZ: ${tone}`;
 	} else if (intent === "title") {
-		console.log(title);
-
 		if (model === "viral") {
 			template = `Use esses Ganchos como modelo e se inspire para criar um título de acordo com o CONTEXT. Ganchos (${hooks.join(
 				" - "

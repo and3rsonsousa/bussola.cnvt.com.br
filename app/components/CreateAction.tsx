@@ -49,7 +49,7 @@ export default function CreateAction({
 }) {
 	const { categories, partners, user, areas } = useMatches()[1]
 		.data as DashboardRootType;
-	const matches = useMatches()[3];
+	const matches = useMatches();
 	const location = useLocation();
 
 	const [open, setOpen] = useState(false);
@@ -65,8 +65,8 @@ export default function CreateAction({
 	}
 
 	let [partner, setPartner] = useState(
-		matches && matches.data
-			? (matches.data as DashboardPartnerType).partner
+		matches[2] && matches[2].data
+			? (matches[2].data as DashboardPartnerType).partner
 			: undefined
 	);
 
@@ -126,8 +126,8 @@ export default function CreateAction({
 
 	useEffect(() => {
 		setPartner(() =>
-			matches && matches.data
-				? (matches.data as DashboardPartnerType).partner
+			matches[2] && matches[2].data
+				? (matches[2].data as DashboardPartnerType).partner
 				: undefined
 		);
 	}, [location]);
@@ -225,7 +225,7 @@ export default function CreateAction({
 				/>
 
 				<hr className="-mx-4 my-2 border-t p-1 md:-mx-6" />
-				<div className="flex flex-col">
+				<div className="flex flex-col gap-1">
 					<div className="flex items-center gap-2 justify-between">
 						{/* Partners */}
 						<PartnersDropdown
@@ -346,7 +346,7 @@ export default function CreateAction({
 							</DropdownMenu>
 						) : null}
 					</div>
-					<div className="flex w-full items-center justify-between gap-2 overflow-hidden pt-1 pr-1">
+					<div className="flex w-full items-center justify-between gap-2 overflow-hidden p-1">
 						<DateTimeAndInstagramDate
 							action={action}
 							onChange={({ date, instagram_date, time }) => {
