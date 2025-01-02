@@ -1,16 +1,19 @@
-import { Link } from "react-router";
+import { Link, type MetaFunction } from "react-router";
 import { FlickeringGrid } from "~/components/Backgrounds";
 import Button from "~/components/Button";
 import { Bussola } from "~/lib/helpers";
 import type { Route } from "./+types/home";
 
-export function meta({}: Route.MetaArgs) {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
 	return [
-		{ title: "New React Router App" },
-		{ name: "description", content: "Welcome to React Router!" },
+		{ title: `ʙússoʟa` },
+		{
+			name: "description",
+			content:
+				"Aplicativo de Gestão de Projetos Criado e Mantido pela Agência Canivete. ",
+		},
 	];
-}
-
+};
 export function loader({ context }: Route.LoaderArgs) {
 	return { message: context.VALUE_FROM_VERCEL };
 }
