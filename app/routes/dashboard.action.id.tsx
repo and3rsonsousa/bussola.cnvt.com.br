@@ -69,6 +69,7 @@ import {
 	LikeFooter,
 } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
+import { cn } from "~/lib/utils";
 
 export const config = { runtime: "edge" };
 const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY;
@@ -215,10 +216,20 @@ export default function ActionPage() {
 	}, [data]);
 
 	return (
-		<div className="container mx-auto flex max-w-5xl flex-col px-0 pt-4 overflow-hidden h-full">
+		<div
+			className={cn(
+				"container mx-auto flex flex-col px-0 pt-4 overflow-hidden h-full",
+				isInstagramFeed(action.category, true)
+					? "max-w-5xl"
+					: "max-w-3xl"
+			)}
+		>
 			<div className="gap-4 px-4 md:px-8 lg:flex overflow-y-auto lg:overflow-hidden h-full">
 				<div
-					className={`flex w-full h-full flex-col lg:overflow-hidden lg:w-2/3`}
+					className={cn(
+						`flex w-full h-full flex-col lg:overflow-hidden`,
+						isInstagramFeed(action.category, true) ? "lg:w-2/3" : ""
+					)}
 				>
 					{/* Header */}
 					<Header action={action} partner={partner} />
