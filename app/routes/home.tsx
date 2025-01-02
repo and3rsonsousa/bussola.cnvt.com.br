@@ -23,7 +23,7 @@ export default function Home() {
 				squareSize={124}
 				gridGap={2}
 				color="#333"
-				maxOpacity={0.2}
+				maxOpacity={0.5}
 				flickerChance={1}
 			/>
 

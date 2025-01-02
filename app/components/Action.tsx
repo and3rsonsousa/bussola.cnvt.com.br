@@ -1255,6 +1255,7 @@ export function ContextMenuItems({
 		person,
 		sprints,
 	} = matches[1].data as DashboardRootType;
+
 	const [delay, setDelay] = useState({ hour: 0, day: 0, week: 0 });
 
 	// const partner = partners.find((p) => p.slug === action.partners[0]);

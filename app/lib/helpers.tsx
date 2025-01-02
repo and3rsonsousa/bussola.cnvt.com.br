@@ -4,7 +4,6 @@ import { Link, useFetchers, useMatches } from "react-router";
 import Color from "color";
 import {
 	compareAsc,
-	differenceInMilliseconds,
 	endOfDay,
 	endOfWeek,
 	format,
@@ -203,9 +202,11 @@ export function Avatar({
 					: size === "lg"
 					? "size-12"
 					: "size-16",
-				ring ? "ring-background ring-2" : "",
+				ring ? "ring-background ring-2" : "ring-1 ring-foreground/5",
+
 				// "ring-card ring-3",
 				"block",
+
 				className,
 			])}
 			style={style}
