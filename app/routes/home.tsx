@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { FlickeringGrid, Waves } from "~/components/Backgrounds";
+import { FlickeringGrid } from "~/components/Backgrounds";
 import Button from "~/components/Button";
 import { Bussola } from "~/lib/helpers";
 import type { Route } from "./+types/home";
@@ -15,7 +15,7 @@ export function loader({ context }: Route.LoaderArgs) {
 	return { message: context.VALUE_FROM_VERCEL };
 }
 
-export default function Home({ loaderData }: Route.ComponentProps) {
+export default function Home() {
 	return (
 		<div className="relative grid h-dvh w-full place-content-center overflow-hidden bg-black">
 			<FlickeringGrid

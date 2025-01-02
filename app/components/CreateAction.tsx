@@ -52,7 +52,7 @@ export default function CreateAction({
 	const matches = useMatches()[3];
 	const location = useLocation();
 
-	const [open, setOpen] = useState(true);
+	const [open, setOpen] = useState(false);
 	const submit = useSubmit();
 	const { toast } = useToast();
 

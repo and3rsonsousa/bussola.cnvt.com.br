@@ -9,6 +9,7 @@ export default [
 		route(":partner/archived", "routes/dashboard.partner.archived.tsx"),
 		route("action/:id", "routes/dashboard.action.id.tsx"),
 		route("me", "routes/dashboard.me.tsx"),
+		route("help", "routes/dashboard.help.tsx"),
 	]),
 	route("login", "routes/login.tsx"),
 	route("logout", "routes/logout.tsx"),
