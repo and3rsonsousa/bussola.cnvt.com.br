@@ -92,13 +92,14 @@ function KanbanColumn({
 	return (
 		<div
 			ref={setNodeRef}
-			className={`flex max-h-[60vh] shrink-0 rounded-2xl p-2 ${
+			className={`flex max-h-[60vh] shrink-0 relative rounded-2xl p-2 ${
 				actions.length > 0
 					? "min-w-72 grow"
 					: "w-auto 2xl:min-w-72 2xl:grow"
 			} flex-col overflow-hidden ${isOver ? "dragover" : ""}`}
 			key={state.slug}
 		>
+			<div className="absolute w-full bottom-0 h-8 bg-linear-to-b from-transparent via-background to-background z-20"></div>
 			<div className="mb-2 flex items-center">
 				<div
 					className={`tracking-tigh flex items-center gap-2 rounded-full font-bold`}
