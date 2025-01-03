@@ -1,4 +1,3 @@
-import { ReactLenis } from "lenis/react";
 import { useEffect, useState, type ReactNode } from "react";
 import {
 	useLocation,
@@ -13,16 +12,11 @@ import { Toaster } from "./ui/toaster";
 
 export default function Layout({ children }: { children: ReactNode }) {
 	const navigate = useNavigate();
-	const matches = useMatches();
 
 	const [open, setOpen] = useState(false);
 
 	const { isTransitioning, setTransitioning } =
 		useOutletContext() as ContextType;
-
-	const useLenisHere =
-		matches[2].id !== "routes/dashboard.partner" &&
-		!/\/dashboard\/action\//.test(useLocation().pathname);
 
 	useEffect(() => {
 		const keyDown = (event: KeyboardEvent) => {
@@ -47,16 +41,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 			className={`bg-background relative mx-auto flex h-[100dvh] flex-col`}
 		>
 			<Header setOpen={setOpen} />
-			{useLenisHere ? (
-				<ReactLenis
-					root={false}
-					className="flex flex-col overflow-auto h-full"
-				>
-					{children}
-				</ReactLenis>
-			) : (
-				children
-			)}
+
+			{children}
+
 			{/* </div> */}
 			<div
 				className={`${

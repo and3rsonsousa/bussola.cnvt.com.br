@@ -15,7 +15,6 @@ import {
 	CommandList,
 } from "./ui/command";
 import Loader from "./Loader";
-import ReactLenis from "lenis/react";
 import { DialogTitle } from "./ui/dialog";
 
 type CommandItemType = {

@@ -23,7 +23,6 @@ import { useState } from "react";
 import clsx from "clsx";
 
 import stylesheet from "./app.css?url";
-import "lenis/dist/lenis.css";
 
 export type LoaderData = {
 	theme: Theme | null;

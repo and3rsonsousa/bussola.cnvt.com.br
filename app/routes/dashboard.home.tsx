@@ -459,66 +459,59 @@ function WeekView({
 }: {
 	weekActions: { date: Date; actions: Action[] }[];
 }) {
-	return (
+	return weekActions.reduce(
+		(acc, currentValue) => acc + currentValue.actions.length,
+		0
+	) > 0 ? (
 		<>
 			<div className="border-b"></div>
-			<div className="">
-				{weekActions.reduce(
-					(acc, currentValue) => acc + currentValue.actions.length,
-					0
-				) > 0 ? (
-					<div className="py-8 lg:py-24">
-						<div className="pb-8 px-2 md:px-8 text-center">
-							<Heading>Semana</Heading>
-						</div>
-						<div className="mb-8 px-2 md:px-8 flex flex-nowrap max-h-[50vh] overflow-x-auto  overflow-y-hidden">
-							{weekActions.map(({ date, actions }) => (
-								<div
-									className="group flex max-h-full w-full min-w-72 flex-col overflow-hidden"
-									key={date.getDate()}
-									data-date={format(date, "yyyy-MM-dd")}
-								>
-									{/* Dia */}
-									<div className="flex shrink-0 items-center justify-between">
-										<div className="font-semibold text-nowrap text-ellipsis first-letter:capitalize">
-											{format(date, "EEEE ", {
-												locale: ptBR,
-											})}
-										</div>
-										<div className="text-center opacity-0 group-hover:opacity-100">
-											<CreateAction
-												mode="day"
-												date={format(
-													date,
-													"yyyy-MM-dd"
-												)}
-											/>
-										</div>
-									</div>
-									{/* Data */}
-									<div className="text-muted-foreground mb-4 text-[10px] font-medium tracking-widest uppercase">
-										{format(date, "d 'de' MMMM", {
-											locale: ptBR,
-										})}
-									</div>
-
-									{/* Lista de Ações do dia */}
-									<div className=" overflow-hidden  p-1">
-										<ListOfActions
-											actions={actions}
-											date={{ timeFormat: 1 }}
-											showCategory={true}
-											short
-										/>
-									</div>
+			<div className="py-8 lg:py-24">
+				<div className="pb-8 px-2 md:px-8 text-center">
+					<Heading>Semana</Heading>
+				</div>
+				<div className="mb-8 px-2 md:px-8 flex flex-nowrap max-h-[50vh] overflow-x-auto scrollbars-h overflow-y-hidden">
+					{weekActions.map(({ date, actions }) => (
+						<div
+							className="group flex max-h-full w-full min-w-72 flex-col overflow-hidden"
+							key={date.getDate()}
+							data-date={format(date, "yyyy-MM-dd")}
+						>
+							{/* Dia */}
+							<div className="flex shrink-0 items-center justify-between">
+								<div className="font-medium text-nowrap text-ellipsis first-letter:capitalize">
+									{format(date, "EEEE ", {
+										locale: ptBR,
+									})}
 								</div>
-							))}
+								<div className="text-center opacity-0 group-hover:opacity-100">
+									<CreateAction
+										mode="day"
+										date={format(date, "yyyy-MM-dd")}
+									/>
+								</div>
+							</div>
+							{/* Data */}
+							<div className="text-muted-foreground mb-4 text-[10px] font-medium tracking-widest uppercase">
+								{format(date, "d 'de' MMMM", {
+									locale: ptBR,
+								})}
+							</div>
+
+							{/* Lista de Ações do dia */}
+							<div className=" overflow-hidden  p-1">
+								<ListOfActions
+									actions={actions}
+									date={{ timeFormat: 1 }}
+									showCategory={true}
+									short
+								/>
+							</div>
 						</div>
-					</div>
-				) : null}
+					))}
+				</div>
 			</div>
 		</>
-	);
+	) : null;
 }
 
 export function HoursView({ actions }: { actions: Action[] }) {

@@ -110,7 +110,7 @@ function KanbanColumn({
 					{state.title}
 				</div>
 			</div>
-			<div className="pt-1">
+			<div className="pt-1 overflow-hidden h-full">
 				{list ? (
 					<ListOfActions
 						actions={actions}

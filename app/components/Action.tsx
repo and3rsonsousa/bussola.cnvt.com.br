@@ -70,7 +70,6 @@ import {
 import { Button } from "./ui/button";
 import { Toggle } from "./ui/toggle";
 import { useDraggable } from "@dnd-kit/core";
-import ReactLenis from "lenis/react";
 
 export function ActionLine({
 	action,
@@ -874,31 +873,30 @@ export function ListOfActions({
 	const [fold, setFold] = useState(isFoldable ? foldCount : undefined);
 	return actions.length > 0 ? (
 		<>
-			<ReactLenis root={false} className="overflow-hidden h-full">
-				<div
-					className={`${
-						columns === 1
-							? "flex flex-col"
-							: columns === 2
-							? "grid sm:grid-cols-2"
-							: columns === 3
-							? "grid sm:grid-cols-2 md:grid-cols-3"
-							: "grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6"
-					} @container gap-x-4 gap-y-1 h-full overflow-y-auto p-1`}
-				>
-					{actions?.slice(0, fold).map((action) => (
-						<ActionLine
-							short={short}
-							long={long}
-							key={action.id}
-							action={action}
-							showCategory={showCategory}
-							showPartner={showPartner}
-							date={date}
-						/>
-					))}
-				</div>
-			</ReactLenis>
+			<div
+				className={`${
+					columns === 1
+						? "flex flex-col"
+						: columns === 2
+						? "grid sm:grid-cols-2"
+						: columns === 3
+						? "grid sm:grid-cols-2 md:grid-cols-3"
+						: "grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6"
+				} @container gap-x-4 gap-y-1 scrollbars-v pb-8`}
+			>
+				{actions?.slice(0, fold).map((action) => (
+					<ActionLine
+						short={short}
+						long={long}
+						key={action.id}
+						action={action}
+						showCategory={showCategory}
+						showPartner={showPartner}
+						date={date}
+					/>
+				))}
+			</div>
+
 			{actions && isFoldable && actions.length > foldCount ? (
 				<div className="p-4 text-center">
 					<Toggle
@@ -951,7 +949,7 @@ export function BlockOfActions({
 		: [];
 
 	return (
-		<div className="@container">
+		<div className="@container overflow-hidden h-full">
 			<div
 				className={`grid ${
 					!max
@@ -959,7 +957,7 @@ export function BlockOfActions({
 						: max === 2
 						? "grid-cols-2"
 						: ""
-				} gap-2`}
+				} gap-2 scrollbars-v pb-8`}
 			>
 				{actions?.map((action) => (
 					<ActionBlock
