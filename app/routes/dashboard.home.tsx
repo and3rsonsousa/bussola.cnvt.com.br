@@ -344,7 +344,7 @@ function TodayViews({ actions }: { actions: Action[] }) {
 									key={button.id}
 									variant={
 										todayView === button.id
-											? "default"
+											? "secondary"
 											: "ghost"
 									}
 									size={"sm"}
