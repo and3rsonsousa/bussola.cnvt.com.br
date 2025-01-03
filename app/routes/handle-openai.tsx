@@ -32,8 +32,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		template = "você é um copywritter experiente.";
 		content = `Aumente o TEXTO em 25% sem alterar o sentido ou mudar o tom de voz. TEXTO: ${description}.`;
 	} else if (intent === "develop") {
-		template = "Pesquisar sobre o assunto.";
-		content = `Pesquise sobre o CONTEXTO. REGRAS: Retorne apenas o texto sem nenhuma observação. Texto com parágrafos e tags html. Retorne apenas uma frase sem aspas. Traga o texto com no máximo 300 palavras. 
+		template = "Comando normal.";
+		content = `Apenas responda sobre o CONTEXTO. REGRAS: Retorne apenas o texto sem nenhuma observação. Texto com parágrafos e tags html. Retorne apenas uma frase sem aspas. Traga o texto com no máximo 300 palavras. 
     EMPRESA: ${context}.
     CONTEXTO: Título da ação: '${title}, descrição: ${description}'`;
 	} else if (intent === "hook") {
@@ -77,7 +77,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 		}
 	} else if (intent === "caption") {
 		template =
-			"Texto da legenda e hashtags SEO, use de 3 a 5 hashtags bem focadas no nicho da DESCRIÇÃO.";
+			"Texto da legenda e hashtags SEO, use de 3 a 5 hashtags bem focadas no nicho da DESCRIÇÃO. Use pelo menos um emoji por parágrafo.";
 
 		if (model === "aida") {
 			template = `Texto da legenda seguindo o modelo AIDA bem criativo, usando técnicas de Storytelling e reforçando o CONTEXTO. Use as keywords relevantes ao CONTEXTO e encerre a legenda com 9 keywords SEO que falem tanto da DESCRIÇÃO, quanto do CONTEXTO. Siga esse modelo de AIDA: Atenção - Use emojis, perguntas diretas ou estatísticas chocantes Interesse - Faça o público se identificar com o problema ou a situação Desejo - Gere expectativa sobre a solução. Ação - Finalize com um convite claro e uma CTA estratégica.`;
@@ -116,7 +116,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     HASHTAGS'. 
     
-  REGRAS: Retorne apenas o texto sem nenhuma observação. Texto somente com parágrafos e sem tags html. 
+  REGRAS: Retorne apenas o texto sem nenhuma observação. Texto somente com parágrafos e sem tags html e sem markdown. 
   TEMPLATE: ${template}.
   EMPRESA: ${context}.
   CONTEXTO: Título do post: '${title}, descrição: ${description}'
