@@ -1,25 +1,28 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { ReactLenis, type LenisProps, type LenisRef } from "lenis/react";
-import Header from "./Header";
-import Search from "./Search";
-import Loader from "./Loader";
-import { Toaster } from "./ui/toaster";
+import { ReactLenis } from "lenis/react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
 	useLocation,
+	useMatches,
 	useNavigate,
-	useNavigation,
 	useOutletContext,
 } from "react-router";
+import Header from "./Header";
+import Loader from "./Loader";
+import Search from "./Search";
+import { Toaster } from "./ui/toaster";
 
 export default function Layout({ children }: { children: ReactNode }) {
 	const navigate = useNavigate();
+	const matches = useMatches();
 
 	const [open, setOpen] = useState(false);
 
 	const { isTransitioning, setTransitioning } =
 		useOutletContext() as ContextType;
 
-	const useLenisHere = !/\/dashboard\/action\//.test(useLocation().pathname);
+	const useLenisHere =
+		matches[2].id !== "routes/dashboard.partner" &&
+		!/\/dashboard\/action\//.test(useLocation().pathname);
 
 	useEffect(() => {
 		const keyDown = (event: KeyboardEvent) => {

@@ -146,10 +146,11 @@ export function ActionLine({
 		);
 	}, [isMobile]);
 
-	const { attributes, listeners, transform, setNodeRef } = useDraggable({
-		id: action.id,
-		data: { ...action },
-	});
+	const { attributes, listeners, transform, setNodeRef, isDragging } =
+		useDraggable({
+			id: action.id,
+			data: { ...action },
+		});
 
 	const style = transform
 		? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0px)` }
@@ -288,6 +289,8 @@ export function ActionLine({
 						style={style}
 						title={action.title}
 						className={`action group/action action-item items-center gap-2 [&>*]:border-red-500 ${
+							isDragging ? "z-[100]" : "z-1"
+						} ${
 							short ? "px-3 py-2" : long ? "px-4 py-3" : "p-3"
 						} font-base @container md:text-sm ${
 							showDelay &&
@@ -592,10 +595,6 @@ export function ActionLine({
 								</div>
 							)
 						)}
-
-						{/* {isSprint(action.id, sprints) && (
-              <div className="ring-primary absolute inset-0 rounded border-0 ring-2"></div>
-            )} */}
 					</div>
 				)}
 			</ContextMenuTrigger>
@@ -982,8 +981,8 @@ export function GridOfActions({
 	partner: Partner;
 }) {
 	return (
-		<div>
-			<div className="grid grid-cols-3 gap-[2px] overflow-hidden rounded">
+		<div className="scrollbars">
+			<div className="grid grid-cols-3 gap-[2px] rounded-xl overflow-hidden">
 				{actions?.map((action, index) => (
 					<Content
 						action={action}

@@ -68,6 +68,7 @@ import {
 import { SiInstagram } from "@icons-pack/react-simple-icons";
 import { INTENTS } from "~/lib/constants";
 import {
+	Avatar,
 	Icons,
 	getCategoriesSortedByContent,
 	getInstagramFeed,
@@ -162,28 +163,23 @@ export default function Partner() {
 	const [short, setShort] = useState(false);
 	const [allUsers, setAllUsers] = useState(false);
 
-	const {
-		showFeed,
-		setShowFeed,
-		categoryFilter,
-		setCategoryFilter,
-		stateFilter,
-		setStateFilter,
-	} = useOutletContext() as ContextType;
+	const { categoryFilter, setCategoryFilter, stateFilter, setStateFilter } =
+		useOutletContext() as ContextType;
 
 	const { categories, states, person, celebrations } = matches[1]
 		.data as DashboardRootType;
 
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	let params = new URLSearchParams();
+	let params = new URLSearchParams(searchParams);
 
 	for (const [key, value] of searchParams.entries()) {
 		params.set(key, value);
 	}
 
-	const isInstagramDate = searchParams.get("instagram_date") === "true";
-	const showContent = searchParams.get("show_content") === "true";
+	const isInstagramDate = !!searchParams.get("instagram_date");
+	const showContent = !!searchParams.get("show_content");
+	const showFeed = !!searchParams.get("show_feed");
 
 	const currentDate = date;
 	const pendingActions = usePendingData().actions;
@@ -273,7 +269,12 @@ export default function Partner() {
 				} else if (code === "KeyS") {
 					setShort((value) => !value);
 				} else if (code === "KeyI") {
-					setShowFeed((value) => !value);
+					if (showFeed) {
+						params.delete("show_feed");
+					} else {
+						params.set("show_feed", "true");
+					}
+					setSearchParams(params);
 				}
 			}
 		}
@@ -332,361 +333,344 @@ export default function Partner() {
 	);
 
 	return (
-		<div className="flex flex-col overflow-hidden">
-			{/* Header */}
+		<div className="flex overflow-hidden" id="partner-page">
+			<div className={`h-full w-full flex flex-col overflow-hidden `}>
+				{/* Calendário Header */}
 
-			<div className="flex h-full w-full overflow-hidden overflow-x-auto">
-				{/* Calendar */}
-				<div
-					className={`flex h-full w-full min-w-[90vw] flex-col overflow-hidden lg:min-w-[800px]`}
-				>
-					<div className="items-center justify-between px-4 py-2 md:flex md:px-8">
-						<div className="flex items-center gap-1">
-							<Link to="/dashboard">
-								<HomeIcon />
-							</Link>
-							<div className="mr-1">
-								<DropdownMenu>
-									<DropdownMenuTrigger
-										className="capitalize outline-hidden"
-										asChild
-									>
-										<Button
-											variant={"ghost"}
-											className="text-xl font-bold"
-										>
-											{format(currentDate, "MMMM", {
-												locale: ptBR,
-											})}
-										</Button>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent className="glass">
-										{eachMonthOfInterval({
-											start: startOfYear(new Date()),
-											end: endOfYear(new Date()),
-										}).map((month) => (
-											<DropdownMenuItem
-												className="bg-item capitalize"
-												key={month.getMonth()}
-												onSelect={() => {}}
-												asChild
-											>
-												<Link
-													prefetch="intent"
-													to={`/dashboard/${
-														partner.slug
-													}/?date=${format(
-														new Date().setMonth(
-															month.getMonth()
-														),
-														"yyyy-MM-'01'"
-													)}`}
-												>
-													{format(month, "MMMM", {
-														locale: ptBR,
-													})}
-												</Link>
-											</DropdownMenuItem>
-										))}
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</div>
-							<Button size="icon" variant="ghost" asChild>
-								<Link
-									prefetch="intent"
-									to={`/dashboard/${
-										partner?.slug
-									}?date=${format(
-										subMonths(currentDate, 1),
-										"yyyy-MM-dd"
-									)}`}
-								>
-									<ChevronLeftIcon className="h-4 w-4" />
-								</Link>
-							</Button>
-							<Button size="icon" variant="ghost" asChild>
-								<Link
-									prefetch="intent"
-									to={`/dashboard/${
-										partner?.slug
-									}?date=${format(
-										addMonths(currentDate, 1),
-										"yyyy-MM-dd"
-									)}`}
-								>
-									<ChevronRightIcon className="h-4 w-4" />
-								</Link>
-							</Button>
-						</div>
-						<div className="flex items-center gap-1 pr-1 lg:gap-2">
-							<Button
-								size={"sm"}
-								variant={isInstagramDate ? "default" : "ghost"}
-								onClick={() => {
-									if (isInstagramDate) {
-										params.set("instagram_date", "");
-										params.set("show_content", "");
-									} else {
-										params.set("instagram_date", "true");
-										params.set("show_content", "true");
-									}
-									setSearchParams(params);
-								}}
-								title={
-									"Organizar ações pelas datas do Instagram"
-								}
-							>
-								<SiInstagram className="size4" />
-							</Button>
-							<Button
-								size={"sm"}
-								variant={showContent ? "default" : "ghost"}
-								onClick={() => {
-									if (showContent) {
-										params.set("show_content", "");
-									} else {
-										params.set("show_content", "true");
-									}
-									setSearchParams(params);
-								}}
-								title={
-									showContent
-										? "Mostrar conteúdo das postagens"
-										: "Mostrar apenas os títulos"
-								}
-							>
-								{showContent ? (
-									<ImageIcon className="size-4" />
-								) : (
-									<AlignJustifyIcon className="size-4" />
-								)}
-							</Button>
-							<Button
-								size={"sm"}
-								variant={allUsers ? "default" : "ghost"}
-								onClick={() =>
-									setAllUsers((allUsers) => !allUsers)
-								}
-								title={
-									allUsers
-										? "Mostrar todos os responsáveis"
-										: "Exibir apenas 'eu' como responsável"
-								}
-							>
-								{allUsers ? (
-									<UsersIcon className="size-4" />
-								) : (
-									<UserIcon className="size-4" />
-								)}
-							</Button>
-							<Button
-								variant={short ? "default" : "ghost"}
-								size={"sm"}
-								onClick={() => setShort((short) => !short)}
-								title={
-									short
-										? "Aumentar o tamanho da ação"
-										: "Diminuir o tamanho da ação"
-								}
-							>
-								{short ? (
-									<ChevronsUpDownIcon className="size-4" />
-								) : (
-									<ChevronsDownUpIcon className="size-4" />
-								)}
-							</Button>
+				<div className="flex items-center bg-card justify-between px-4 py-2 md:px-8 border-b">
+					<div className="flex items-center gap-1">
+						<Link to="/dashboard">
+							<HomeIcon />
+						</Link>
+						<div className="mr-1">
 							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
+								<DropdownMenuTrigger
+									className="capitalize outline-hidden"
+									asChild
+								>
 									<Button
-										size={"sm"}
 										variant={"ghost"}
-										className={`border-2 text-xs font-bold`}
-										style={{
-											borderColor: stateFilter
-												? stateFilter.color
-												: "transparent",
-										}}
+										className="text-xl font-bold"
 									>
-										{stateFilter ? (
-											stateFilter.title
-										) : (
-											<>
-												<span className="-mr-1 hidden font-normal md:inline">
-													Filtrar pelo
-												</span>
-												Status
-											</>
-										)}
+										{format(currentDate, "MMMM", {
+											locale: ptBR,
+										})}
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent className="glass">
-									<DropdownMenuItem
-										className="bg-item"
-										onSelect={() => {
-											setStateFilter(undefined);
-										}}
-									>
-										<div
-											className={`size-2 rounded-full bg-gray-500`}
-										></div>
-										<div>Todos os Status</div>
-									</DropdownMenuItem>
-									{states.map((state) => (
+									{eachMonthOfInterval({
+										start: startOfYear(new Date()),
+										end: endOfYear(new Date()),
+									}).map((month) => (
 										<DropdownMenuItem
-											className="bg-item"
-											key={state.slug}
-											onSelect={() =>
-												setStateFilter(state)
-											}
+											className="bg-item capitalize"
+											key={month.getMonth()}
+											onSelect={() => {}}
+											asChild
 										>
-											<div
-												className={`h-2 w-2 rounded-full`}
-												style={{
-													backgroundColor:
-														state.color,
-												}}
-											></div>
-											<div>{state.title}</div>
+											<Link
+												prefetch="intent"
+												to={`/dashboard/${
+													partner.slug
+												}/?date=${format(
+													new Date().setMonth(
+														month.getMonth()
+													),
+													"yyyy-MM-'01'"
+												)}`}
+											>
+												{format(month, "MMMM", {
+													locale: ptBR,
+												})}
+											</Link>
 										</DropdownMenuItem>
 									))}
 								</DropdownMenuContent>
 							</DropdownMenu>
-							<DropdownMenu>
-								<DropdownMenuTrigger asChild>
-									<Button
-										size={"sm"}
-										variant={
-											categoryFilter.length > 0
-												? "secondary"
-												: "ghost"
-										}
-										className={`text-xs font-bold`}
+						</div>
+						<Button size="icon" variant="ghost" asChild>
+							<Link
+								prefetch="intent"
+								to={`/dashboard/${partner?.slug}?date=${format(
+									subMonths(currentDate, 1),
+									"yyyy-MM-dd"
+								)}`}
+							>
+								<ChevronLeftIcon className="h-4 w-4" />
+							</Link>
+						</Button>
+						<Button size="icon" variant="ghost" asChild>
+							<Link
+								prefetch="intent"
+								to={`/dashboard/${partner?.slug}?date=${format(
+									addMonths(currentDate, 1),
+									"yyyy-MM-dd"
+								)}`}
+							>
+								<ChevronRightIcon className="h-4 w-4" />
+							</Link>
+						</Button>
+					</div>
+					<div className="flex items-center gap-1 lg:gap-2">
+						<Button
+							size={"sm"}
+							variant={isInstagramDate ? "default" : "ghost"}
+							onClick={() => {
+								if (isInstagramDate) {
+									params.delete("instagram_date");
+									params.delete("show_content");
+								} else {
+									params.set("instagram_date", "true");
+									params.set("show_content", "true");
+								}
+								setSearchParams(params);
+							}}
+							title={"Organizar ações pelas datas do Instagram"}
+						>
+							<SiInstagram className="size4" />
+						</Button>
+						<Button
+							size={"sm"}
+							variant={showContent ? "default" : "ghost"}
+							onClick={() => {
+								if (showContent) {
+									params.delete("show_content", "");
+								} else {
+									params.set("show_content", "true");
+								}
+								setSearchParams(params);
+							}}
+							title={
+								showContent
+									? "Mostrar conteúdo das postagens"
+									: "Mostrar apenas os títulos"
+							}
+						>
+							{showContent ? (
+								<ImageIcon className="size-4" />
+							) : (
+								<AlignJustifyIcon className="size-4" />
+							)}
+						</Button>
+						<Button
+							size={"sm"}
+							variant={allUsers ? "default" : "ghost"}
+							onClick={() => setAllUsers((allUsers) => !allUsers)}
+							title={
+								allUsers
+									? "Mostrar todos os responsáveis"
+									: "Exibir apenas 'eu' como responsável"
+							}
+						>
+							{allUsers ? (
+								<UsersIcon className="size-4" />
+							) : (
+								<UserIcon className="size-4" />
+							)}
+						</Button>
+						<Button
+							variant={short ? "default" : "ghost"}
+							size={"sm"}
+							onClick={() => setShort((short) => !short)}
+							title={
+								short
+									? "Aumentar o tamanho da ação"
+									: "Diminuir o tamanho da ação"
+							}
+						>
+							{short ? (
+								<ChevronsUpDownIcon className="size-4" />
+							) : (
+								<ChevronsDownUpIcon className="size-4" />
+							)}
+						</Button>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button
+									size={"sm"}
+									variant={"ghost"}
+									className={`border-2 text-xs font-bold`}
+									style={{
+										borderColor: stateFilter
+											? stateFilter.color
+											: "transparent",
+									}}
+								>
+									{stateFilter ? (
+										stateFilter.title
+									) : (
+										<>
+											<span className="-mr-1 hidden font-normal md:inline ">
+												Filtrar pelo
+											</span>
+											Status
+										</>
+									)}
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="glass">
+								<DropdownMenuItem
+									className="bg-item"
+									onSelect={() => {
+										setStateFilter(undefined);
+									}}
+								>
+									<div
+										className={`size-2 rounded-full bg-gray-500`}
+									></div>
+									<div>Todos os Status</div>
+								</DropdownMenuItem>
+								{states.map((state) => (
+									<DropdownMenuItem
+										className="bg-item"
+										key={state.slug}
+										onSelect={() => setStateFilter(state)}
 									>
-										{categoryFilter.length > 0 ? (
-											<>
-												<div>
-													{categoryFilter
-														.map(
-															(category) =>
-																category.title
-														)
-														.join(", ")}
-												</div>
-											</>
-										) : (
-											<>
-												<span className="-mr-1 hidden font-normal md:inline">
-													Filtrar pela
-												</span>
-												Categoria
-											</>
-										)}
-									</Button>
-								</DropdownMenuTrigger>
-								<DropdownMenuContent className="glass">
-									<DropdownMenuCheckboxItem
-										className="bg-select-item flex gap-2"
-										checked={categoryFilter?.length == 0}
-										onCheckedChange={() => {
-											setCategoryFilter([]);
-										}}
-									>
-										<Icons className="h-3 w-3" id="all" />
-										<div>Todas as Categorias</div>
-									</DropdownMenuCheckboxItem>
+										<div
+											className={`h-2 w-2 rounded-full`}
+											style={{
+												backgroundColor: state.color,
+											}}
+										></div>
+										<div>{state.title}</div>
+									</DropdownMenuItem>
+								))}
+							</DropdownMenuContent>
+						</DropdownMenu>
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button
+									size={"sm"}
+									variant={
+										categoryFilter.length > 0
+											? "secondary"
+											: "ghost"
+									}
+									className={`text-xs font-bold`}
+								>
+									{categoryFilter.length > 0 ? (
+										<>
+											<div>
+												{categoryFilter
+													.map(
+														(category) =>
+															category.title
+													)
+													.join(", ")}
+											</div>
+										</>
+									) : (
+										<>
+											<span className="-mr-1 hidden font-normal md:inline">
+												Filtrar pela
+											</span>
+											Categoria
+										</>
+									)}
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="glass">
+								<DropdownMenuCheckboxItem
+									className="bg-select-item flex gap-2"
+									checked={categoryFilter?.length == 0}
+									onCheckedChange={() => {
+										setCategoryFilter([]);
+									}}
+								>
+									<Icons className="h-3 w-3" id="all" />
+									<div>Todas as Categorias</div>
+								</DropdownMenuCheckboxItem>
 
+								<DropdownMenuCheckboxItem
+									className="bg-select-item flex gap-2"
+									checked={
+										categoryFilter
+											? categoryFilter.filter((cf) =>
+													isInstagramFeed(cf.id)
+											  ).length === 3
+											: false
+									}
+									onCheckedChange={(checked) => {
+										if (checked) {
+											setCategoryFilter(
+												categories.filter((category) =>
+													isInstagramFeed(
+														category.slug
+													)
+												)
+											);
+										} else {
+											setCategoryFilter([]);
+										}
+									}}
+								>
+									<Grid3x3Icon className="h-3 w-3" />
+									<div>Feed do Instagram</div>
+								</DropdownMenuCheckboxItem>
+								<DropdownMenuSeparator className="border-t" />
+								{categories.map((category) => (
 									<DropdownMenuCheckboxItem
 										className="bg-select-item flex gap-2"
+										key={category.slug}
 										checked={
 											categoryFilter
-												? categoryFilter.filter((cf) =>
-														isInstagramFeed(cf.id)
-												  ).length === 3
-												: false
-										}
-										onCheckedChange={(checked) => {
-											if (checked) {
-												setCategoryFilter(
-													categories.filter(
-														(category) =>
-															isInstagramFeed(
-																category.slug
-															)
-													)
-												);
-											} else {
-												setCategoryFilter([]);
-											}
-										}}
-									>
-										<Grid3x3Icon className="h-3 w-3" />
-										<div>Feed do Instagram</div>
-									</DropdownMenuCheckboxItem>
-									<DropdownMenuSeparator className="border-t" />
-									{categories.map((category) => (
-										<DropdownMenuCheckboxItem
-											className="bg-select-item flex gap-2"
-											key={category.slug}
-											checked={
-												categoryFilter
-													? categoryFilter?.findIndex(
-															(c) =>
-																category.slug ===
-																c.slug
-													  ) >= 0
-													: false
-											}
-											onCheckedChange={(checked) => {
-												if (
-													!checked &&
-													categoryFilter?.findIndex(
+												? categoryFilter?.findIndex(
 														(c) =>
 															category.slug ===
 															c.slug
-													) >= 0
-												) {
-													const filters =
-														categoryFilter.filter(
-															(c) =>
-																c.slug !=
-																category.slug
-														);
-
-													setCategoryFilter(filters);
-												} else {
-													setCategoryFilter(
-														categoryFilter
-															? [
-																	...categoryFilter,
-																	category,
-															  ]
-															: [category]
+												  ) >= 0
+												: false
+										}
+										onCheckedChange={(checked) => {
+											if (
+												!checked &&
+												categoryFilter?.findIndex(
+													(c) =>
+														category.slug === c.slug
+												) >= 0
+											) {
+												const filters =
+													categoryFilter.filter(
+														(c) =>
+															c.slug !=
+															category.slug
 													);
-												}
-											}}
-										>
-											<Icons
-												id={category.slug}
-												className="h-3 w-3"
-											/>
-											<div>{category.title}</div>
-										</DropdownMenuCheckboxItem>
-									))}
-								</DropdownMenuContent>
-							</DropdownMenu>
-						</div>
+
+												setCategoryFilter(filters);
+											} else {
+												setCategoryFilter(
+													categoryFilter
+														? [
+																...categoryFilter,
+																category,
+														  ]
+														: [category]
+												);
+											}
+										}}
+									>
+										<Icons
+											id={category.slug}
+											className="h-3 w-3"
+										/>
+										<div>{category.title}</div>
+									</DropdownMenuCheckboxItem>
+								))}
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
-					<DndContext
-						onDragEnd={handleDragEnd}
-						sensors={sensors}
-						id={id}
-					>
+				</div>
+
+				{/* Calendário */}
+				<DndContext onDragEnd={handleDragEnd} sensors={sensors} id={id}>
+					<div className=" overflow-x-auto overflow-y-hidden">
 						<div
-							className="scrollbars-horizontal main-container h-full overflow-y-auto px-4 md:px-8"
+							className="w-full flex flex-col min-w-[1200px] main-container h-full"
 							id="calendar-full"
 						>
+							{/* Dias do Calendário */}
 							<div
-								className={`grid min-w-[1200px] grid-cols-7 border-t border-b px-0 py-2 text-center text-xs font-bold tracking-wider uppercase`}
+								className={`grid  grid-cols-7 px-4 md:px-8 py-2 border-b text-xs font-bold tracking-wider uppercase `}
 							>
 								{eachDayOfInterval({
 									start: startOfWeek(new Date()),
@@ -709,9 +693,10 @@ export default function Partner() {
 									);
 								})}
 							</div>
+							{/* Calendário Content */}
 							<div
 								id="calendar"
-								className={`scrollbars scrollbars-thin grid min-w-[1200px] grid-cols-7 pb-32`}
+								className={`grid px-4 md:px-8  overflow-y-auto grid-cols-7 pb-32`}
 							>
 								{calendar.map((day, i) => (
 									<CalendarDay
@@ -727,21 +712,43 @@ export default function Partner() {
 								))}
 							</div>
 						</div>
-					</DndContext>
-				</div>
-				{/* Instagram Grid */}
-				{showFeed && (
-					<div
-						className="w-full max-w-[600px] min-w-96 py-4 pb-20"
-						id="instagram-grid"
-					>
+					</div>
+				</DndContext>
+			</div>
+
+			{/* Instagram Grid */}
+			{showFeed && (
+				<div
+					className="w-full  relative max-w-[600px] flex flex-col min-w-96"
+					id="instagram-grid"
+				>
+					{/* Instagram Grid Header */}
+					<div className="items-center  bg-card px-4 py-3  border-b leading-none flex gap-2">
+						<div>
+							<Avatar
+								item={{
+									short: partner.short,
+									bg: partner.colors[0],
+									fg: partner.colors[1],
+								}}
+								size="md"
+							/>
+						</div>
+						<div>
+							<div className="font-medium">{partner.title}</div>
+							<div className="text-xs">@{partner.slug}</div>
+						</div>
+					</div>
+
+					{/* Instagram Grid Content */}
+					<div className="px-3 py-3 border-l overflow-hidden">
 						<GridOfActions
 							partner={partner}
 							actions={instagramActions as Action[]}
 						/>
 					</div>
-				)}
-			</div>
+				</div>
+			)}
 		</div>
 	);
 }

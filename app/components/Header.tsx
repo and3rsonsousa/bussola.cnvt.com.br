@@ -42,6 +42,7 @@ import {
 	useNavigate,
 	useNavigation,
 	useOutletContext,
+	useSearchParams,
 } from "react-router";
 
 export default function Header({
@@ -53,10 +54,14 @@ export default function Header({
 	const navigation = useNavigation();
 	const navigate = useNavigate();
 	const fetchers = useFetchers();
-	const { showFeed, setShowFeed } = useOutletContext() as ContextType;
+	const [searchParams, setSearchParams] = useSearchParams();
+
 	const [progressView, setProgressView] = useState<
 		"today" | "week" | "month"
 	>("today");
+
+	const showFeed = !!searchParams.get("show_feed");
+	const params = new URLSearchParams(searchParams);
 
 	const { partners, person } = matches[1].data as DashboardRootType;
 	let { actions, actionsChart, partner } = (
@@ -90,7 +95,7 @@ export default function Header({
 
 	return (
 		<header
-			className={`flex items-center justify-between gap-4 border-b px-6 py-2`}
+			className={`flex items-center bg-card justify-between gap-4 border-b px-6 py-2`}
 		>
 			{/* Logo */}
 			<div className="flex items-center gap-1">
@@ -122,7 +127,13 @@ export default function Header({
 							<Button
 								variant={showFeed ? "default" : "ghost"}
 								onClick={() => {
-									setShowFeed((value) => !value);
+									if (showFeed) {
+										params.delete("show_feed");
+									} else {
+										params.set("show_feed", "true");
+									}
+
+									setSearchParams(params);
 								}}
 								size={"icon"}
 							>

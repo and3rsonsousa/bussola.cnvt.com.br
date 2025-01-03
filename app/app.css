@@ -2,9 +2,10 @@
 
 @layer base {
 	:root {
-		--background: 0 0% 100%;
-		--card: 230 20% 96%;
-		--popover: 0 100% 100%;
+		/* --background: 0 0% 100%; */
+		--background: 200 10% 96%;
+		--card: 0 0% 100%;
+		--popover: 0 0% 100%;
 		--primary: 80 100% 55%;
 		--primary-hover: 80 100% 65%;
 		--secondary: 220 5% 92%;
@@ -219,23 +220,26 @@ body {
 }
 
 .debug-1 {
-	@apply border-2 border-red-500;
+	@apply border-2 border-[#f00];
 }
 .debug-2 {
-	@apply border-2 border-yellow-500;
+	@apply border-2 border-[#ff0];
 }
 .debug-3 {
-	@apply border-2 border-green-500;
+	@apply border-2 border-[#0f0];
 }
 .debug-4 {
-	@apply border-2 border-sky-500;
+	@apply border-2 border-[#0ff];
 }
 .debug-5 {
-	@apply border-2 border-pink-500;
+	@apply border-2 border-[#00f];
+}
+.debug-6 {
+	@apply border-2 border-[#f0f];
 }
 
 .action-item {
-	@apply ring-ring ring-offset-background bg-card hover:bg-secondary relative flex w-full rounded-l-sm rounded-r-sm ring-offset-2 outline-hidden transition-colors select-none focus-within:ring-2 focus:ring-2;
+	@apply ring-ring ring-offset-background bg-card hover:bg-secondary relative flex w-full rounded-md ring-offset-2 outline-hidden transition-colors select-none focus-within:ring-2 focus:ring-2 border;
 }
 
 .action-item-block {
@@ -369,19 +373,21 @@ input::-webkit-inner-spin-button {
 
 .dragover {
 	/* @apply border-primary bg-primary/10; */
-	@apply bg-primary/75 z-0;
+	/* @apply bg-primary/75 z-0; */
+	@apply bg-secondary z-0;
 }
-.dark .dragover {
-	/* @apply border-primary bg-primary/10; */
-	@apply bg-primary/25 z-0;
+/* .dark .dragover {
+	@apply bg-secondary z-0;
+} */
+
+.scrollbars {
+	@apply mr-1 h-full overflow-hidden overflow-y-auto px-1;
 }
 
 .scrollbars::-webkit-scrollbar {
-	@apply mr-4 block w-2;
+	@apply block w-2;
 }
-.scrollbars-thin::-webkit-scrollbar {
-	@apply mr-4 block w-1;
-}
+
 .scrollbars::-webkit-scrollbar-button {
 	@apply hidden;
 }
@@ -390,14 +396,37 @@ input::-webkit-inner-spin-button {
 	@apply bg-transparent;
 }
 .scrollbars::-webkit-scrollbar-track-piece {
-	@apply mr-4 bg-transparent;
+	@apply bg-transparent;
 }
 
 .scrollbars::-webkit-scrollbar-thumb {
 	@apply rounded-full;
 }
 
+.scrollbars-horizontal {
+	@apply mb-1 h-full overflow-x-auto overflow-y-hidden py-1;
+	scrollbars-gutter: stable;
+}
+
+.scrollbars-horizontal::-webkit-scrollbar {
+	@apply block h-2;
+}
+
+.scrollbars-horizontal::-webkit-scrollbar-button {
+	@apply hidden;
+}
+
+.scrollbars-horizontal::-webkit-scrollbar-track {
+	@apply bg-transparent;
+}
+.scrollbars-horizontal::-webkit-scrollbar-track-piece {
+	@apply mx-1 bg-transparent;
+}
+.scrollbars-horizontal::-webkit-scrollbar-thumb {
+	@apply h-2 rounded-full;
+}
+
 .scrollbars-horizontal::-webkit-scrollbar-thumb,
 .scrollbars::-webkit-scrollbar-thumb {
-	@apply bg-foreground/15;
+	@apply bg-foreground/20;
 }
