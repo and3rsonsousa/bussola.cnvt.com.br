@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { type MetaFunction, type LoaderFunctionArgs } from "react-router";
 import {
 	addMonths,
 	eachDayOfInterval,
@@ -7,6 +6,7 @@ import {
 	endOfMonth,
 	endOfWeek,
 	endOfYear,
+	format,
 	isSameDay,
 	isSameMonth,
 	isToday,
@@ -16,7 +16,6 @@ import {
 	startOfYear,
 	subMonths,
 } from "date-fns";
-import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
 	AlignJustifyIcon,
@@ -32,13 +31,12 @@ import {
 } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import {
-	Link,
-	redirect,
+	Link, type LoaderFunctionArgs, type MetaFunction, redirect,
 	useLoaderData,
 	useMatches,
 	useOutletContext,
 	useSearchParams,
-	useSubmit,
+	useSubmit
 } from "react-router";
 import invariant from "tiny-invariant";
 import {
@@ -177,6 +175,8 @@ export default function Partner() {
 		params.set(key, value);
 	}
 
+	console.log({params})
+
 	const isInstagramDate = !!searchParams.get("instagram_date");
 	const showContent = !!searchParams.get("show_content");
 	const showFeed = !!searchParams.get("show_feed");
@@ -260,10 +260,12 @@ export default function Partner() {
 				const code = event.code;
 
 				if (code === "KeyC") {
-					// setShowContent((value) => !value);
-					params.set("show_content", "");
+
+					console.log({params})
+
+					params.delete("show_content");
 					setSearchParams(params);
-					// setShowContent((value) => !value);
+					
 				} else if (code === "KeyR") {
 					setAllUsers((value) => !value);
 				} else if (code === "KeyS") {
@@ -434,7 +436,7 @@ export default function Partner() {
 							variant={showContent ? "default" : "ghost"}
 							onClick={() => {
 								if (showContent) {
-									params.delete("show_content", "");
+									params.delete("show_content");
 								} else {
 									params.set("show_content", "true");
 								}

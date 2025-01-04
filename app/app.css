@@ -256,7 +256,7 @@ body {
 }
 
 .action-item {
-	@apply ring-ring ring-offset-background bg-card hover:bg-popover relative flex w-full rounded-md focus:ring-offset-2 outline-hidden select-none focus-within:ring-2 focus:ring-2 shadow-sm hover:z-10 transition-[colors_shadow] hover:shadow-xl cursor-pointer  inset-shadow-xs inset-shadow-highlight ;
+	@apply ring-ring ring-offset-background bg-card hover:bg-popover relative flex w-full rounded-md focus:ring-offset-2 outline-hidden select-none focus-within:ring-2 focus:ring-2 shadow-sm hover:z-10 transition-[color,box-shadow] hover:shadow-xl cursor-pointer  inset-shadow-xs inset-shadow-highlight ;
 }
 
 .action-item-block {
@@ -271,11 +271,11 @@ body {
 	@apply bg-primary text-primary-foreground hover:bg-primary-hover;
 }
 
-.dark .action-item.action-delayed {
-	@apply bg-rose-950 text-rose-100;
-}
 .action-item.action-delayed {
 	@apply bg-rose-50 text-rose-700 border border-rose-300;
+}
+.dark .action-item.action-delayed {
+	@apply bg-rose-950 text-rose-100 border-rose-900;
 }
 
 .action-content-delayed > .late-border {
