@@ -9,8 +9,6 @@ import { cn } from "~/lib/utils";
 export const ThemeColorToggle = () => {
   const [, , themeColor, setThemeColor] = useTheme();
 
-  console.log(themeColor);
-
   return (
     <div className="flex justify-between gap-2 p-2">
       <button

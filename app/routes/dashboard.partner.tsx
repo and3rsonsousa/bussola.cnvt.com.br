@@ -175,8 +175,6 @@ export default function Partner() {
 		params.set(key, value);
 	}
 
-	console.log({params})
-
 	const isInstagramDate = !!searchParams.get("instagram_date");
 	const showContent = !!searchParams.get("show_content");
 	const showFeed = !!searchParams.get("show_feed");
@@ -260,8 +258,6 @@ export default function Partner() {
 				const code = event.code;
 
 				if (code === "KeyC") {
-
-					console.log({params})
 
 					params.delete("show_content");
 					setSearchParams(params);
@@ -783,7 +779,7 @@ export const CalendarDay = ({
 			<div
 				ref={setNodeRef}
 				id={`day_${format(parseISO(day.date), "yyyy-MM-dd")}`}
-				className={`transition group/day relative flex h-full flex-col rounded border-2 border-transparent px-2 pb-4 ${
+				className={`transition group/day relative flex h-full flex-col rounded border-2 border-transparent hover:bg-accent/50 px-2 pb-4 ${
 					Math.floor(Number(index) / 7) % 2 === 0
 						? "item-even"
 						: "item-odd"

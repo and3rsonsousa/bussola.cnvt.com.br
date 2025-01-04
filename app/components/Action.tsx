@@ -1008,6 +1008,8 @@ function ShortcutActions({ action }: { action: Action }) {
 	const matches = useMatches();
 	const [searchParams] = useSearchParams();
 	const isInstagramDate = !!searchParams.get("instagram_date");
+	
+	
 
 	const { states, categories, priorities, person, sprints } = matches[1]
 		.data as DashboardRootType;
@@ -1957,8 +1959,12 @@ export function getNewDateValues(
 				),
 			};
 			// console.log("Corrigindo", { values });
+		}else{
+			values = {
+				date: format(newDate, "yyyy-MM-dd HH:mm:ss")}
 		}
 	}
+	
 
 	return values;
 }
