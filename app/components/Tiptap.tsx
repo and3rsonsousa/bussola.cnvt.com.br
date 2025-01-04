@@ -42,7 +42,7 @@ export default function Tiptap({
 	];
 
 	return (
-		<div className="editor-tiptap bg-input overflow-hidden rounded p-4">
+		<div className="editor-tiptap border bg-input overflow-hidden rounded p-4">
 			<EditorProvider
 				immediatelyRender={false}
 				onBlur={({ editor }) => onBlur(editor.getHTML())}
@@ -60,7 +60,7 @@ export default function Tiptap({
 				>
 					<Menu type={2} />
 				</FloatingMenu>
-				<BubbleMenu editor={null} className="glass rounded-lg p-1">
+				<BubbleMenu editor={null} className="bg-content rounded-lg p-1">
 					<Menu type={3} />
 				</BubbleMenu>
 			</EditorProvider>

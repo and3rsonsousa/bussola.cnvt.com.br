@@ -975,7 +975,7 @@ function Sprint() {
 							<SelectTrigger>
 								<SelectValue />
 							</SelectTrigger>
-							<SelectContent className="glass">
+							<SelectContent className="bg-content">
 								<SelectItem value="state">Status</SelectItem>
 								<SelectItem value="priority">
 									Prioridade

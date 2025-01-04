@@ -2,7 +2,7 @@
 
 @layer base {
 	:root {
-		/* --background: 0 0% 100%; */
+		
 		--background: 200 5% 94%;
 		--foreground: 200 10% 10%;
 
@@ -28,8 +28,9 @@
 		--destructive: 355 85% 60%;
 		--destructive-foreground: 0 0% 100%;
 
-		--border: 200 10% 90%;
-		--input: 200 10% 96%;
+		--highlight: 0 0% 100%;
+		--border: 200 10% 86%;
+		--input: 200 10% 98%;
 		--ring: 200 20% 5%;
 		--radius: 12px;
 
@@ -39,23 +40,29 @@
 	}
 
 	.dark {
-		--background: 220 30% 2%;
-		--card: 220 25% 12%;
-		--popover: 220 12% 13%;
-		--primary: 80 90% 50%;
-		--secondary: 210 15% 20%;
-		--muted: 220 10% 25%;
-		--accent: 220 12% 22%;
-		--destructive: 350 75% 45%;
+		--background: 210 15% 2%;
+		--foreground: 210 15% 98%;
 
-		--foreground: 210 12% 98%;
-		--card-foreground: 210 15% 90%;
-		--popover-foreground: 210 15% 90%;
-		--secondary-foreground: 220 15% 90%;
-		--muted-foreground: 210 10% 50%;
-		--accent-foreground: 210 15% 90%;
+		--card: 210 15% 6%;
+		--card-foreground: 210 15% 98%;
+		
+		--popover: 210 15% 12%;
+		--popover-foreground: 210 15% 98%;
+		
+		--muted: 210 12% 25%;
+		--muted-foreground: 210 12% 40%;
+
+		--secondary: 210 8% 35%;
+		--secondary-foreground: 210 15% 98%;
+		
+		--accent: 210 15% 20%;
+		--accent-foreground: 210 15% 98%;
+		
+		--destructive: 350 75% 45%;
 		--destructive-foreground: 250 20% 98%;
-		--border: 220 10% 20%;
+
+		--highlight: 210 15% 15%;
+		--border: 220 10% 30%;
 		--input: 220 10% 10%;
 		--ring: 80 90% 50%;
 	}
@@ -73,7 +80,7 @@
 		--ring: 250 100% 55%;
 	}
 
-	.carmin {
+	.carmine {
 		--primary: 350 100% 55%;
 		--primary-hover: 345 100% 45%;
 		--primary-foreground: 0 0% 100%;
@@ -173,6 +180,8 @@
 	--color-alert: var(--alert);
 	--color-error: var(--error);
 
+	--color-highlight: hsl(var(--highlight));
+
 	--radius-xs: calc(var(--radius) - 8px); /*  4 */
 	--radius-sm: calc(var(--radius) - 4px); /*  8 */
 	--radius-md: calc(var(--radius) + 2px); /* 14 */
@@ -212,8 +221,8 @@ body {
 	@apply bg-background text-foreground antialiased;
 }
 
-.glass {
-	@apply bg-popover rounded-xl shadow-2xl border-0 py-4;
+.bg-content {
+	@apply bg-popover rounded-xl shadow-2xl border-0 ring ring-border/50;
 }
 
 .bg-label {
@@ -247,26 +256,26 @@ body {
 }
 
 .action-item {
-	@apply ring-ring ring-offset-background bg-card hover:bg-popover relative flex w-full rounded-md focus:ring-offset-2 outline-hidden select-none focus-within:ring-2 focus:ring-2 shadow-sm hover:z-10 transition-[colors_shadow] hover:shadow-lg cursor-pointer  inset-shadow-xs inset-shadow-white;
+	@apply ring-ring ring-offset-background bg-card hover:bg-popover relative flex w-full rounded-md focus:ring-offset-2 outline-hidden select-none focus-within:ring-2 focus:ring-2 shadow-sm hover:z-10 transition-[colors_shadow] hover:shadow-xl cursor-pointer  inset-shadow-xs inset-shadow-highlight ;
 }
 
 .action-item-block {
 	@apply bg-card hover:bg-popover isolate rounded-lg px-6 py-4;
 }
 
-.action-sprint {
-	@apply bg-primary text-primary-foreground hover:bg-primary-hover;
+.dark .action-item{
+	@apply shadow-black
 }
 
-.action-row {
-	@apply px-3 py-2;
+.action-sprint {
+	@apply bg-primary text-primary-foreground hover:bg-primary-hover;
 }
 
 .dark .action-item.action-delayed {
 	@apply bg-rose-950 text-rose-100;
 }
 .action-item.action-delayed {
-	@apply bg-rose-50 text-rose-700;
+	@apply bg-rose-50 text-rose-700 border border-rose-300;
 }
 
 .action-content-delayed > .late-border {
@@ -356,7 +365,7 @@ input::-webkit-inner-spin-button {
 }
 
 .button-trigger {
-	@apply ring-ring ring-offset-background hover:bg-secondary rounded-md border-none px-3 py-2 text-sm font-medium ring-offset-2 outline-hidden focus:ring-2;
+	@apply ring-ring ring-offset-background rounded-md border-none px-3 py-2 text-sm font-medium ring-offset-2 outline-hidden focus:ring-2 hover:bg-accent cursor-pointer;
 }
 
 .button-trigger__squared {
@@ -375,18 +384,9 @@ input::-webkit-inner-spin-button {
 	}
 }
 
-.item-container {
-	@apply transition;
-}
-
-.dragover {
-	/* @apply border-primary bg-primary/10; */
-	/* @apply bg-primary/75 z-0; */
+.dragover {	
 	@apply bg-accent z-0;
 }
-/* .dark .dragover {
-	@apply bg-secondary z-0;
-} */
 
 .scrollbars-v {
 	@apply mr-1 h-full overflow-hidden overflow-y-auto px-1;

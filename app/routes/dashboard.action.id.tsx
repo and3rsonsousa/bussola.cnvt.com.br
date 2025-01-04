@@ -370,7 +370,7 @@ function Title({
 						</Button>
 					</DropdownMenuTrigger>
 
-					<DropdownMenuContent className="glass">
+					<DropdownMenuContent className="bg-content">
 						<DropdownMenuItem
 							className="bg-item"
 							onSelect={async () => {
@@ -464,7 +464,7 @@ function Description({
 								</Button>
 							</DropdownMenuTrigger>
 
-							<DropdownMenuContent className="glass">
+							<DropdownMenuContent className="bg-content">
 								<DropdownMenuItem
 									className="bg-item"
 									onSelect={async () => {
@@ -536,7 +536,7 @@ function Description({
 								</Button>
 							</DropdownMenuTrigger>
 
-							<DropdownMenuContent className="glass">
+							<DropdownMenuContent className="bg-content">
 								<DropdownMenuItem
 									className="bg-item"
 									onSelect={async () => {
@@ -630,7 +630,7 @@ function Description({
 								</Button>
 							</DropdownMenuTrigger>
 
-							<DropdownMenuContent className="glass">
+							<DropdownMenuContent className="bg-content">
 								<DropdownMenuItem
 									className="bg-item"
 									onSelect={async () => {
@@ -820,7 +820,7 @@ function RightSide({
 									<SparklesIcon className="size-4" />
 								</Button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent className="glass">
+							<DropdownMenuContent className="bg-content">
 								<DropdownMenuItem
 									onSelect={async () => {
 										fetcher.submit(
@@ -1163,7 +1163,7 @@ function LowerBar({
 					<DropdownMenuTrigger className="button-trigger button-trigger__squared">
 						<Icons id={action.category} />
 					</DropdownMenuTrigger>
-					<DropdownMenuContent className="glass">
+					<DropdownMenuContent className="bg-content">
 						{areas.map((area, i) => (
 							<DropdownMenuGroup key={area.id}>
 								{i > 0 && <DropdownMenuSeparator />}
@@ -1220,7 +1220,7 @@ function LowerBar({
 					<DropdownMenuTrigger className="button-trigger button-trigger__squared">
 						<Icons id={action.priority} type="priority" />
 					</DropdownMenuTrigger>
-					<DropdownMenuContent className="glass">
+					<DropdownMenuContent className="bg-content">
 						{priorities.map((priority) => (
 							<DropdownMenuItem
 								key={priority.slug}
@@ -1269,7 +1269,7 @@ function LowerBar({
 									}}
 								></div>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent className="glass">
+							<DropdownMenuContent className="bg-content">
 								{actionPartners[0].colors.map(
 									(color, i) =>
 										i !== 1 && (
@@ -1407,12 +1407,12 @@ export const TriggersSelect = ({
 }) => (
 	<Select value={trigger} onValueChange={(value) => setTrigger(value)}>
 		<SelectTrigger
-			className="h-auto gap-1 px-3 py-0.5 text-xs"
+			className="h-auto font-medium gap-1 px-3 py-0.5 text-xs border-0"
 			title="Gatilho Mental"
 		>
 			<SelectValue />
 		</SelectTrigger>
-		<SelectContent className="glass">
+		<SelectContent className="bg-content">
 			{TRIGGERS.map((trigger) => (
 				<SelectItem
 					className="bg-select-item"

@@ -12,6 +12,7 @@ import {
 import {
 	NonFlashOfWrongThemeEls,
 	Theme,
+	ThemeColor,
 	ThemeProvider,
 	useTheme,
 } from "~/lib/theme-provider";
@@ -26,6 +27,13 @@ import stylesheet from "./app.css?url";
 
 export type LoaderData = {
 	theme: Theme | null;
+	themeColor: ThemeColor | null;
+	env: {
+		SUPABASE_URL: string,
+		SUPABASE_KEY: string,
+		CLOUDINARY_CLOUD_NAME: string,
+		CLOUDINARY_UPLOAD_PRESET: string,
+	}
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -33,6 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 	return {
 		theme: themeSession.getTheme(),
+		themeColor: themeSession.getThemeColor(),
 		env: {
 			SUPABASE_URL: process.env.SUPABASE_URL!,
 			SUPABASE_KEY: process.env.SUPABASE_KEY!,
@@ -47,12 +56,12 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function LayoutBase({ children }: { children: React.ReactNode }) {
-	let [theme] = useTheme();
+	let [theme, , themeColor] = useTheme();
 
 	const data = useLoaderData<typeof loader>();
 
 	return (
-		<html lang="pt-br" className={clsx(theme)}>
+		<html lang="pt-br" className={clsx(theme, themeColor)}>
 			<head>
 				<meta charSet="utf-8" />
 				<meta
@@ -78,7 +87,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 	const data = useLoaderData<typeof loader>();
 
 	return (
-		<ThemeProvider specifyedTheme={data.theme}>
+		<ThemeProvider specifyedTheme={data.theme} specifyedThemeColor={data.themeColor}>
 			<LayoutBase>{children}</LayoutBase>
 		</ThemeProvider>
 	);

@@ -1260,7 +1260,7 @@ export function ContextMenuItems({
 	const _partners = getPartners(action.partners);
 
 	return (
-		<ContextMenuContent className="glass">
+		<ContextMenuContent className="bg-content">
 			{/* Editar */}
 			<ContextMenuItem asChild>
 				<Link
@@ -1310,7 +1310,7 @@ export function ContextMenuItems({
 					<span>Mudar horário</span>
 				</ContextMenuSubTrigger>
 				<ContextMenuPortal>
-					<ContextMenuSubContent className="glass font-medium">
+					<ContextMenuSubContent className="bg-content font-medium">
 						{Array(12)
 							.fill(1)
 							.map((a, i) => (
@@ -1343,7 +1343,7 @@ export function ContextMenuItems({
 					<span>Adiar</span>
 				</ContextMenuSubTrigger>
 				<ContextMenuPortal>
-					<ContextMenuSubContent className="glass font-medium">
+					<ContextMenuSubContent className="bg-content font-medium">
 						{/* Adiar horas */}
 						<ContextMenuItem
 							asChild
@@ -1582,7 +1582,7 @@ export function ContextMenuItems({
 					</div>
 				</ContextMenuSubTrigger>
 				<ContextMenuPortal>
-					<ContextMenuSubContent className="glass">
+					<ContextMenuSubContent className="bg-content">
 						{partners.map((partner) => (
 							<ContextMenuCheckboxItem
 								checked={
@@ -1648,7 +1648,7 @@ export function ContextMenuItems({
 					<span>{state?.title}</span>
 				</ContextMenuSubTrigger>
 				<ContextMenuPortal>
-					<ContextMenuSubContent className="glass">
+					<ContextMenuSubContent className="bg-content">
 						{states.map((state) => (
 							<ContextMenuItem
 								key={state.slug}
@@ -1695,7 +1695,7 @@ export function ContextMenuItems({
 					</span>
 				</ContextMenuSubTrigger>
 				<ContextMenuPortal>
-					<ContextMenuSubContent className="glass">
+					<ContextMenuSubContent className="bg-content">
 						{areas.map((area, i) => (
 							<ContextMenuGroup key={area.id}>
 								{i > 0 && <ContextMenuSeparator />}
@@ -1763,7 +1763,7 @@ export function ContextMenuItems({
 					</div>
 				</ContextMenuSubTrigger>
 				<ContextMenuPortal>
-					<ContextMenuSubContent className="glass">
+					<ContextMenuSubContent className="bg-content">
 						{people.map((person) => (
 							<ContextMenuCheckboxItem
 								checked={
@@ -1842,7 +1842,7 @@ export function ContextMenuItems({
 						></div>
 					</ContextMenuSubTrigger>
 					<ContextMenuPortal>
-						<ContextMenuSubContent className="glass">
+						<ContextMenuSubContent className="bg-content">
 							{getPartners(action.partners)[0].colors.map(
 								(color, i) =>
 									i !== 1 && (
@@ -1888,7 +1888,7 @@ export function ContextMenuItems({
 					</span>
 				</ContextMenuSubTrigger>
 				<ContextMenuPortal>
-					<ContextMenuSubContent className="glass">
+					<ContextMenuSubContent className="bg-content">
 						{priorities.map((priority) => (
 							<ContextMenuItem
 								key={priority.slug}

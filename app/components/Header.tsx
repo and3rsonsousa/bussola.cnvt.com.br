@@ -12,6 +12,14 @@ import {
 	Users2Icon,
 } from "lucide-react";
 import { useState } from "react";
+import {
+	Link,
+	useFetchers,
+	useMatches,
+	useNavigate,
+	useNavigation,
+	useSearchParams
+} from "react-router";
 import { SOW } from "~/lib/constants";
 import {
 	Avatar,
@@ -22,6 +30,10 @@ import {
 	getTodayActions,
 	ReportReview,
 } from "~/lib/helpers";
+import CreateAction from "./CreateAction";
+import Loader from "./Loader";
+import { CircularProgress } from "./Progress";
+import { ThemeColorToggle, ThemeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
 import {
 	DropdownMenu,
@@ -31,19 +43,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import CreateAction from "./CreateAction";
-import Loader from "./Loader";
-import { CircularProgress } from "./Progress";
-import { ThemeToggle } from "./ThemeToggle";
-import {
-	Link,
-	useFetchers,
-	useMatches,
-	useNavigate,
-	useNavigation,
-	useOutletContext,
-	useSearchParams,
-} from "react-router";
 
 export default function Header({
 	setOpen,
@@ -86,12 +85,7 @@ export default function Header({
 			: partner;
 
 	const lateActions = getDelayedActions({ actions });
-	const setTheme = function (theme: string) {
-		document
-			.querySelector("html")
-			?.classList.remove("base", "fuchsia", "indigo", "carmin");
-		document.querySelector("html")?.classList.add(theme);
-	};
+	
 
 	return (
 		<header
@@ -229,7 +223,7 @@ export default function Header({
 								)}
 							</Button>
 						</DropdownMenuTrigger>
-						<DropdownMenuContent className="glass mr-8">
+						<DropdownMenuContent className="bg-content mr-8">
 							<DropdownMenuLabel className="bg-label">
 								Consultoria de Marketing
 							</DropdownMenuLabel>
@@ -321,47 +315,16 @@ export default function Header({
 							</Button>
 						</DropdownMenuTrigger>
 
-						<DropdownMenuContent className="glass">
+						<DropdownMenuContent className="bg-content">
 							<ThemeToggle
 								element="dropdownmenuitem"
 								className="bg-item"
 								hasText
 							/>
 
-							<div className="flex justify-between gap-2 p-2">
-								<button
-									className="button-trigger"
-									onClick={() => {
-										setTheme("base");
-									}}
-								>
-									<div className="size-6 rounded bg-lime-300"></div>
-								</button>
-								<button
-									className="button-trigger"
-									onClick={() => {
-										setTheme("fuchsia");
-									}}
-								>
-									<div className="size-6 rounded bg-fuchsia-500"></div>
-								</button>
-								<button
-									className="button-trigger"
-									onClick={() => {
-										setTheme("indigo");
-									}}
-								>
-									<div className="size-6 rounded bg-blue-600"></div>
-								</button>
-								<button
-									className="button-trigger"
-									onClick={() => {
-										setTheme("carmin");
-									}}
-								>
-									<div className="size-6 rounded bg-red-600"></div>
-								</button>
-							</div>
+							{/* Cores Colors */}
+
+							<ThemeColorToggle />
 
 							<DropdownMenuSeparator />
 

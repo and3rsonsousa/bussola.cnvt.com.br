@@ -357,7 +357,7 @@ export default function Partner() {
 										})}
 									</Button>
 								</DropdownMenuTrigger>
-								<DropdownMenuContent className="glass">
+								<DropdownMenuContent className="bg-content">
 									{eachMonthOfInterval({
 										start: startOfYear(new Date()),
 										end: endOfYear(new Date()),
@@ -508,7 +508,7 @@ export default function Partner() {
 									)}
 								</Button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent className="glass">
+							<DropdownMenuContent className="bg-content">
 								<DropdownMenuItem
 									className="bg-item"
 									onSelect={() => {
@@ -569,7 +569,7 @@ export default function Partner() {
 									)}
 								</Button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent className="glass">
+							<DropdownMenuContent className="bg-content">
 								<DropdownMenuCheckboxItem
 									className="bg-select-item flex gap-2"
 									checked={categoryFilter?.length == 0}
@@ -777,11 +777,11 @@ export const CalendarDay = ({
 	});
 
 	return (
-		<div className="py-2">
+		<div className="py-2"> 
 			<div
 				ref={setNodeRef}
 				id={`day_${format(parseISO(day.date), "yyyy-MM-dd")}`}
-				className={`item-container group/day relative flex h-full flex-col rounded border-2 border-transparent px-2 pb-4 ${
+				className={`transition group/day relative flex h-full flex-col rounded border-2 border-transparent px-2 pb-4 ${
 					Math.floor(Number(index) / 7) % 2 === 0
 						? "item-even"
 						: "item-odd"
