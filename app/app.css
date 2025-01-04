@@ -436,5 +436,5 @@ input::-webkit-inner-spin-button {
 
 .scrollbars-h::-webkit-scrollbar-thumb,
 .scrollbars-v::-webkit-scrollbar-thumb {
-	@apply bg-secondary/10;
+	@apply bg-accent;
 }

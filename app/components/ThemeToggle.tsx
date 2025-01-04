@@ -21,7 +21,7 @@ export const ThemeColorToggle = () => {
           setThemeColor(ThemeColor.LIME);
         }}
       >
-        <div className="size-6 rounded bg-lime-300"></div>
+        <div className="size-6 rounded border-2 border-popover bg-lime-300"></div>
       </button>
       <button
         className={cn(
@@ -31,7 +31,7 @@ export const ThemeColorToggle = () => {
           setThemeColor(ThemeColor.FUCHSIA);
         }}
       >
-        <div className="size-6 rounded bg-fuchsia-500"></div>
+        <div className="size-6 rounded border-2 border-popover bg-fuchsia-500"></div>
       </button>
       <button
         className={cn(
@@ -41,7 +41,7 @@ export const ThemeColorToggle = () => {
           setThemeColor(ThemeColor.INDIGO);
         }}
       >
-        <div className="size-6 rounded bg-indigo-600"></div>
+        <div className="size-6 rounded border-2 border-popover bg-indigo-600"></div>
       </button>
       <button
         className={cn(
@@ -51,11 +51,12 @@ export const ThemeColorToggle = () => {
           setThemeColor(ThemeColor.CARMINE);
         }}
       >
-        <div className="size-6 rounded bg-rose-600"></div>
+        <div className="size-6 rounded border-2 border-popover bg-rose-600"></div>
       </button>
     </div>
   );
 };
+
 export const ThemeToggle = ({
   element = "button",
   className,
