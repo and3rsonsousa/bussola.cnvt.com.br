@@ -89,7 +89,7 @@ export default function Header({
 
 	return (
 		<header
-			className={`flex items-center bg-card justify-between gap-4 border-b px-6 py-2`}
+			className={`flex items-center bg-card justify-between gap-4 shadow-xs px-6 py-2`}
 		>
 			{/* Logo */}
 			<div className="flex items-center gap-1">
