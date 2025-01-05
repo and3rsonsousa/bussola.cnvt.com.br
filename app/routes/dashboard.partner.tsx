@@ -88,7 +88,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 			: _date
 		: format(new Date(), "yyyy-MM-dd");
 
-	// date = date?.replace(/\-01$/, "-02");
+	date = date?.replace(/\-01$/, "-02");
 
 	// let start = startOfWeek(startOfMonth(date));
 	// let end = endOfDay(endOfWeek(endOfMonth(date)));
@@ -134,9 +134,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 				.single(),
 		]);
 
-	if (!partner || !actions || !actionsChart) {
+	// if (!partner || !actions || !actionsChart) {
 		// console.log({ partner, actions, actionsChart });
-	}
+	// }
 
 	invariant(partner);
 
@@ -200,6 +200,7 @@ export default function Partner() {
 
 	actions = sortActions(Array.from(actionsMap, ([, v]) => v));
 	const instagramActions = getInstagramFeed({ actions });
+	
 
 	const days = eachDayOfInterval({
 		start: startOfWeek(startOfMonth(currentDate)),

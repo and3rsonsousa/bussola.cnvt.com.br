@@ -16,6 +16,7 @@ import {
 } from "./ui/command";
 import Loader from "./Loader";
 import { DialogTitle } from "./ui/dialog";
+import { formatActionDatetime } from "./Action";
 
 type CommandItemType = {
 	name: string;
@@ -31,6 +32,7 @@ type CommandItemType = {
 			priority: Priority;
 			partner: Partner;
 			responsibles: Person[];
+			date?: string
 		};
 	}[];
 };
@@ -51,8 +53,8 @@ export default function Search({
 	const [query] = useDebounce(value, 300);
 	const { partners, states, categories, people, priorities, person } =
 		matches[1].data as DashboardRootType;
-	const { partner } = matches[3]
-		? (matches[3].data as DashboardPartnerType)
+	const { partner } = matches[2]
+		? (matches[2].data as DashboardPartnerType)
 		: {};
 	const { setCategoryFilter, categoryFilter, setStateFilter } =
 		useOutletContext() as ContextType;
@@ -217,6 +219,7 @@ export default function Search({
 														person.user_id
 												) >= 0
 										),
+										date: action.date
 									},
 							  }))
 							: [];
@@ -277,7 +280,7 @@ export default function Search({
 									}}
 									className="flex justify-between gap-8"
 								>
-									<div className="line-clamp-1 text-xl font-medium tracking-tight">
+									<div className="line-clamp-1 text-base">
 										{item.title}
 									</div>
 									{item.obs ? (
@@ -293,6 +296,7 @@ export default function Search({
 												{item.obs.responsibles.map(
 													(responsible) => (
 														<Avatar
+														size="xs"
 															item={{
 																image: responsible.image,
 																short: responsible.initials!,
@@ -304,6 +308,7 @@ export default function Search({
 												)}
 											</div>
 											<Avatar
+											size="xs"
 												item={{
 													short: item.obs.partner
 														.short,
@@ -317,6 +322,9 @@ export default function Search({
 												id={item.obs.category.slug}
 												className="opacity-50"
 											/>
+											<div className="w-12 text-center text-xs opacity-75">
+												{ formatActionDatetime({date: item.obs.date!, dateFormat: 2 }) }
+											</div>
 											<div
 												className={`size-2 rounded-full`}
 												style={{
