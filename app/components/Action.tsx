@@ -619,7 +619,7 @@ export function ActionBlock({
 	const matches = useMatches();
 	const navigate = useNavigate();
 
-	const { categories, states, partners, sprints } = matches[1]
+	const { categories, states, sprints } = matches[1]
 		.data as DashboardRootType;
 
 	const actionPartners = getPartners(action.partners);
@@ -647,7 +647,7 @@ export function ActionBlock({
 		);
 	}, [isMobile]);
 
-	const { attributes, listeners, transform, setNodeRef } = useDraggable({
+	const { attributes, listeners, transform, setNodeRef, isDragging } = useDraggable({
 		id: action.id,
 		data: { ...action },
 	});
@@ -668,6 +668,8 @@ export function ActionBlock({
 					<div
 						title={action.title}
 						className={`action group/action action-item action-item-block @container cursor-pointer flex-col justify-between gap-2 text-sm ${
+							isDragging ? "z-[100]" : "z-1"
+						} ${
 							isSprint(action.id, sprints) && sprint
 								? "action-sprint"
 								: ""
@@ -949,7 +951,7 @@ export function BlockOfActions({
 		: [];
 
 	return (
-		<div className="@container overflow-hidden h-full">
+		<div className="@container -mx-1 overflow-hidden h-full">
 			<div
 				className={`grid ${
 					!max
@@ -957,7 +959,7 @@ export function BlockOfActions({
 						: max === 2
 						? "grid-cols-2"
 						: ""
-				} gap-2 scrollbars-v pb-8`}
+				} gap-2 p-1 scrollbars-v  pb-8`}
 			>
 				{actions?.map((action) => (
 					<ActionBlock

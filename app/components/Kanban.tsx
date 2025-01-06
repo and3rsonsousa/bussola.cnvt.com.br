@@ -58,7 +58,7 @@ export default function Kanban({
 
 	return (
 		<div className="overflow-hidden pb-4">
-			<div className="flex w-full gap-2">
+			<div className="flex w-full">
 				<DndContext onDragEnd={handleDragEnd} sensors={sensors} id={id}>
 					{states.map((state) => {
 						const stateActions = actions.filter(
@@ -92,7 +92,7 @@ function KanbanColumn({
 	return (
 		<div
 			ref={setNodeRef}
-			className={`flex max-h-[60vh] shrink-0 relative rounded-2xl p-2 ${
+			className={`flex max-h-[60vh] z-0 shrink-0 relative rounded-2xl p-2 ${
 				actions.length > 0
 					? "min-w-72 grow"
 					: "w-auto 2xl:min-w-72 2xl:grow"
@@ -111,7 +111,7 @@ function KanbanColumn({
 					{state.title}
 				</div>
 			</div>
-			<div className="pt-1 overflow-hidden h-full">
+			
 				{list ? (
 					<ListOfActions
 						actions={actions}
@@ -121,7 +121,7 @@ function KanbanColumn({
 				) : (
 					<BlockOfActions max={1} actions={actions} sprint />
 				)}
-			</div>
+			
 		</div>
 	);
 }
