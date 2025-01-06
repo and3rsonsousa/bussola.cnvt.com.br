@@ -17,6 +17,7 @@ import {
   isBefore,
   isSameYear,
   parseISO,
+  subHours,
 } from "date-fns";
 
 import { ptBR } from "date-fns/locale";
@@ -96,6 +97,7 @@ export function ActionLine({
   const submit = useSubmit();
   const matches = useMatches();
   const [searchParams] = useSearchParams();
+  const isInstagramDate = searchParams.get("instagram_date");
 
   // console.log(Array.from(searchParams).map((k) => k[0]));
 
@@ -216,7 +218,7 @@ export function ActionLine({
 
                 <div>
                   {formatActionDatetime({
-                    date: action.date,
+                    date: isInstagramDate ? action.instagram_date : action.date,
                     dateFormat: date?.dateFormat,
                     timeFormat: date?.timeFormat,
                   })}
@@ -1770,17 +1772,29 @@ export function getNewDateValues(
         : new Date(),
       minutes,
     );
+
   if (isInstagramDate) {
-    values = {
-      instagram_date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
-    };
+    console.log("INSTA DATE");
+
+    if (isAfter(action.date, newDate)) {
+      console.log("IS AFTER");
+      values = {
+        date: format(subHours(newDate, 1), "yyyy-MM-dd HH:mm:ss"),
+        instagram_date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
+      };
+    } else {
+      values = {
+        instagram_date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
+      };
+    }
   } else {
+    console.log("NOT INSTA DATE");
     if (isAfter(newDate, action.instagram_date)) {
+      console.log("IS AFTER");
       values = {
         date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
         instagram_date: format(addHours(newDate, 1), "yyyy-MM-dd HH:mm:ss"),
       };
-      // console.log("Corrigindo", { values });
     } else {
       values = {
         date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
