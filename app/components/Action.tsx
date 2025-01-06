@@ -793,7 +793,7 @@ export function ListOfActions({
               : columns === 3
                 ? "grid sm:grid-cols-2 md:grid-cols-3"
                 : "grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6"
-        } scrollbars-v @container gap-x-4 gap-y-1 pb-8`}
+        } scrollbars-v @container gap-x-4 gap-y-1 pt-1 pb-8`}
       >
         {actions
           ?.slice(0, fold)
