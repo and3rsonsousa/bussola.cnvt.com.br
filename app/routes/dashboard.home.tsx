@@ -577,7 +577,7 @@ function DelayedActions({ actions }: { actions: Action[] }) {
               )}
 
               <Button
-                variant={"outline"}
+                variant={"ghost"}
                 onClick={() => {
                   setShowSearch(!showSearch);
                   setFiltered(actions);
