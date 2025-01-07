@@ -7,339 +7,309 @@ import { useDebounce } from "use-debounce";
 import { PRIORITIES } from "~/lib/constants";
 import { Avatar, Icons } from "~/lib/helpers";
 import {
-	CommandDialog,
-	CommandEmpty,
-	CommandGroup,
-	CommandInput,
-	CommandItem,
-	CommandList,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
 } from "./ui/command";
 import Loader from "./Loader";
 import { DialogTitle } from "./ui/dialog";
 import { formatActionDatetime } from "./Action";
 
 type CommandItemType = {
-	name: string;
-	items: {
-		id: string | number;
-		title: string;
-		href?: string;
-		click?: () => void;
-		options: string[];
-		obs?: {
-			state: State;
-			category: Category;
-			priority: Priority;
-			partner: Partner;
-			responsibles: Person[];
-			date?: string
-		};
-	}[];
+  name: string;
+  items: {
+    id: string | number;
+    title: string;
+    href?: string;
+    click?: () => void;
+    options: string[];
+    obs?: {
+      state: State;
+      category: Category;
+      priority: Priority;
+      partner: Partner;
+      responsibles: Person[];
+      date?: string;
+    };
+  }[];
 };
 
 export default function Search({
-	search,
+  search,
 }: {
-	search: {
-		open: boolean;
-		setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	};
+  search: {
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 }) {
-	const navigate = useNavigate();
-	const matches = useMatches();
+  const navigate = useNavigate();
+  const matches = useMatches();
 
-	const [loading, setLoading] = useState(false);
-	const [value, setValue] = useState("");
-	const [query] = useDebounce(value, 300);
-	const { partners, states, categories, people, priorities, person } =
-		matches[1].data as DashboardRootType;
-	const { partner } = matches[2]
-		? (matches[2].data as DashboardPartnerType)
-		: {};
-	const { setCategoryFilter, categoryFilter, setStateFilter } =
-		useOutletContext() as ContextType;
+  const [loading, setLoading] = useState(false);
+  const [value, setValue] = useState("");
+  const [query] = useDebounce(value, 300);
+  const { partners, states, categories, people, priorities, person } =
+    matches[1].data as DashboardRootType;
+  const { partner } = matches[2].data
+    ? (matches[2].data as DashboardPartnerType)
+    : {};
 
-	let startSections: CommandItemType[] = [
-		{
-			name: "Parceiros",
-			items: partners.map((partner) => ({
-				id: partner.id,
-				title: partner.title,
-				options: [partner.title, partner.short, partner.slug],
-				href: `/dashboard/${partner.slug}`,
-			})),
-		},
-	];
+  const { setCategoryFilter, categoryFilter, setStateFilter } =
+    useOutletContext() as ContextType;
 
-	startSections =
-		partner !== undefined
-			? [
-					...startSections,
-					{
-						name: "Filtrar pelo Status",
-						items: [
-							{
-								id: "clean-status",
-								title: "Remover filtro de Status",
-								click: () => {
-									setStateFilter(undefined);
-								},
-								options: [
-									"status remover",
-									"status limpar",
-									"status clean",
-								],
-							},
-							...states.map((state) => ({
-								id: state.id,
-								title: state.title,
-								click: () => {
-									setStateFilter(state);
-								},
-								options: [
-									"status ".concat(state.title),
-									"status ".concat(state.slug),
-								],
-							})),
-						],
-					},
-					{
-						name: "Filtrar pela Categoria",
-						items: [
-							{
-								id: "clean-category",
-								title: "Remover filtro de Categoria",
-								click: () => {
-									setCategoryFilter([]);
-								},
-								options: [
-									"categoria remover",
-									"categoria limpar",
-									"categoria clean",
-								],
-							},
-							...categories.map((category) => ({
-								id: category.id,
-								title: category.title,
+  let startSections: CommandItemType[] = [
+    {
+      name: "Parceiros",
+      items: partners.map((partner) => ({
+        id: partner.id,
+        title: partner.title,
+        options: [partner.title, partner.short, partner.slug],
+        href: `/dashboard/${partner.slug}`,
+      })),
+    },
+  ];
 
-								click: () => {
-									setCategoryFilter([
-										category,
-										...categoryFilter,
-									]);
-								},
-								options: [
-									"categoria ".concat(category.title),
-									"categoria ".concat(category.slug),
-								],
-							})),
-						],
-					},
-			  ]
-			: startSections;
+  startSections =
+    partner !== undefined
+      ? [
+          ...startSections,
+          {
+            name: "Filtrar pelo Status",
+            items: [
+              {
+                id: "clean-status",
+                title: "Remover filtro de Status",
+                click: () => {
+                  setStateFilter(undefined);
+                },
+                options: ["status remover", "status limpar", "status clean"],
+              },
+              ...states.map((state) => ({
+                id: state.id,
+                title: state.title,
+                click: () => {
+                  setStateFilter(state);
+                },
+                options: [
+                  "status ".concat(state.title),
+                  "status ".concat(state.slug),
+                ],
+              })),
+            ],
+          },
+          {
+            name: "Filtrar pela Categoria",
+            items: [
+              {
+                id: "clean-category",
+                title: "Remover filtro de Categoria",
+                click: () => {
+                  setCategoryFilter([]);
+                },
+                options: [
+                  "categoria remover",
+                  "categoria limpar",
+                  "categoria clean",
+                ],
+              },
+              ...categories.map((category) => ({
+                id: category.id,
+                title: category.title,
 
-	const [sections, setSections] = useState<CommandItemType[]>([
-		{
-			name: "Ações",
-			items: [],
-		},
-		...startSections,
-	]);
+                click: () => {
+                  setCategoryFilter([category, ...categoryFilter]);
+                },
+                options: [
+                  "categoria ".concat(category.title),
+                  "categoria ".concat(category.slug),
+                ],
+              })),
+            ],
+          },
+        ]
+      : startSections;
 
-	const { env } = matches[0].data as {
-		env: { SUPABASE_URL: string; SUPABASE_KEY: string };
-	};
+  const [sections, setSections] = useState<CommandItemType[]>([
+    {
+      name: "Ações",
+      items: [],
+    },
+    ...startSections,
+  ]);
 
-	const supabase = createBrowserClient(env.SUPABASE_URL, env.SUPABASE_KEY);
+  const { env } = matches[0].data as {
+    env: { SUPABASE_URL: string; SUPABASE_KEY: string };
+  };
 
-	useEffect(() => {
-		const keyDown = (event: KeyboardEvent) => {
-			if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-				event.preventDefault();
-				search.setOpen((open) => !open);
-			}
-		};
+  const supabase = createBrowserClient(env.SUPABASE_URL, env.SUPABASE_KEY);
 
-		document.addEventListener("keydown", keyDown);
-		return () => document.removeEventListener("keydown", keyDown);
-	}, []);
+  useEffect(() => {
+    const keyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+        event.preventDefault();
+        search.setOpen((open) => !open);
+      }
+    };
 
-	useEffect(() => {
-		async function getActions() {
-			if (supabase && sections) {
-				setLoading(true);
+    document.addEventListener("keydown", keyDown);
+    return () => document.removeEventListener("keydown", keyDown);
+  }, []);
 
-				supabase
-					.from("actions")
-					.select("*")
-					.is("archived", false)
-					.contains(
-						"responsibles",
-						person?.admin ? [] : [person.user_id]
-					)
-					.containedBy(
-						"partners",
-						partner ? [partner.slug] : partners.map((p) => p.slug)!
-					)
-					.order("date", { ascending: false })
-					.textSearch("title", `%${query}%`, { type: "websearch" })
-					.then((value) => {
-						const actions = value.data
-							? value.data.map((action: Action) => ({
-									id: action.id,
-									title: action.title,
-									href: `/dashboard/action/${action.id}`,
-									options: [action.title, action.id],
-									obs: {
-										state: states.find(
-											(state) =>
-												state.slug === action.state
-										)!,
-										category: categories.find(
-											(category) =>
-												category.slug ===
-												action.category
-										)!,
-										partner: partners.find((partner) => {
-											return (
-												partner.slug ===
-												action.partners[0]
-											);
-										})!,
-										priority: priorities.find(
-											(priority) =>
-												priority.slug ===
-												action.priority
-										)!,
-										responsibles: people.filter(
-											(person) =>
-												action.responsibles.findIndex(
-													(responsible_id) =>
-														responsible_id ===
-														person.user_id
-												) >= 0
-										),
-										date: action.date
-									},
-							  }))
-							: [];
+  useEffect(() => {
+    async function getActions() {
+      if (supabase && sections) {
+        setLoading(true);
 
-						setSections([
-							{
-								name: "Ações",
-								items: actions,
-							},
-							...startSections,
-						]);
+        supabase
+          .from("actions")
+          .select("*")
+          .is("archived", false)
+          .contains("responsibles", person?.admin ? [] : [person.user_id])
+          .containedBy(
+            "partners",
+            partner ? [partner.slug] : partners.map((p) => p.slug)!,
+          )
+          .order("date", { ascending: false })
+          .textSearch("title", `%${query}%`, { type: "websearch" })
+          .then((value) => {
+            const actions = value.data
+              ? value.data.map((action: Action) => ({
+                  id: action.id,
+                  title: action.title,
+                  href: `/dashboard/action/${action.id}`,
+                  options: [action.title, action.id],
+                  obs: {
+                    state: states.find((state) => state.slug === action.state)!,
+                    category: categories.find(
+                      (category) => category.slug === action.category,
+                    )!,
+                    partner: partners.find((partner) => {
+                      return partner.slug === action.partners[0];
+                    })!,
+                    priority: priorities.find(
+                      (priority) => priority.slug === action.priority,
+                    )!,
+                    responsibles: people.filter(
+                      (person) =>
+                        action.responsibles.findIndex(
+                          (responsible_id) => responsible_id === person.user_id,
+                        ) >= 0,
+                    ),
+                    date: action.date,
+                  },
+                }))
+              : [];
 
-						setLoading(false);
-					});
-			}
-		}
+            setSections([
+              {
+                name: "Ações",
+                items: actions,
+              },
+              ...startSections,
+            ]);
 
-		if (query !== "" && query.length >= 3) {
-			getActions();
-		} else {
-			setSections([
-				{
-					name: "Ações",
-					items: [],
-				},
-				...startSections,
-			]);
-		}
-	}, [query]);
+            setLoading(false);
+          });
+      }
+    }
 
-	return (
-		<CommandDialog open={search.open} onOpenChange={search.setOpen}>
-			<DialogTitle className="hidden">Buscar</DialogTitle>
-			<CommandInput
-				className={`text-xl font-medium`}
-				value={value}
-				onValueChange={setValue}
-			/>
+    if (query !== "" && query.length >= 3) {
+      getActions();
+    } else {
+      setSections([
+        {
+          name: "Ações",
+          items: [],
+        },
+        ...startSections,
+      ]);
+    }
+  }, [query]);
 
-			<CommandList className="pb-2 outline-none scrollbars">
-				<CommandEmpty>Nenhum resultado encontrado. 😬</CommandEmpty>
-				{loading && (
-					<CommandLoading className="flex justify-center p-4">
-						<Loader size="md" />
-					</CommandLoading>
-				)}
-				{sections.map((section, i) =>
-					section.items.length > 0 ? (
-						<CommandGroup key={section.name} heading={section.name}>
-							{section.items.map((item, i) => (
-								<CommandItem
-									key={i}
-									value={item.options.join(" ")}
-									onSelect={() => {
-										if (item.href) navigate(item.href);
-										else if (item.click) item.click();
-										search.setOpen(false);
-									}}
-									className="flex justify-between gap-8"
-								>
-									<div className="line-clamp-1 text-base">
-										{item.title}
-									</div>
-									{item.obs ? (
-										<div className="flex items-center gap-2">
-											{item.obs.priority.slug ===
-											PRIORITIES.high ? (
-												<Icons
-													id="high"
-													className="text-rose-500"
-												/>
-											) : null}
-											<div className="flex">
-												{item.obs.responsibles.map(
-													(responsible) => (
-														<Avatar
-														size="xs"
-															item={{
-																image: responsible.image,
-																short: responsible.initials!,
-															}}
-															key={responsible.id}
-															ring
-														/>
-													)
-												)}
-											</div>
-											<Avatar
-											size="xs"
-												item={{
-													short: item.obs.partner
-														.short,
-													bg: item.obs.partner
-														.colors[0],
-													fg: item.obs.partner
-														.colors[1],
-												}}
-											/>
-											<Icons
-												id={item.obs.category.slug}
-												className="opacity-50"
-											/>
-											<div className="w-12 text-center text-xs opacity-75">
-												{ formatActionDatetime({date: item.obs.date!, dateFormat: 2 }) }
-											</div>
-											<div
-												className={`size-2 rounded-full`}
-												style={{
-													backgroundColor:
-														item.obs.state.color,
-												}}
-											></div>
-										</div>
-									) : null}
-								</CommandItem>
-							))}
-						</CommandGroup>
-					) : null
-				)}
-			</CommandList>
-		</CommandDialog>
-	);
+  return (
+    <CommandDialog open={search.open} onOpenChange={search.setOpen}>
+      <DialogTitle className="hidden">Buscar</DialogTitle>
+      <CommandInput
+        className={`text-xl font-medium`}
+        value={value}
+        onValueChange={setValue}
+      />
+
+      <CommandList className="scrollbars pb-2 outline-none">
+        <CommandEmpty>Nenhum resultado encontrado. 😬</CommandEmpty>
+        {loading && (
+          <CommandLoading className="flex justify-center p-4">
+            <Loader size="md" />
+          </CommandLoading>
+        )}
+        {sections.map((section, i) =>
+          section.items.length > 0 ? (
+            <CommandGroup key={section.name} heading={section.name}>
+              {section.items.map((item, i) => (
+                <CommandItem
+                  key={i}
+                  value={item.options.join(" ")}
+                  onSelect={() => {
+                    if (item.href) navigate(item.href);
+                    else if (item.click) item.click();
+                    search.setOpen(false);
+                  }}
+                  className="flex justify-between gap-8"
+                >
+                  <div className="line-clamp-1 text-base">{item.title}</div>
+                  {item.obs ? (
+                    <div className="flex items-center gap-2">
+                      {item.obs.priority.slug === PRIORITIES.high ? (
+                        <Icons id="high" className="text-rose-500" />
+                      ) : null}
+                      <div className="flex">
+                        {item.obs.responsibles.map((responsible) => (
+                          <Avatar
+                            size="xs"
+                            item={{
+                              image: responsible.image,
+                              short: responsible.initials!,
+                            }}
+                            key={responsible.id}
+                            ring
+                          />
+                        ))}
+                      </div>
+                      <Avatar
+                        size="xs"
+                        item={{
+                          short: item.obs.partner.short,
+                          bg: item.obs.partner.colors[0],
+                          fg: item.obs.partner.colors[1],
+                        }}
+                      />
+                      <Icons
+                        id={item.obs.category.slug}
+                        className="opacity-50"
+                      />
+                      <div className="w-12 text-center text-xs opacity-75">
+                        {formatActionDatetime({
+                          date: item.obs.date!,
+                          dateFormat: 2,
+                        })}
+                      </div>
+                      <div
+                        className={`size-2 rounded-full`}
+                        style={{
+                          backgroundColor: item.obs.state.color,
+                        }}
+                      ></div>
+                    </div>
+                  ) : null}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          ) : null,
+        )}
+      </CommandList>
+    </CommandDialog>
+  );
 }

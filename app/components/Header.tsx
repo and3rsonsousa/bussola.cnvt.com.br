@@ -361,7 +361,7 @@ export default function Header({
                   <DropdownMenuItem
                     className="bg-item"
                     id="new-partner"
-                    onSelect={() => navigate("/dashboard/admin/partners/new")}
+                    onSelect={() => navigate("/dashboard/admin/partner/new")}
                   >
                     <PlusIcon className="size-4 opacity-50" />
                     <div>Novo parceiro</div>

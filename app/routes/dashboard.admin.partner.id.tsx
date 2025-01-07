@@ -59,7 +59,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     {
       name: "description",
       content:
-        "Aplicativo de Gestão de Projetos Criado e Mantido pela Agência Canivete. ",
+        "Aplicativo de Gestão de Projetos Criado e Mantido pela Agência CNVT®. ",
     },
   ];
 };
@@ -141,8 +141,8 @@ export default function AdminPartners() {
   }, [fetcher.data]);
 
   return (
-    <div className="px-4 md:px-8 lg:px-8">
-      <div className="max-w-xl mx-auto">
+    <div className="scrollbars-v px-4 md:px-8 lg:px-8">
+      <div className="mx-auto max-w-xl">
         {/* Header */}
         <div
           className="flex items-center gap-2 py-4 font-bold tracking-tighter"
@@ -295,32 +295,6 @@ export default function AdminPartners() {
           <div id="voices">
             <div className="flex items-center justify-between">
               <div className="font-bold">Tom de voz</div>
-              {/* <div>
-								<Select
-									onValueChange={(value) => {
-										let _temp = archetypes.filter(
-											(a) => a.name === value
-										)[0].voice;
-										setVX(() => _temp);
-									}}
-								>
-									<SelectTrigger>
-										<SelectValue
-											placeholder={"Modelo de voz"}
-										/>
-									</SelectTrigger>
-									<SelectContent className="bg-content">
-										{archetypes.map((archetype, i) => (
-											<SelectItem
-												key={archetype.name}
-												value={archetype.name}
-											>
-												{archetype.name}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							</div> */}
             </div>
             <div>
               {voices.map((voice, i) => (
@@ -337,19 +311,19 @@ export default function AdminPartners() {
               ))}
             </div>
           </div>
-          <div className="border-t border-b py-8 mb-8">
-            <h2 className="mb-4 tracking-tighter text-3xl font-medium">
+          <div className="mb-8 border-t border-b py-8">
+            <h2 className="mb-4 text-3xl font-medium tracking-tighter">
               Exemplo de texto
             </h2>
             <div
-              className="leading-relaxed text-xl"
+              className="text-xl leading-relaxed"
               dangerouslySetInnerHTML={{
                 __html: text === "" ? "Carregando..." : text,
               }}
             ></div>
           </div>
 
-          <div className="text-right pb-8">
+          <div className="pb-8 text-right">
             <Button type="submit">Atualizar</Button>
           </div>
         </Form>
@@ -416,10 +390,10 @@ function Voice({
               <circle
                 className={`timer-circle transition-colors duration-500 ${
                   alert === 1
-                    ? "stroke-alert-500"
+                    ? "stroke-amber-500"
                     : alert === 2
                       ? "stroke-rose-500"
-                      : "stroke-primary"
+                      : "stroke-secondary"
                 }`}
                 cx="8"
                 cy="8"

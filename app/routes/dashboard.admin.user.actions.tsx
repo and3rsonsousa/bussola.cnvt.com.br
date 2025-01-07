@@ -48,7 +48,7 @@ export const meta: MetaFunction = () => {
     {
       name: "description",
       content:
-        "Aplicativo de Gestão de Projetos Criado e Mantido pela Agência Canivete. ",
+        "Aplicativo de Gestão de Projetos Criado e Mantido pela Agência CNVT®. ",
     },
   ];
 };

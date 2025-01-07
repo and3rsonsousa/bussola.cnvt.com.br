@@ -890,23 +890,12 @@ export function GridOfActions({
   partner: Partner;
 }) {
   return (
-    <div className="scrollbars">
+    <div className="scrollbars-v">
       <div className="grid grid-cols-3 gap-[2px] overflow-hidden rounded-xl">
         {actions?.map((action, index) => (
-          <Content
-            action={action}
-            aspect="squared"
-            partner={partner}
-            key={index}
-          />
-
-          // <ActionGrid
-          //   action={action}
-          //   key={action.id}
-          //   classNames={
-          //     index === 0 ? "rounded-tl-xl" : index === 2 ? "rounded-tr-xl" : ""
-          //   }
-          // />
+          <Link to={`/dashboard/action/${action.id}`} key={index}>
+            <Content action={action} aspect="squared" partner={partner} />
+          </Link>
         ))}
       </div>
     </div>
@@ -1774,10 +1763,7 @@ export function getNewDateValues(
     );
 
   if (isInstagramDate) {
-    console.log("INSTA DATE");
-
     if (isAfter(action.date, newDate)) {
-      console.log("IS AFTER");
       values = {
         date: format(subHours(newDate, 1), "yyyy-MM-dd HH:mm:ss"),
         instagram_date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
@@ -1788,9 +1774,7 @@ export function getNewDateValues(
       };
     }
   } else {
-    console.log("NOT INSTA DATE");
     if (isAfter(newDate, action.instagram_date)) {
-      console.log("IS AFTER");
       values = {
         date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
         instagram_date: format(addHours(newDate, 1), "yyyy-MM-dd HH:mm:ss"),
