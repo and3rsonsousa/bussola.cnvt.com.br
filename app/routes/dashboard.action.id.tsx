@@ -175,6 +175,8 @@ export default function ActionPage() {
   // Atualizar a Inserir o conteúdo da IA
   useEffect(() => {
     if (fetcher.data && intent) {
+      console.log({ intent });
+
       if (intent === "title") {
         setAction(() => ({
           ...action,
@@ -199,8 +201,10 @@ export default function ActionPage() {
         fetcher.formData &&
         ["caption", "stories", "shrink", "expand"].findIndex(
           (item) => item === intent,
-        )
+        ) >= 0
       ) {
+        console.log(fetcher.data);
+
         setAction({
           ...action,
           caption: (fetcher.data as { message: string }).message,
