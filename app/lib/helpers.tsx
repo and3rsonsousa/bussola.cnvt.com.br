@@ -666,7 +666,7 @@ export const Content = ({
         />
 
         <div className="absolute bottom-0 w-full p-1 text-center text-xs font-medium text-white drop-shadow-sm">
-          {formatActionDatetime({ date: action.date, dateFormat: 2 })}
+          {formatActionDatetime({ date: action.instagram_date, dateFormat: 2 })}
         </div>
       </div>
     ) : (
@@ -742,7 +742,7 @@ export const Post = ({
           className="absolute bottom-0 w-full p-1 text-center text-xs font-medium opacity-75"
           style={{ color: getTextColor(bgColor) }}
         >
-          {formatActionDatetime({ date: action.date, dateFormat: 2 })}
+          {formatActionDatetime({ date: action.instagram_date, dateFormat: 2 })}
         </div>
       )}
     </div>
