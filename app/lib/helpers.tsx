@@ -62,6 +62,7 @@ import {
 } from "~/components/ui/popover";
 import { BASE_COLOR, INTENTS, PRIORITIES } from "./constants";
 import { cn } from "./utils";
+import { formatActionDatetime } from "~/components/Action";
 
 export function ShortText({
   text,
@@ -202,7 +203,7 @@ export function Avatar({
               : size === "lg"
                 ? "size-12"
                 : "size-16",
-        ring ? "ring-background ring-2" : "ring-1 ring-foreground/5",
+        ring ? "ring-background ring-2" : "ring-foreground/5 ring-1",
 
         // "ring-card ring-3",
         "block",
@@ -610,6 +611,7 @@ export const Content = ({
   aspect,
   partner,
   className,
+  showDate,
 }: {
   action:
     | Action
@@ -619,6 +621,7 @@ export const Content = ({
   aspect: "feed" | "full" | "squared";
   partner: Partner;
   className?: string;
+  showDate?: boolean;
 }) => {
   let files =
     "previews" in action && action.previews
@@ -650,16 +653,22 @@ export const Content = ({
         ))}
       </div>
     ) : files[0].type === "image" ? (
-      <img
-        src={`${files[0].preview}`}
-        className={cn(
-          `object-cover transition-opacity ${
-            aspect === "squared" ? "aspect-square" : ""
-          } ${isPreview && "opacity-50"}`,
-          className,
-        )}
-        style={{ backgroundColor: action.color }}
-      />
+      <div className="relative">
+        <img
+          src={`${files[0].preview}`}
+          className={cn(
+            `object-cover transition-opacity ${
+              aspect === "squared" ? "aspect-square" : ""
+            } ${isPreview && "opacity-50"}`,
+            className,
+          )}
+          style={{ backgroundColor: action.color }}
+        />
+
+        <div className="absolute bottom-0 w-full p-1 text-center text-xs font-medium text-white drop-shadow-sm">
+          {formatActionDatetime({ date: action.date, dateFormat: 2 })}
+        </div>
+      </div>
     ) : (
       <video
         src={files[0].preview}
@@ -677,7 +686,12 @@ export const Content = ({
       />
     )
   ) : (
-    <Post className={className} action={action} colors={partner!.colors} />
+    <Post
+      className={className}
+      action={action}
+      colors={partner!.colors}
+      showDate={showDate}
+    />
   );
 };
 
@@ -685,10 +699,12 @@ export const Post = ({
   action,
   colors,
   className,
+  showDate,
 }: {
   action: Action;
   colors: string[];
   className?: string;
+  showDate?: boolean;
 }) => {
   let factor = Math.floor(Math.random() * colors.length);
   factor = factor === 1 ? factor - 1 : factor;
@@ -704,8 +720,6 @@ export const Post = ({
       )}
       style={{
         backgroundColor: bgColor,
-
-        // color: getTextColor(bgColor),
       }}
     >
       <div
@@ -723,6 +737,14 @@ export const Post = ({
       >
         {action.title}
       </div>
+      {showDate && (
+        <div
+          className="absolute bottom-0 w-full p-1 text-center text-xs font-medium opacity-75"
+          style={{ color: getTextColor(bgColor) }}
+        >
+          {formatActionDatetime({ date: action.date, dateFormat: 2 })}
+        </div>
+      )}
     </div>
   );
 };
