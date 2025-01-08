@@ -770,7 +770,7 @@ function ContentLowerBar({
 
   return (
     <div
-      className={`absolute bottom-0 left-0 flex w-full justify-between p-2 pt-8 text-xs font-semibold ${
+      className={`absolute bottom-0 left-0 flex w-full justify-between rounded-b-md p-2 pt-8 text-xs font-semibold ${
         action.files?.length ? "drop-shadow-sm" : ""
       } ${isOverlay ? "bg-gradient-to-b from-transparent to-black/75" : ""}`}
       style={{
