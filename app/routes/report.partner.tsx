@@ -24,22 +24,18 @@ import {
   CalendarDaysIcon,
   GalleryVerticalIcon,
   Grid3X3Icon,
-  MessageCircleIcon,
   Rows3Icon,
-  SendIcon,
 } from "lucide-react";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import invariant from "tiny-invariant";
 import {
   Avatar,
   Content,
   getInstagramFeed,
-  Heart,
   isInstagramFeed,
   LikeFooter,
 } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
-import { formatActionDatetime } from "~/components/Action";
 
 export const config = { runtime: "edge" };
 
@@ -114,8 +110,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .is("archived", false)
         .contains("partners", [slug])
         .in("category", ["post", "reels", "carousel", "stories"])
-        .gte("date", start)
-        .lte("date", end)
+        .gte("instagram_date", start)
+        .lte("instagram_date", end)
         .order("date", { ascending: true }),
       await supabase.from("partners").select().match({ slug }).single(),
       supabase.from("categories").select(),
