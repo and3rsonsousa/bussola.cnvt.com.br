@@ -350,29 +350,21 @@ export default function Partner() {
                     <DropdownMenuItem
                       className="bg-item capitalize"
                       key={month.getMonth()}
-                      onSelect={() => {}}
-                      asChild
-                    >
-                      {/* DOR: Meu peito está quente e dolorido ao toque.
-PROBLEMA: Pode ser um sinal de mastite. */}
-                      <button
-                        className="w-full"
-                        onClick={() => {
-                          params.set(
-                            "date",
-                            format(
-                              new Date().setMonth(month.getMonth()),
-                              "yyyy-MM-'01'",
-                            ),
-                          );
+                      onSelect={() => {
+                        params.set(
+                          "date",
+                          format(
+                            new Date().setMonth(month.getMonth()),
+                            "yyyy-MM-'01'",
+                          ),
+                        );
 
-                          setSearchParams(params);
-                        }}
-                      >
-                        {format(month, "MMMM", {
-                          locale: ptBR,
-                        })}
-                      </button>
+                        setSearchParams(params);
+                      }}
+                    >
+                      {format(month, "MMMM", {
+                        locale: ptBR,
+                      })}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
