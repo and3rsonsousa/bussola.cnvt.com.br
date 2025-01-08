@@ -23,6 +23,7 @@ import {
   BadgeCheckIcon,
   BookmarkIcon,
   CameraIcon,
+  CheckIcon,
   CircleFadingPlusIcon,
   ClapperboardIcon,
   ClipboardCheckIcon,
@@ -48,6 +49,7 @@ import {
 import { useState, type CSSProperties } from "react";
 import { type DateRange } from "react-day-picker";
 import invariant from "tiny-invariant";
+import { formatActionDatetime } from "~/components/Action";
 import {
   AvatarFallback,
   AvatarImage,
@@ -62,7 +64,6 @@ import {
 } from "~/components/ui/popover";
 import { BASE_COLOR, INTENTS, PRIORITIES } from "./constants";
 import { cn } from "./utils";
-import { formatActionDatetime } from "~/components/Action";
 
 export function ShortText({
   text,
@@ -612,6 +613,7 @@ export const Content = ({
   partner,
   className,
   showInfo,
+  showFinished,
   date,
 }: {
   action:
@@ -623,6 +625,7 @@ export const Content = ({
   partner: Partner;
   className?: string;
   showInfo?: boolean;
+  showFinished?: boolean;
   date?: dateTimeFormat;
 }) => {
   let files =
@@ -686,6 +689,13 @@ export const Content = ({
         )
       ) : (
         <Post className={className} action={action} colors={partner!.colors} />
+      )}
+      {showFinished && action.state === "finished" && (
+        <div className="absolute top-0 left-0 p-2">
+          <div className="grid size-4 place-content-center rounded-full bg-lime-500">
+            <CheckIcon className="size-3 text-white" />
+          </div>
+        </div>
       )}
       {showInfo && (
         <ContentLowerBar action={action} date={date} isOverlay={isFile} />

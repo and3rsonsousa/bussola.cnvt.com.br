@@ -471,7 +471,7 @@ const CalendarReportView = ({
     return {
       date: day,
       actions: actions?.filter((action) =>
-        isSameDay(parseISO(action.date), day),
+        isSameDay(parseISO(action.instagram_date), day),
       ),
     };
   });
@@ -512,6 +512,9 @@ const CalendarReportView = ({
                       action={action as Action}
                       aspect="squared"
                       partner={partner}
+                      showFinished
+                      showInfo
+                      date={{ timeFormat: 1 }}
                     />
 
                     {action.caption && (
@@ -554,6 +557,7 @@ const InstagramReportView = ({
               aspect="squared"
               partner={partner}
               showInfo
+              showFinished
               date={{ dateFormat: 2 }}
             />
           </div>
