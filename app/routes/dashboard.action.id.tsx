@@ -311,7 +311,7 @@ function Header({ action, partner }: { action: Action; partner: Partner }) {
           </Link>
         </div>
       </div>
-      <div className="text-secondary-foreground text-xs">
+      <div className="text-xs opacity-75">
         {format(
           parseISO(action?.updated_at as string),
           "yyyy-MM-dd HH:mm:ss",
