@@ -43,6 +43,7 @@ type loaderData = {
   action?: Action;
   actions?: Action[];
   partner?: Partner;
+  partners?: Partner[];
   categories?: Category[];
   range?: string[];
   states?: State[];
@@ -101,6 +102,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     const [
       { data: actions },
       { data: partner },
+      { data: partners },
       { data: categories },
       { data: states },
     ] = await Promise.all([
@@ -114,6 +116,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .lte("instagram_date", end)
         .order("date", { ascending: true }),
       await supabase.from("partners").select().match({ slug }).single(),
+      await supabase.from("partners").select().match({ archived: false }),
       supabase.from("categories").select(),
       supabase.from("states").select(),
     ]);
@@ -123,6 +126,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     return {
       actions,
       partner,
+      partners,
       categories,
       range: [range[0].replace(/-/g, "/"), range[1].replace(/-/g, "/")],
       states,
@@ -549,7 +553,8 @@ const InstagramReportView = ({
               action={action as Action}
               aspect="squared"
               partner={partner}
-              showDate
+              showInfo
+              date={{ dateFormat: 2 }}
             />
           </div>
         ))}

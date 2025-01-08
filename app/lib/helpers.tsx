@@ -611,7 +611,8 @@ export const Content = ({
   aspect,
   partner,
   className,
-  showDate,
+  showInfo,
+  date,
 }: {
   action:
     | Action
@@ -621,7 +622,8 @@ export const Content = ({
   aspect: "feed" | "full" | "squared";
   partner: Partner;
   className?: string;
-  showDate?: boolean;
+  showInfo?: boolean;
+  date?: dateTimeFormat;
 }) => {
   let files =
     "previews" in action && action.previews
@@ -634,64 +636,61 @@ export const Content = ({
         : undefined;
 
   let isPreview = !(action.files !== null && action.files[0] !== "");
+  let isFile = files && !["", "null", null].find((p) => p === files[0].preview);
 
-  return files && !["", "null", null].find((p) => p === files[0].preview) ? (
-    // Se for carrossel ou Stories
-    files.length > 1 && aspect !== "squared" ? (
-      <div
-        className={clsx(
-          `flex snap-x snap-mandatory gap-[1px] overflow-hidden overflow-x-auto transition-opacity ${
-            isPreview && "opacity-50"
-          } `,
-          className,
-        )}
-      >
-        {files.map((file, i) => (
-          <div className="w-full shrink-0 snap-center" key={i}>
-            <img src={`${file.preview}`} />
+  return (
+    <div className="relative">
+      {files && !["", "null", null].find((p) => p === files[0].preview) ? (
+        // Se for carrossel ou Stories
+        files.length > 1 && aspect !== "squared" ? (
+          <div
+            className={clsx(
+              `flex snap-x snap-mandatory gap-[1px] overflow-hidden overflow-x-auto transition-opacity ${
+                isPreview && "opacity-50"
+              } `,
+              className,
+            )}
+          >
+            {files.map((file, i) => (
+              <div className="w-full shrink-0 snap-center" key={i}>
+                <img src={`${file.preview}`} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    ) : files[0].type === "image" ? (
-      <div className="relative">
-        <img
-          src={`${files[0].preview}`}
-          className={cn(
-            `object-cover transition-opacity ${
-              aspect === "squared" ? "aspect-square" : ""
-            } ${isPreview && "opacity-50"}`,
-            className,
-          )}
-          style={{ backgroundColor: action.color }}
-        />
-
-        <div className="absolute bottom-0 w-full p-1 text-center text-xs font-medium text-white drop-shadow-sm">
-          {formatActionDatetime({ date: action.instagram_date, dateFormat: 2 })}
-        </div>
-      </div>
-    ) : (
-      <video
-        src={files[0].preview}
-        className={clsx(
-          `w-full object-cover ${
-            aspect === "squared"
-              ? "aspect-square"
-              : aspect === "feed"
-                ? "aspect-4/5"
-                : ""
-          }`,
-          className,
-        )}
-        controls
-      />
-    )
-  ) : (
-    <Post
-      className={className}
-      action={action}
-      colors={partner!.colors}
-      showDate={showDate}
-    />
+        ) : files[0].type === "image" ? (
+          <img
+            src={`${files[0].preview}`}
+            className={cn(
+              `object-cover transition-opacity ${
+                aspect === "squared" ? "aspect-square" : ""
+              } ${isPreview && "opacity-50"}`,
+              className,
+            )}
+            style={{ backgroundColor: action.color }}
+          />
+        ) : (
+          <video
+            src={files[0].preview}
+            className={clsx(
+              `w-full object-cover ${
+                aspect === "squared"
+                  ? "aspect-square"
+                  : aspect === "feed"
+                    ? "aspect-4/5"
+                    : ""
+              }`,
+              className,
+            )}
+            controls
+          />
+        )
+      ) : (
+        <Post className={className} action={action} colors={partner!.colors} />
+      )}
+      {showInfo && (
+        <ContentLowerBar action={action} date={date} isOverlay={isFile} />
+      )}
+    </div>
   );
 };
 
@@ -699,12 +698,10 @@ export const Post = ({
   action,
   colors,
   className,
-  showDate,
 }: {
   action: Action;
   colors: string[];
   className?: string;
-  showDate?: boolean;
 }) => {
   let factor = Math.floor(Math.random() * colors.length);
   factor = factor === 1 ? factor - 1 : factor;
@@ -737,17 +734,68 @@ export const Post = ({
       >
         {action.title}
       </div>
-      {showDate && (
+
+      {/* {showInfo && (
         <div
           className="absolute bottom-0 w-full p-1 text-center text-xs font-medium opacity-75"
           style={{ color: getTextColor(bgColor) }}
         >
           {formatActionDatetime({ date: action.instagram_date, dateFormat: 2 })}
         </div>
-      )}
+      )} */}
     </div>
   );
 };
+
+function ContentLowerBar({
+  action,
+  date,
+  isOverlay,
+}: {
+  action: Action;
+  date?: dateTimeFormat;
+  isOverlay?: boolean;
+}) {
+  const action_partners = getPartners(action.partners);
+
+  return (
+    <div
+      className={`absolute bottom-0 left-0 flex w-full justify-between p-2 pt-8 text-xs font-semibold ${
+        action.files?.length ? "drop-shadow-sm" : ""
+      } ${isOverlay ? "bg-gradient-to-b from-transparent to-black/75" : ""}`}
+      style={{
+        color: action.files?.length ? "white" : getTextColor(action.color),
+      }}
+    >
+      <Icons id={action.category} className="size-4" />
+      {/* {action.partners.length > 1 && (
+      <HeartHandshakeIcon className="size-4" />
+    )} */}
+      {action.partners.length > 1 && (
+        <AvatarGroup
+          size="xs"
+          avatars={action_partners.map((partner) => ({
+            item: {
+              short: partner.short,
+              bg: partner.colors[0],
+              fg: partner.colors[1],
+              title: partner.title,
+            },
+          }))}
+        />
+      )}
+      {date && (
+        <div>
+          {formatActionDatetime({
+            date: action.instagram_date,
+            dateFormat: date.dateFormat,
+            timeFormat: date.timeFormat,
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function isInstagramFeed(category: string, stories = false) {
   return ["post", "reels", "carousel", stories ? "stories" : null].includes(
@@ -919,11 +967,6 @@ export function getTomorrowActions(actions: Action[]) {
 }
 
 export function getThisWeekActions(actions: Action[]) {
-  // actions?.filter(
-  //     (action) =>
-  //       isAfter(action.date, startOfWeek(new Date())) &&
-  //       isBefore(action.date, endOfWeek(new Date())),
-  //   );
   return actions?.filter((action) => isThisWeek(action.date)) as Action[];
 }
 

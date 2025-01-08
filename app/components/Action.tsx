@@ -1,15 +1,7 @@
 import {
-  Link,
-  useMatches,
-  useNavigate,
-  useSearchParams,
-  useSubmit,
-} from "react-router";
-import {
   addDays,
   addHours,
   addMinutes,
-  addMonths,
   addWeeks,
   format,
   formatDistanceToNow,
@@ -19,7 +11,15 @@ import {
   parseISO,
   subHours,
 } from "date-fns";
+import {
+  Link,
+  useMatches,
+  useNavigate,
+  useSearchParams,
+  useSubmit,
+} from "react-router";
 
+import { useDraggable } from "@dnd-kit/core";
 import { ptBR } from "date-fns/locale";
 import {
   ArchiveRestoreIcon,
@@ -62,7 +62,6 @@ import {
   getActionsByTime,
   getPartners,
   getResponsibles,
-  getTextColor,
   Icons,
   isInstagramFeed,
   isSprint,
@@ -70,7 +69,6 @@ import {
 } from "~/lib/helpers";
 import { Button } from "./ui/button";
 import { Toggle } from "./ui/toggle";
-import { useDraggable } from "@dnd-kit/core";
 
 export function ActionLine({
   action,
@@ -84,7 +82,7 @@ export function ActionLine({
   showPartner,
 }: {
   action: Action;
-  date?: { dateFormat?: 0 | 1 | 2 | 3 | 4; timeFormat?: 0 | 1 };
+  date?: dateTimeFormat;
   short?: boolean;
   long?: boolean;
   allUsers?: boolean;
@@ -184,46 +182,11 @@ export function ActionLine({
                 action={action}
                 partner={partner!}
                 aspect="squared"
+                showInfo
+                date={{ timeFormat: 1 }}
                 className={`the-action-content aspect-square overflow-hidden rounded-md hover:opacity-75`}
               />
               <div className="late-border absolute inset-0 hidden rounded-md border-2 border-rose-600"></div>
-
-              <div
-                className={`absolute right-2 bottom-1.5 left-2 flex justify-between text-xs font-semibold ${
-                  action.files?.length ? "drop-shadow-sm" : ""
-                }`}
-                style={{
-                  color: action.files?.length
-                    ? "white"
-                    : getTextColor(action.color),
-                }}
-              >
-                <Icons id={action.category} className="size-4" />
-                {/* {action.partners.length > 1 && (
-                    <HeartHandshakeIcon className="size-4" />
-                  )} */}
-                {action.partners.length > 1 && (
-                  <AvatarGroup
-                    size="xs"
-                    avatars={action_partners.map((partner) => ({
-                      item: {
-                        short: partner.short,
-                        bg: partner.colors[0],
-                        fg: partner.colors[1],
-                        title: partner.title,
-                      },
-                    }))}
-                  />
-                )}
-
-                <div>
-                  {formatActionDatetime({
-                    date: isInstagramDate ? action.instagram_date : action.date,
-                    dateFormat: date?.dateFormat,
-                    timeFormat: date?.timeFormat,
-                  })}
-                </div>
-              </div>
 
               <div className="absolute -top-3 right-2 flex gap-2">
                 {isSprint(action.id, sprints) && (
