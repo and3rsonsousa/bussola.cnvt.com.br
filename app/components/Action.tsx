@@ -1155,6 +1155,7 @@ export function ContextMenuItems({
               .fill(1)
               .map((a, i) => (
                 <ContextMenuItem
+                  className="bg-item"
                   key={i}
                   onSelect={() => {
                     handleActions({
