@@ -371,8 +371,14 @@ input::-webkit-inner-spin-button {
   @apply bg-accent z-0;
 }
 
+.scrollbars-h {
+  @apply mb-1 h-full overflow-x-auto overflow-y-hidden py-1;
+  scrollbars-gutter: stable;
+}
+
 .scrollbars-v {
-  @apply mr-1 h-full overflow-hidden overflow-y-auto px-1;
+  @apply mr-1 h-full overflow-x-hidden overflow-y-auto px-1;
+  scrollbars-gutter: stable;
 }
 
 .scrollbars-v::-webkit-scrollbar {
@@ -392,11 +398,6 @@ input::-webkit-inner-spin-button {
 
 .scrollbars-v::-webkit-scrollbar-thumb {
   @apply rounded-full;
-}
-
-.scrollbars-h {
-  @apply mb-1 h-full overflow-x-auto overflow-y-hidden py-1;
-  scrollbars-gutter: stable;
 }
 
 .scrollbars-h::-webkit-scrollbar {

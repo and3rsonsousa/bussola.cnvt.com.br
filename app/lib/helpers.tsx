@@ -46,7 +46,7 @@ import {
   UsersIcon,
   type LucideIcon,
 } from "lucide-react";
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { type DateRange } from "react-day-picker";
 import invariant from "tiny-invariant";
 import { formatActionDatetime } from "~/components/Action";
@@ -984,4 +984,15 @@ export function getMonthsActions(actions: Action[], date = new Date()) {
   return actions?.filter((action) =>
     isSameMonth(action.date, date),
   ) as Action[];
+}
+
+export function useDocumentSize() {
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  useEffect(() => {
+    if (window) {
+      setSize({ width: window.innerWidth, height: window.innerHeight });
+    }
+  }, []);
+
+  return size;
 }
