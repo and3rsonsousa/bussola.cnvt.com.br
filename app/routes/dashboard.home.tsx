@@ -711,7 +711,7 @@ function Partners({ actions }: { actions?: Action[] }) {
                       {partner.title}
                     </Link>
                   </div>
-                  <div className="text-muted-foreground text-sm leading-none">
+                  <div className="text-sm leading-none opacity-50">
                     <div>
                       {
                         actions.filter((action) =>

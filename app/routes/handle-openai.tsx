@@ -1,4 +1,4 @@
-import { OpenAI } from "openai";
+import { OpenAI, OpenAIError } from "openai";
 import type { ActionFunctionArgs } from "react-router";
 
 export const config = { runtime: "edge" };
@@ -36,7 +36,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       messages: [
         {
           role: "user",
-          content: `${description.toString()}. Retorne sem aspas e em tags html.`,
+          content: `${description.toString()}. Retorne sem aspas e com tags html, sem markdown.`,
         },
       ],
       model: "gpt-4o-mini",
@@ -259,17 +259,23 @@ TOM DE VOZ: ${tone}`;
     );
   }
 
-  const chatCompletion = await openai.chat.completions.create({
-    messages: [
-      {
-        role: "user",
-        content,
-      },
-    ],
-    model: "gpt-4o-mini",
-  });
+  try {
+    const chatCompletion = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "user",
+          content,
+        },
+      ],
+      model: "gpt-4o-mini",
+    });
 
-  return { message: chatCompletion.choices[0].message.content };
+    return { message: chatCompletion.choices[0].message.content };
+  } catch (error) {
+    console.log(error);
+    //@ts-ignore
+    throw new Error(error);
+  }
 };
 
 const hooks = [
