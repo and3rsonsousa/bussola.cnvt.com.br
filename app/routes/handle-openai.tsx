@@ -32,17 +32,29 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     template = "você é um copywritter experiente.";
     content = `Aumente o TEXTO em 25% sem alterar o sentido ou mudar o tom de voz. TEXTO: ${description}.`;
   } else if (intent === "develop") {
-    const chatCompletion = await openai.chat.completions.create({
-      messages: [
-        {
-          role: "user",
-          content: `${description.toString()}. Retorne sem aspas e com tags html, sem markdown.`,
-        },
-      ],
-      model: "gpt-4o-mini",
-    });
-
-    return { message: chatCompletion.choices[0].message.content };
+    await openai.chat.completions
+      .create({
+        messages: [
+          {
+            role: "user",
+            content: `${description.toString()}. Retorne sem aspas e com tags html, sem markdown.`,
+          },
+        ],
+        model: "gpt-4o-mini",
+      })
+      .then((completion) => {
+        return { message: completion.choices[0].message.content };
+      })
+      .catch(async (error) => {
+        if (error instanceof OpenAI.APIError) {
+          console.log(error.status);
+          console.log(error.name);
+          console.log(error.headers);
+          console.log(error.message);
+        } else {
+          throw error;
+        }
+      });
   } else if (intent === "hook") {
     template =
       "Lista com 5 Ganchos Virais para iniciar vídeos no Instagram/TikTok. Cada frase deve ter no máximo 2 segundos.";
@@ -259,8 +271,8 @@ TOM DE VOZ: ${tone}`;
     );
   }
 
-  try {
-    const chatCompletion = await openai.chat.completions.create({
+  await openai.chat.completions
+    .create({
       messages: [
         {
           role: "user",
@@ -268,14 +280,22 @@ TOM DE VOZ: ${tone}`;
         },
       ],
       model: "gpt-4o-mini",
+    })
+    .then((completion) => {
+      return { message: completion.choices[0].message.content };
+    })
+    .catch(async (error) => {
+      if (error instanceof OpenAI.APIError) {
+        console.log(error.status);
+        console.log(error.name);
+        console.log(error.headers);
+        console.log(error.message);
+      } else {
+        throw error;
+      }
     });
 
-    return { message: chatCompletion.choices[0].message.content };
-  } catch (error) {
-    console.log(error);
-    //@ts-ignore
-    throw new Error(error);
-  }
+  return { message: "NO MESSAGE COMPLETION" };
 };
 
 const hooks = [
