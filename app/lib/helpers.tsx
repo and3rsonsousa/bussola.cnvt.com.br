@@ -68,15 +68,17 @@ import { cn } from "./utils";
 export function ShortText({
   text,
   className,
+  isLowerCase,
 }: {
   text: string;
   className?: string;
+  isLowerCase?: boolean;
 }) {
   const length = text.length;
   return (
     <div
       className={cn(
-        `text-center text-[10px] leading-none font-bold tracking-wide uppercase`,
+        `text-center text-[10px] font-bold tracking-wide ${isLowerCase ? "leading-2 lowercase" : "leading-none uppercase"}`,
         className,
       )}
     >
@@ -99,7 +101,7 @@ export function AvatarGroup({
   size = "sm",
   className,
   ringColor,
-  ring,
+  isLowerCase,
 }: {
   avatars?: {
     item: {
@@ -115,10 +117,10 @@ export function AvatarGroup({
   }[];
   people?: Person[];
   partners?: Partner[];
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: Size;
   className?: string;
   ringColor?: string;
-  ring?: boolean;
+  isLowerCase?: boolean;
 }) {
   if (people) {
     avatars = people.map((person) => ({
@@ -141,24 +143,22 @@ export function AvatarGroup({
 
   invariant(avatars, "Nenhum Avatar foi definido");
 
+  const spaceX = {
+    xs: "-space-x-0.5",
+    sm: "-space-x-0.5",
+    md: "-space-x-1",
+    lg: "-space-x-1",
+    xl: "-space-x-2",
+  };
+
   return (
     <div
-      className={cn(
-        `flex ${
-          ["sm", "xs"].find((s) => s === size)
-            ? "-space-x-0.5"
-            : ["md", "lg"].find((s) => s === size)
-              ? "-space-x-1"
-              : size === "lg"
-                ? "-space-x-2"
-                : "-space-x-1"
-        }`,
-        className,
-      )}
+      className={cn(`flex ${spaceX[size]}`, className)}
       title={avatars.map((avatar) => avatar.item.title).join(" • ")}
     >
       {avatars.map(({ item, className, style }, i) => (
         <Avatar
+          isLowerCase={isLowerCase}
           key={i}
           item={item}
           className={`${className} ${ringColor}`}
@@ -173,10 +173,11 @@ export function AvatarGroup({
 
 export function Avatar({
   item,
-  ring,
   size = "sm",
   style,
   className,
+  ring,
+  isLowerCase,
 }: {
   item: {
     image?: string | null;
@@ -189,7 +190,24 @@ export function Avatar({
   style?: CSSProperties;
   className?: string;
   ring?: boolean;
+  isLowerCase?: boolean;
 }) {
+  const textSizes = isLowerCase
+    ? {
+        xs: "",
+        sm: "scale-[0.8]",
+        md: "1.3",
+        lg: "scale-[1.6]",
+        xl: "scale-[2]",
+      }
+    : {
+        xs: "",
+        sm: "scale-[0.75]",
+        md: "scale-[0.85]",
+        lg: "scale-[1.3]",
+        xl: "scale-[1.6]",
+      };
+
   return (
     <AvatarShad
       title={item.title}
@@ -206,7 +224,6 @@ export function Avatar({
                 : "size-16",
         ring ? "ring-background ring-2" : "ring-foreground/5 ring-1",
 
-        // "ring-card ring-3",
         "block",
 
         className,
@@ -217,24 +234,16 @@ export function Avatar({
         <AvatarImage src={item.image} />
       ) : (
         <AvatarFallback
+          className="bg-white"
           style={{
-            backgroundColor: item.bg || "#778",
-            color: item.fg || "#bbc",
+            backgroundColor: item.bg,
+            color: item.fg,
           }}
         >
           <ShortText
+            isLowerCase={isLowerCase}
             text={size === "xs" ? item.short[0] : item.short}
-            className={
-              size === "xl"
-                ? "scale-[1.6]"
-                : size === "lg"
-                  ? "scale-[1.3]"
-                  : size === "sm"
-                    ? "scale-[0.75]"
-                    : size === "md"
-                      ? "scale-[0.85]"
-                      : ""
-            }
+            className={textSizes[size]}
           />
         </AvatarFallback>
       )}

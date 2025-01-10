@@ -110,11 +110,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .from("actions")
         .select("*")
         .is("archived", false)
+        .neq("state", "idea")
         .contains("partners", [slug])
         .in("category", ["post", "reels", "carousel", "stories"])
         .gte("instagram_date", start)
         .lte("instagram_date", end)
-        .order("date", { ascending: true }),
+        .order("instagram_date", { ascending: true }),
       await supabase.from("partners").select().match({ slug }).single(),
       await supabase.from("partners").select().match({ archived: false }),
       supabase.from("categories").select(),
@@ -188,6 +189,7 @@ export default function ReportPage() {
                 fg: partner.colors[1],
               }}
               size="xl"
+              isLowerCase
             />
             <div>
               <h2 className="text-2xl leading-none font-semibold tracking-tighter text-gray-950">
