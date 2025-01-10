@@ -243,7 +243,7 @@ export default function Partner() {
       left: day.offsetLeft - 48,
       behavior: "smooth",
     });
-    calendar.scrollTo({ top: day.offsetTop - 96, behavior: "smooth" });
+    calendar.scrollTo({ top: day.offsetTop - 120, behavior: "smooth" });
 
     function keyDown(event: KeyboardEvent) {
       if (event.shiftKey && event.altKey) {
@@ -253,16 +253,24 @@ export default function Partner() {
         const code = event.code;
 
         if (code === "KeyC") {
-          params.delete("show_content");
+          if (params.get("show_content")) {
+            params.delete("show_content");
+          } else {
+            params.set("show_content", "true");
+          }
           setSearchParams(params);
         } else if (code === "KeyR") {
           setAllUsers((value) => !value);
         } else if (code === "KeyS") {
           setShort((value) => !value);
         } else if (code === "KeyI") {
-          if (showFeed) {
+          if (params.get("show_feed")) {
             params.delete("show_feed");
+            params.delete("instagram_date");
+            params.delete("show_content");
           } else {
+            params.set("instagram_date", "true");
+            params.set("show_content", "true");
             params.set("show_feed", "true");
           }
           setSearchParams(params);
