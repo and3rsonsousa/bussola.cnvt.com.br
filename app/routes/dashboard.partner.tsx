@@ -135,10 +135,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .single(),
     ]);
 
-  // if (!partner || !actions || !actionsChart) {
-  // console.log({ partner, actions, actionsChart });
-  // }
-
   invariant(partner);
 
   return { actions, actionsChart, partner, person, date };
@@ -327,16 +323,16 @@ export default function Partner() {
 
         <div className="bg-card flex items-center justify-between border-b px-4 py-2 md:px-8">
           <div className="flex items-center gap-1">
-            {/* <Link to="/dashboard">
-              <HomeIcon />
-            </Link> */}
             <div className="mr-1">
               <DropdownMenu>
                 <DropdownMenuTrigger
                   className="capitalize outline-hidden"
                   asChild
                 >
-                  <Button variant={"ghost"} className="text-xl font-bold">
+                  <Button
+                    variant={"ghost"}
+                    className="cursor-pointer text-xl font-bold"
+                  >
                     {format(currentDate, "MMMM", {
                       locale: ptBR,
                     })}
@@ -370,19 +366,19 @@ export default function Partner() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <Button size="icon" variant="ghost" asChild>
-              <button
-                onClick={() => {
-                  params.set(
-                    "date",
-                    format(subMonths(currentDate, 1), "yyyy-MM-dd"),
-                  );
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => {
+                params.set(
+                  "date",
+                  format(subMonths(currentDate, 1), "yyyy-MM-dd"),
+                );
 
-                  setSearchParams(params);
-                }}
-              >
-                <ChevronLeftIcon className="h-4 w-4" />
-              </button>
+                setSearchParams(params);
+              }}
+            >
+              <ChevronLeftIcon className="h-4 w-4" />
             </Button>
             <Button size="icon" variant="ghost" asChild>
               <button

@@ -115,7 +115,6 @@ export function ActionLine({
   ) as Partner;
 
   const responsibles = getResponsibles(action.responsibles);
-  const action_partners = getPartners(action.partners);
 
   function handleActions(data: {
     [key: string]: string | number | null | string[] | boolean;
@@ -150,7 +149,7 @@ export function ActionLine({
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger>
+      <ContextMenuTrigger className={isDragging ? "z-10" : "z-1"}>
         {isInstagramFeed(action.category) && showContent ? (
           <div
             onClick={() => {
