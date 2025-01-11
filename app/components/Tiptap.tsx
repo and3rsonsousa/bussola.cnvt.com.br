@@ -42,14 +42,14 @@ export default function Tiptap({
   ];
 
   return (
-    <div className="editor-tiptap bg-input overflow-hidden rounded border p-4">
+    <div className="editor-tiptap bg-input overflow-hidden rounded border pt-4 pl-4">
       <EditorProvider
         immediatelyRender={false}
         onBlur={({ editor }) => onBlur(editor.getHTML())}
         extensions={extensions}
         content={content}
         editorContainerProps={{
-          className: "overflow-y-auto",
+          className: "scrollbars-v pt-4",
         }}
         slotBefore={<Menu type={1} />}
       >
@@ -89,7 +89,7 @@ export const Menu = ({ type }: { type: 1 | 2 | 3 }) => {
   return (
     <div
       className={`flex gap-6 overflow-x-auto ${
-        type === 1 ? "-mt-2 mb-2 -ml-2 border-b pb-2" : ""
+        type === 1 ? "-mt-2 -ml-4 border-b pb-2 pl-2" : ""
       }`}
     >
       {/* Formating */}
