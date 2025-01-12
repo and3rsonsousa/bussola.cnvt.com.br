@@ -236,7 +236,7 @@ export function ActionLine({
             className={`action group/action action-item items-center gap-2 hover:z-100 [&>*]:border-red-500 ${
               isDragging ? "z-[100]" : "z-0"
             } ${
-              short ? "px-3 py-2" : long ? "px-4 py-3" : "p-3"
+              short ? "px-2 py-1" : long ? "px-4 py-3" : "p-3"
             } font-base @container md:text-sm ${
               showDelay &&
               isBefore(action.date, new Date()) &&
