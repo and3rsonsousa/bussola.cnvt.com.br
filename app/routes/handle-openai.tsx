@@ -1,11 +1,11 @@
-import { OpenAI, OpenAIError } from "openai";
+import { OpenAI } from "openai";
 import type { ActionFunctionArgs } from "react-router";
 
 export const config = { runtime: "edge" };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  let { title, description, intent, model, context, trigger, voice } =
+  let { title, description, prompt, intent, model, context, trigger, voice } =
     Object.fromEntries(formData.entries());
 
   let vx = String(voice).split(",");
@@ -31,12 +31,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   } else if (intent === "expand") {
     template = "você é um copywritter experiente.";
     content = `Aumente o TEXTO em 25% sem alterar o sentido ou mudar o tom de voz. TEXTO: ${description}.`;
-  } else if (intent === "develop") {
+  } else if (intent === "prompt") {
     const chatCompletion = await openai.chat.completions.create({
       messages: [
         {
           role: "user",
-          content: `${description.toString()}. Retorne sem aspas e com tags html, sem markdown.`,
+          content: `${prompt.toString()}. Retorne sem aspas e com tags html, sem markdown.`,
         },
       ],
       model: "gpt-4o-mini",

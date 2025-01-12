@@ -7,6 +7,7 @@ import {
   endOfWeek,
   endOfYear,
   format,
+  isAfter,
   isSameDay,
   isSameMonth,
   isToday,
@@ -155,9 +156,6 @@ export default function Partner() {
   const submit = useSubmit();
   const id = useId();
 
-  const [short, setShort] = useState(false);
-  const [allUsers, setAllUsers] = useState(false);
-
   const { categoryFilter, setCategoryFilter, stateFilter, setStateFilter } =
     useOutletContext() as ContextType;
 
@@ -175,6 +173,8 @@ export default function Partner() {
   const isInstagramDate = !!searchParams.get("instagram_date");
   const showContent = !!searchParams.get("show_content");
   const showFeed = !!searchParams.get("show_feed");
+  const short = !!searchParams.get("short");
+  const allUsers = !!searchParams.get("all_users");
 
   const currentDate = date;
   const pendingActions = usePendingData().actions;
@@ -260,9 +260,20 @@ export default function Partner() {
           }
           setSearchParams(params);
         } else if (code === "KeyR") {
-          setAllUsers((value) => !value);
+          if (params.get("all_users")) {
+            params.delete("all_users");
+          } else {
+            params.set("all_users", "true");
+          }
+          setSearchParams(params);
         } else if (code === "KeyS") {
-          setShort((value) => !value);
+          if (params.get("short")) {
+            params.delete("short");
+          } else {
+            params.set("short", "true");
+          }
+          setSearchParams(params);
+          // setShort((value) => !value);
         } else if (code === "KeyI") {
           if (params.get("show_feed")) {
             params.delete("show_feed");
@@ -406,7 +417,7 @@ export default function Partner() {
           <div className="flex items-center gap-1 lg:gap-2">
             <Button
               size={"sm"}
-              variant={isInstagramDate ? "default" : "ghost"}
+              variant={isInstagramDate ? "secondary" : "ghost"}
               onClick={() => {
                 if (isInstagramDate) {
                   params.delete("instagram_date");
@@ -423,7 +434,7 @@ export default function Partner() {
             </Button>
             <Button
               size={"sm"}
-              variant={showContent ? "default" : "ghost"}
+              variant={showContent ? "secondary" : "ghost"}
               onClick={() => {
                 if (showContent) {
                   params.delete("show_content");
@@ -446,12 +457,18 @@ export default function Partner() {
             </Button>
             <Button
               size={"sm"}
-              variant={allUsers ? "default" : "ghost"}
-              onClick={() => setAllUsers((allUsers) => !allUsers)}
+              variant={allUsers ? "secondary" : "ghost"}
+              onClick={() => {
+                if (allUsers) {
+                  params.delete("all_users");
+                } else {
+                  params.set("all_users", "true");
+                }
+
+                setSearchParams(params);
+              }}
               title={
-                allUsers
-                  ? "Mostrar todos os responsáveis"
-                  : "Exibir apenas 'eu' como responsável"
+                allUsers ? "Todos os responsáveis" : "'Eu' como responsável"
               }
             >
               {allUsers ? (
@@ -461,9 +478,16 @@ export default function Partner() {
               )}
             </Button>
             <Button
-              variant={short ? "default" : "ghost"}
+              variant={short ? "secondary" : "ghost"}
               size={"sm"}
-              onClick={() => setShort((short) => !short)}
+              onClick={() => {
+                if (params.get("short")) {
+                  params.delete("short");
+                } else {
+                  params.set("short", "true");
+                }
+                setSearchParams(params);
+              }}
               title={
                 short
                   ? "Aumentar o tamanho da ação"
@@ -855,6 +879,9 @@ function CategoryActions({
   short?: boolean;
   allUsers?: boolean;
 }) {
+  actions = actions?.sort((a, b) =>
+    isAfter(b.instagram_date, a.instagram_date) ? 1 : -1,
+  );
   return actions && actions.length > 0 ? (
     <div key={category.slug} className="flex flex-col gap-3">
       {!(showContent && isInstagramFeed(category.slug)) && (

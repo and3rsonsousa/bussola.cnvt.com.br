@@ -86,6 +86,37 @@ export default function Header({
 
   const lateActions = getDelayedActions({ actions });
 
+  const ProgressViews = {
+    today: {
+      title: "HJ",
+      length: getTodayActions(actions).length,
+      view: (
+        <CircularProgress actions={getTodayActions(actions)} title="Hoje" />
+      ),
+    },
+    week: {
+      title: "Sem",
+      length: getThisWeekActions(actions).length,
+      view: (
+        <CircularProgress actions={getThisWeekActions(actions)} title="Sem" />
+      ),
+    },
+    month: {
+      title: format(new Date(), "MMM", {
+        locale: ptBR,
+      }),
+      length: getMonthsActions(actions).length,
+      view: (
+        <CircularProgress
+          actions={getMonthsActions(actions)}
+          title={format(new Date(), "MMM", {
+            locale: ptBR,
+          })}
+        />
+      ),
+    },
+  };
+
   return (
     <header
       className={`bg-card flex items-center justify-between gap-4 border-b px-6 py-2 shadow-xs`}
@@ -164,34 +195,15 @@ export default function Header({
                 })
               }
             >
-              {progressView === "today" && (
-                <CircularProgress
-                  actions={getTodayActions(actions)}
-                  title="Hoje"
-                />
-              )}
-              {progressView === "week" && (
-                <CircularProgress
-                  actions={getThisWeekActions(actions)}
-                  title="Semana"
-                />
-              )}
-              {progressView === "month" && (
-                <CircularProgress
-                  actions={getMonthsActions(actions)}
-                  title={format(new Date(), "MMM")}
-                />
-              )}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform text-[10px] font-semibold uppercase">
-                {
-                  {
-                    today: "Hoje",
-                    week: "Sem",
-                    month: format(new Date(), "MMM", {
-                      locale: ptBR,
-                    }),
-                  }[progressView]
-                }
+              {ProgressViews[progressView].view}
+
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center leading-none font-medium uppercase">
+                <div className="text-[8px]">
+                  {ProgressViews[progressView].title}
+                </div>
+                <div className="text-[14px] font-normal">
+                  {ProgressViews[progressView].length}
+                </div>
               </div>
             </div>
           )}
