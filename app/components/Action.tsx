@@ -1568,61 +1568,65 @@ export function ContextMenuItems({
         </ContextMenuSubTrigger>
         <ContextMenuPortal>
           <ContextMenuSubContent className="bg-content">
-            {people.map((person) => (
-              <ContextMenuCheckboxItem
-                checked={
-                  action.responsibles?.find(
-                    (user_id) => user_id === person.user_id,
-                  )
-                    ? true
-                    : false
-                }
-                key={person.id}
-                className="bg-select-item flex items-center gap-2"
-                onClick={(event) => {
-                  const checked = action.responsibles.includes(person.user_id);
-
-                  if (checked && action.responsibles.length < 2) {
-                    alert(
-                      "É necessário ter pelo menos um responsável pela ação",
+            {getResponsibles(getPartners(action.partners)[0].users_ids).map(
+              (person) => (
+                <ContextMenuCheckboxItem
+                  checked={
+                    action.responsibles?.find(
+                      (user_id) => user_id === person.user_id,
+                    )
+                      ? true
+                      : false
+                  }
+                  key={person.id}
+                  className="bg-select-item flex items-center gap-2"
+                  onClick={(event) => {
+                    const checked = action.responsibles.includes(
+                      person.user_id,
                     );
-                    return false;
-                  }
 
-                  if (event.shiftKey) {
-                    // onCheckedChange([person.user_id]);
-                    handleActions({
-                      ...action,
-                      responsibles: person.user_id,
+                    if (checked && action.responsibles.length < 2) {
+                      alert(
+                        "É necessário ter pelo menos um responsável pela ação",
+                      );
+                      return false;
+                    }
 
-                      intent: INTENTS.updateAction,
-                    });
-                  } else {
-                    const tempResponsibles = checked
-                      ? action.responsibles.filter(
-                          (id) => id !== person.user_id,
-                        )
-                      : [...action.responsibles, person.user_id];
-                    handleActions({
-                      ...action,
-                      responsibles: tempResponsibles,
+                    if (event.shiftKey) {
+                      // onCheckedChange([person.user_id]);
+                      handleActions({
+                        ...action,
+                        responsibles: person.user_id,
 
-                      intent: INTENTS.updateAction,
-                    });
-                    // onCheckedChange(tempResponsibles);
-                  }
-                }}
-              >
-                <Avatar
-                  item={{
-                    image: person.image,
-                    short: person.initials!,
+                        intent: INTENTS.updateAction,
+                      });
+                    } else {
+                      const tempResponsibles = checked
+                        ? action.responsibles.filter(
+                            (id) => id !== person.user_id,
+                          )
+                        : [...action.responsibles, person.user_id];
+                      handleActions({
+                        ...action,
+                        responsibles: tempResponsibles,
+
+                        intent: INTENTS.updateAction,
+                      });
+                      // onCheckedChange(tempResponsibles);
+                    }
                   }}
-                  size="sm"
-                />
-                {`${person.name} ${person.surname}`}
-              </ContextMenuCheckboxItem>
-            ))}
+                >
+                  <Avatar
+                    item={{
+                      image: person.image,
+                      short: person.initials!,
+                    }}
+                    size="sm"
+                  />
+                  {`${person.name} ${person.surname}`}
+                </ContextMenuCheckboxItem>
+              ),
+            )}
           </ContextMenuSubContent>
         </ContextMenuPortal>
       </ContextMenuSub>

@@ -53,6 +53,7 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
@@ -69,9 +70,11 @@ import { SiInstagram } from "@icons-pack/react-simple-icons";
 import { INTENTS } from "~/lib/constants";
 import {
   Avatar,
+  AvatarGroup,
   Icons,
   getCategoriesSortedByContent,
   getInstagramFeed,
+  getResponsibles,
   isInstagramFeed,
   sortActions,
   useIDsToRemove,
@@ -155,14 +158,16 @@ export default function Partner() {
   const matches = useMatches();
   const submit = useSubmit();
   const id = useId();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [responsiblesFilter, setResponsiblesFilter] = useState<string[]>(
+    partner.users_ids,
+  );
 
   const { categoryFilter, setCategoryFilter, stateFilter, setStateFilter } =
     useOutletContext() as ContextType;
 
   const { categories, states, person, celebrations } = matches[1]
     .data as DashboardRootType;
-
-  const [searchParams, setSearchParams] = useSearchParams();
 
   let params = new URLSearchParams(searchParams);
 
@@ -218,7 +223,10 @@ export default function Partner() {
                 (category) => category.slug === action.category,
               )
             : true) &&
-          (stateFilter ? action.state === stateFilter?.slug : true),
+          (stateFilter ? action.state === stateFilter?.slug : true) &&
+          action.responsibles.find((responsible) =>
+            responsiblesFilter.find((user_id) => user_id === responsible),
+          ),
       ),
       celebrations: celebrations.filter((celebration) =>
         isSameDay(day, parseISO(celebration.date)),
@@ -500,6 +508,88 @@ export default function Partner() {
                 <ChevronsDownUpIcon className="size-4" />
               )}
             </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size={"sm"}
+                  variant={
+                    partner.users_ids.length !== responsiblesFilter.length
+                      ? "secondary"
+                      : "ghost"
+                  }
+                  className={`outline-none`}
+                >
+                  {
+                    <AvatarGroup
+                      avatars={getResponsibles(responsiblesFilter).map(
+                        (person) => ({
+                          item: {
+                            short: person.short,
+                            image: person.image,
+                            title: `${person.name} ${person.surname}`,
+                          },
+                          className:
+                            partner.users_ids.length !==
+                            responsiblesFilter.length
+                              ? "ring-secondary"
+                              : "ring-card",
+                        }),
+                      )}
+                    />
+                  }
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuContent>
+                  {getResponsibles(partner.users_ids).map((person) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={person.id}
+                        className="bg-select-item flex items-center gap-2"
+                        checked={
+                          responsiblesFilter?.find(
+                            (user_id) => user_id === person.user_id,
+                          )
+                            ? true
+                            : false
+                        }
+                        onClick={(event) => {
+                          const checked = responsiblesFilter.includes(
+                            person.user_id,
+                          );
+
+                          // Se so tiver um e ele for desmarcado, mostra todos
+
+                          if (checked && responsiblesFilter.length < 2) {
+                            setResponsiblesFilter(partner.users_ids);
+                          }
+                          // Se o shift estiver sendo pressionado, mostra apenas aquele usuário
+                          if (event.shiftKey) {
+                            setResponsiblesFilter([person.user_id]);
+                          } else {
+                            const tempResponsibles = checked
+                              ? responsiblesFilter.filter(
+                                  (id) => id !== person.user_id,
+                                )
+                              : [...responsiblesFilter, person.user_id];
+                            setResponsiblesFilter(tempResponsibles);
+                          }
+                        }}
+                      >
+                        <Avatar
+                          item={{
+                            image: person.image,
+                            short: person.initials!,
+                          }}
+                          size="sm"
+                        />
+                        {`${person.name} ${person.surname}`}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenuPortal>
+            </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
