@@ -179,7 +179,7 @@ export default function Partner() {
   const showContent = !!searchParams.get("show_content");
   const showFeed = !!searchParams.get("show_feed");
   const short = !!searchParams.get("short");
-  const allUsers = !!searchParams.get("all_users");
+  const showResponsibles = !!searchParams.get("show_responsibles");
 
   const currentDate = date;
   const pendingActions = usePendingData().actions;
@@ -268,10 +268,10 @@ export default function Partner() {
           }
           setSearchParams(params);
         } else if (code === "KeyR") {
-          if (params.get("all_users")) {
-            params.delete("all_users");
+          if (params.get("show_responsibles")) {
+            params.delete("show_responsibles");
           } else {
-            params.set("all_users", "true");
+            params.set("show_responsibles", "true");
           }
           setSearchParams(params);
         } else if (code === "KeyS") {
@@ -465,21 +465,23 @@ export default function Partner() {
             </Button>
             <Button
               size={"sm"}
-              variant={allUsers ? "secondary" : "ghost"}
+              variant={showResponsibles ? "secondary" : "ghost"}
               onClick={() => {
-                if (allUsers) {
-                  params.delete("all_users");
+                if (showResponsibles) {
+                  params.delete("show_responsibles");
                 } else {
-                  params.set("all_users", "true");
+                  params.set("show_responsibles", "true");
                 }
 
                 setSearchParams(params);
               }}
               title={
-                allUsers ? "Todos os responsáveis" : "'Eu' como responsável"
+                showResponsibles
+                  ? "Todos os responsáveis"
+                  : "'Eu' como responsável"
               }
             >
-              {allUsers ? (
+              {showResponsibles ? (
                 <UsersIcon className="size-4" />
               ) : (
                 <UserIcon className="size-4" />
@@ -785,7 +787,7 @@ export default function Partner() {
                     day={day}
                     person={person}
                     short={short}
-                    allUsers={allUsers}
+                    showResponsibles={showResponsibles}
                     showContent={showContent}
                     key={i}
                     index={i}
@@ -838,7 +840,7 @@ export const CalendarDay = ({
   day,
   currentDate,
   short,
-  allUsers,
+  showResponsibles,
   showContent,
   index,
 }: {
@@ -846,7 +848,7 @@ export const CalendarDay = ({
   currentDate: Date | string;
   person: Person;
   short?: boolean;
-  allUsers?: boolean;
+  showResponsibles?: boolean;
   showContent?: boolean;
   index?: string | number;
 }) => {
@@ -910,7 +912,7 @@ export const CalendarDay = ({
                       }))
                       .map(({ actions, category }) => (
                         <CategoryActions
-                          allUsers={allUsers}
+                          showResponsibles={showResponsibles}
                           category={category}
                           actions={actions}
                           short={short}
@@ -932,7 +934,7 @@ export const CalendarDay = ({
                       actions &&
                       actions.length > 0 && (
                         <CategoryActions
-                          allUsers={allUsers}
+                          showResponsibles={showResponsibles}
                           category={category}
                           actions={actions}
                           short={short}
@@ -961,13 +963,13 @@ function CategoryActions({
   actions,
   showContent,
   short,
-  allUsers,
+  showResponsibles,
 }: {
   category: Category;
   actions?: Action[];
   showContent?: boolean;
   short?: boolean;
-  allUsers?: boolean;
+  showResponsibles?: boolean;
 }) {
   actions = actions?.sort((a, b) =>
     isAfter(b.instagram_date, a.instagram_date) ? 1 : -1,
@@ -988,7 +990,7 @@ function CategoryActions({
           <ActionLine
             showContent={showContent}
             short={short}
-            allUsers={allUsers}
+            showResponsibles={showResponsibles}
             showDelay
             action={action}
             key={action.id}

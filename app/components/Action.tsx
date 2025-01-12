@@ -76,7 +76,7 @@ export function ActionLine({
   date,
   short,
   long,
-  allUsers,
+  showResponsibles,
   showCategory,
   showDelay,
   showContent,
@@ -86,7 +86,7 @@ export function ActionLine({
   date?: dateTimeFormat;
   short?: boolean;
   long?: boolean;
-  allUsers?: boolean;
+  showResponsibles?: boolean;
   showCategory?: boolean;
   showDelay?: boolean;
   showContent?: boolean;
@@ -195,7 +195,7 @@ export function ActionLine({
                   </div>
                 )}
 
-                {allUsers && (
+                {showResponsibles && (
                   <AvatarGroup
                     avatars={responsibles.map((responsible) => ({
                       item: {
@@ -444,7 +444,7 @@ export function ActionLine({
             )}
 
             {/* Responsibles */}
-            {allUsers || long ? (
+            {showResponsibles || long ? (
               <div
                 className={`flex shrink-0 justify-center ${long ? "w-24" : ""}`}
               >
