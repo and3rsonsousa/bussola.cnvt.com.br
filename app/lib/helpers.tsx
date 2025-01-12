@@ -1034,9 +1034,14 @@ export function useDocumentSize() {
 }
 
 export function getQueryString(qs?: string) {
-  const [searchParams] = useSearchParams();
+  if (typeof window !== "undefined") {
+    const searchParams = new URLSearchParams(location.search).toString();
+    qs = qs ? `&${qs}` : "";
 
-  qs = qs ? `&${qs}` : "";
-
-  return searchParams.toString() ? `?${searchParams.toString()}${qs}` : qs;
+    return searchParams ? `?${searchParams}${qs}` : qs;
+  } else {
+    const [searchParams] = useSearchParams();
+    qs = qs ? `&${qs}` : "";
+    return searchParams.toString() ? `?${searchParams.toString()}${qs}` : qs;
+  }
 }
