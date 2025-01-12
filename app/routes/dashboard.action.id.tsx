@@ -64,6 +64,7 @@ import {
   Content,
   getInstagramFeed,
   getPartners,
+  getQueryString,
   getTypeOfTheContent,
   Icons,
   isInstagramFeed,
@@ -303,11 +304,11 @@ function Header({ action, partner }: { action: Action; partner: Partner }) {
         />
         <div>
           <Link
-            to={`/dashboard/${partner.slug}${
+            to={`/dashboard/${partner.slug}${getQueryString(
               !isSameMonth(action.date, new Date())
-                ? `?date=${format(action.date, "yyyy-MM-dd")}`
-                : ""
-            }`}
+                ? `date=${format(action.date, "yyyy-MM-dd")}`
+                : "",
+            )}`}
             className="cursor-pointer font-bold tracking-tight"
           >
             {partner.title}

@@ -61,6 +61,7 @@ import {
   getActionsByState,
   getActionsByTime,
   getPartners,
+  getQueryString,
   getResponsibles,
   Icons,
   isInstagramFeed,
@@ -153,7 +154,7 @@ export function ActionLine({
         {isInstagramFeed(action.category) && showContent ? (
           <div
             onClick={() => {
-              navigate(`/dashboard/action/${action.id}`);
+              navigate(`/dashboard/action/${action.id}${getQueryString()}`);
             }}
             ref={setNodeRef}
             {...listeners}
@@ -247,7 +248,7 @@ export function ActionLine({
               e.preventDefault();
               e.stopPropagation();
               if (!edit) {
-                navigate(`/dashboard/action/${action.id}`);
+                navigate(`/dashboard/action/${action.id}${getQueryString()}`);
               }
             }}
             onMouseEnter={() => {
@@ -574,7 +575,7 @@ export function ActionBlock({
               event.preventDefault();
               event.stopPropagation();
               if (!edit) {
-                navigate(`/dashboard/action/${action.id}`);
+                navigate(`/dashboard/action/${action.id}${getQueryString()}`);
               }
             }}
             onMouseEnter={() => {
@@ -855,7 +856,10 @@ export function GridOfActions({
     <div className="scrollbars-v">
       <div className="grid grid-cols-3 gap-[2px] overflow-hidden rounded-xl">
         {actions?.map((action, index) => (
-          <Link to={`/dashboard/action/${action.id}`} key={index}>
+          <Link
+            to={`/dashboard/action/${action.id}${getQueryString()}`}
+            key={index}
+          >
             <Content action={action} aspect="squared" partner={partner} />
           </Link>
         ))}
@@ -929,7 +933,7 @@ function ShortcutActions({ action }: { action: Action }) {
           priority,
         });
       } else if (key === "e" && event.shiftKey) {
-        navigate(`/dashboard/action/${action.id}`);
+        navigate(`/dashboard/action/${action.id}${getQueryString()}`);
       } else if (key === "d" && event.shiftKey) {
         handleActions({
           ...action,
@@ -1106,7 +1110,7 @@ export function ContextMenuItems({
       <ContextMenuItem asChild>
         <Link
           className="bg-item flex items-center gap-2"
-          to={`/dashboard/action/${action.id}`}
+          to={`/dashboard/action/${action.id}${getQueryString()}`}
         >
           <PencilLineIcon className="size-3" />
           <span>Editar</span>

@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Link, useFetchers, useMatches } from "react-router";
+import { Link, useFetchers, useMatches, useSearchParams } from "react-router";
 // @ts-ignore
 import Color from "color";
 import {
@@ -1031,4 +1031,12 @@ export function useDocumentSize() {
   }, []);
 
   return size;
+}
+
+export function getQueryString(qs?: string) {
+  const [searchParams] = useSearchParams();
+
+  qs = qs ? `&${qs}` : "";
+
+  return searchParams.toString() ? `?${searchParams.toString()}${qs}` : qs;
 }

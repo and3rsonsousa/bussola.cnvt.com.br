@@ -86,36 +86,41 @@ export default function Header({
 
   const lateActions = getDelayedActions({ actions });
 
-  const ProgressViews = {
-    today: {
-      title: "HJ",
-      length: getTodayActions(actions).length,
-      view: (
-        <CircularProgress actions={getTodayActions(actions)} title="Hoje" />
-      ),
-    },
-    week: {
-      title: "Sem",
-      length: getThisWeekActions(actions).length,
-      view: (
-        <CircularProgress actions={getThisWeekActions(actions)} title="Sem" />
-      ),
-    },
-    month: {
-      title: format(new Date(), "MMM", {
-        locale: ptBR,
-      }),
-      length: getMonthsActions(actions).length,
-      view: (
-        <CircularProgress
-          actions={getMonthsActions(actions)}
-          title={format(new Date(), "MMM", {
+  const ProgressViews = partner
+    ? {
+        today: {
+          title: "HJ",
+          length: getTodayActions(actions).length,
+          view: (
+            <CircularProgress actions={getTodayActions(actions)} title="Hoje" />
+          ),
+        },
+        week: {
+          title: "Sem",
+          length: getThisWeekActions(actions).length,
+          view: (
+            <CircularProgress
+              actions={getThisWeekActions(actions)}
+              title="Sem"
+            />
+          ),
+        },
+        month: {
+          title: format(new Date(), "MMM", {
             locale: ptBR,
-          })}
-        />
-      ),
-    },
-  };
+          }),
+          length: getMonthsActions(actions).length,
+          view: (
+            <CircularProgress
+              actions={getMonthsActions(actions)}
+              title={format(new Date(), "MMM", {
+                locale: ptBR,
+              })}
+            />
+          ),
+        },
+      }
+    : undefined;
 
   return (
     <header
@@ -183,7 +188,7 @@ export default function Header({
 
         {/* parceiros         */}
         <div className="flex items-center gap-0">
-          {partner && (
+          {partner && ProgressViews ? (
             <div
               className="relative flex cursor-pointer items-center gap-1"
               role="button"
@@ -206,7 +211,7 @@ export default function Header({
                 </div>
               </div>
             </div>
-          )}
+          ) : null}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
