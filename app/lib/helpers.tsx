@@ -1045,3 +1045,9 @@ export function getQueryString(qs?: string) {
     return searchParams.toString() ? `?${searchParams.toString()}${qs}` : qs;
   }
 }
+
+export function getBiaMessage(message: string) {
+  return `<hr><blockquote>${
+    message
+  }<h5>βia às ${format(new Date(), "HH:mm:ss")}</h5></blockquote>`;
+}

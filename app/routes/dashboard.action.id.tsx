@@ -62,6 +62,7 @@ import {
   Avatar,
   Bia,
   Content,
+  getBiaMessage,
   getInstagramFeed,
   getPartners,
   getQueryString,
@@ -198,16 +199,14 @@ export default function ActionPage() {
           description:
             index < 0
               ? description.concat(
-                  `<hr/><h4>βia às ${format(new Date(), "HH:mm:ss")}</h4> ${
-                    (fetcher.data as { message: string }).message
-                  }`,
+                  getBiaMessage((fetcher.data as { message: string }).message),
                 )
               : description
                   .substring(0, action.description?.indexOf("<hr>"))
                   .concat(
-                    `<hr/><h4>βia às ${format(new Date(), "HH:mm:ss")}</h4> ${
-                      (fetcher.data as { message: string }).message
-                    }`,
+                    getBiaMessage(
+                      (fetcher.data as { message: string }).message,
+                    ),
                   )
                   .concat(description.substring(index)),
         }));

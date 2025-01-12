@@ -310,7 +310,15 @@ ol {
 }
 
 .tiptap hr {
-  @apply my-12 border-t;
+  @apply my-4 border-t;
+}
+
+.tiptap blockquote {
+  @apply bg-accent rounded-md px-6 py-4;
+}
+
+.tiptap blockquote h5 {
+  @apply mt-2 text-right text-xs font-medium tracking-widest opacity-50;
 }
 
 input::-webkit-outer-spin-button,
@@ -373,12 +381,10 @@ input::-webkit-inner-spin-button {
 
 .scrollbars-h {
   @apply mb-1 h-full overflow-x-auto overflow-y-hidden py-1;
-  scrollbars-gutter: stable;
 }
 
 .scrollbars-v {
-  @apply mr-1 h-full overflow-x-hidden overflow-y-auto px-1;
-  scrollbars-gutter: stable;
+  @apply mr-1 h-full overflow-x-hidden overflow-y-auto px-1 pr-4;
 }
 
 .scrollbars-v::-webkit-scrollbar {

@@ -2,6 +2,7 @@ import BulletList from "@tiptap/extension-bullet-list";
 import Highlight from "@tiptap/extension-highlight";
 import Subscript from "@tiptap/extension-subscript";
 import Superscrit from "@tiptap/extension-superscript";
+import Blockquote from "@tiptap/extension-blockquote";
 import {
   BubbleMenu,
   EditorProvider,
@@ -35,10 +36,11 @@ export default function Tiptap({
 }) {
   const extensions = [
     StarterKit,
-    Highlight.configure({ multicolor: true }),
+    Highlight,
     BulletList,
     Superscrit,
     Subscript,
+    Blockquote,
   ];
 
   return (
