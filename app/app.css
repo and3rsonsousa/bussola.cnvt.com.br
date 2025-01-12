@@ -310,7 +310,7 @@ ol {
 }
 
 .tiptap hr {
-  @apply border-t;
+  @apply my-12 border-t;
 }
 
 input::-webkit-outer-spin-button,

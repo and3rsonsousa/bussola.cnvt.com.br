@@ -179,8 +179,6 @@ export default function ActionPage() {
   // Atualizar a Inserir o conteúdo da IA
   useEffect(() => {
     if (fetcher.data && intent) {
-      console.log({ intent });
-
       if (intent === "title") {
         setAction(() => ({
           ...action,
@@ -193,13 +191,25 @@ export default function ActionPage() {
           (category) => category === intent,
         )
       ) {
+        const description = action.description || "";
+        const index = action.description?.indexOf("<hr>") || -1;
         setAction(() => ({
           ...action,
-          description: (action.description || "").concat(
-            `<h2>βIA às ${format(new Date(), "HH:mm:ss")}</h2> ${
-              (fetcher.data as { message: string }).message
-            }`,
-          ),
+          description:
+            index < 0
+              ? description.concat(
+                  `<hr/><h4>βia às ${format(new Date(), "HH:mm:ss")}</h4> ${
+                    (fetcher.data as { message: string }).message
+                  }`,
+                )
+              : description
+                  .substring(0, action.description?.indexOf("<hr>"))
+                  .concat(
+                    `<hr/><h4>βia às ${format(new Date(), "HH:mm:ss")}</h4> ${
+                      (fetcher.data as { message: string }).message
+                    }`,
+                  )
+                  .concat(description.substring(index)),
         }));
       } else if (
         fetcher.formData &&
@@ -207,8 +217,6 @@ export default function ActionPage() {
           (item) => item === intent,
         ) >= 0
       ) {
-        console.log(fetcher.data);
-
         setAction({
           ...action,
           caption: (fetcher.data as { message: string }).message,
@@ -455,7 +463,7 @@ function Description({
             <PopoverTrigger className="button-trigger">
               <Bia size="xs" />
             </PopoverTrigger>
-            <PopoverContent className="bg-content">
+            <PopoverContent className="bg-content w-[90dvw] lg:max-w-[500px]">
               <fieldset disabled={fetcher.formData?.get("intent") === "prompt"}>
                 <div className="mb-2 text-sm font-medium">Peça algo à βia</div>
                 <div className="bg-input relative rounded-sm border p-2 pb-10">
@@ -472,7 +480,7 @@ function Description({
                         "animate-colors",
                     )}
                     size={"icon"}
-                    variant={"secondary"}
+                    variant={"ghost"}
                     onClick={async () => {
                       const prompt = promptRef.current?.value;
 
@@ -480,7 +488,6 @@ function Description({
                         fetcher.submit(
                           {
                             prompt,
-
                             intent: "prompt",
                           },
 
@@ -502,196 +509,156 @@ function Description({
           {isInstagramFeed(action.category, true) && (
             <TriggersSelect setTrigger={setTrigger} trigger={trigger} />
           )}
-          {
-            action.category === "carousel" ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    className={`h-7 w-7 p-1 ${
-                      isWorking &&
-                      fetcher.formData?.get("intent") === "carousel" &&
-                      "animate-colors"
-                    }`}
-                    variant="ghost"
-                  >
-                    <SparklesIcon />
-                  </Button>
-                </DropdownMenuTrigger>
+          {action.category === "carousel" ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  className={`h-7 w-7 p-1 ${
+                    isWorking &&
+                    fetcher.formData?.get("intent") === "carousel" &&
+                    "animate-colors"
+                  }`}
+                  variant="ghost"
+                >
+                  <SparklesIcon />
+                </Button>
+              </DropdownMenuTrigger>
 
-                <DropdownMenuContent className="bg-content">
-                  <DropdownMenuItem
-                    className="bg-item"
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-                          intent: "carousel",
-                          trigger,
-                          voice: partner.voice,
-                        },
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    Modelo Comum
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="bg-item"
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-                          intent: "carousel",
-                          model: "twitter",
-                          trigger,
-                          voice: partner.voice,
-                        },
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    Modelo Twitter
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : action.category === "reels" ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    size={"sm"}
-                    className={` ${
-                      isWorking &&
-                      ["hook", "reels"].find(
-                        (category) =>
-                          category === fetcher.formData?.get("intent"),
-                      ) &&
-                      "animate-colors"
-                    }`}
-                    variant="ghost"
-                  >
-                    <SparklesIcon className="size-4" />
-                  </Button>
-                </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-content">
+                <DropdownMenuItem
+                  className="bg-item"
+                  onSelect={async () => {
+                    fetcher.submit(
+                      {
+                        title: action.title,
+                        description: action.description,
+                        context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+                        intent: "carousel",
+                        trigger,
+                        voice: partner.voice,
+                      },
+                      {
+                        action: "/handle-openai",
+                        method: "post",
+                      },
+                    );
+                  }}
+                >
+                  Modelo Comum
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="bg-item"
+                  onSelect={async () => {
+                    fetcher.submit(
+                      {
+                        title: action.title,
+                        description: action.description,
+                        context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+                        intent: "carousel",
+                        model: "twitter",
+                        trigger,
+                        voice: partner.voice,
+                      },
+                      {
+                        action: "/handle-openai",
+                        method: "post",
+                      },
+                    );
+                  }}
+                >
+                  Modelo Twitter
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : action.category === "reels" ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size={"sm"}
+                  className={` ${
+                    isWorking &&
+                    ["hook", "reels"].find(
+                      (category) =>
+                        category === fetcher.formData?.get("intent"),
+                    ) &&
+                    "animate-colors"
+                  }`}
+                  variant="ghost"
+                >
+                  <SparklesIcon className="size-4" />
+                </Button>
+              </DropdownMenuTrigger>
 
-                <DropdownMenuContent className="bg-content">
-                  <DropdownMenuItem
-                    className="bg-item"
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          context: `EMPRESA: ${partner.title} - CONTEXTO: ${partner.context}`,
-                          intent: "hook",
-                        },
+              <DropdownMenuContent className="bg-content">
+                <DropdownMenuItem
+                  className="bg-item"
+                  onSelect={async () => {
+                    fetcher.submit(
+                      {
+                        title: action.title,
+                        description: action.description,
+                        context: `EMPRESA: ${partner.title} - CONTEXTO: ${partner.context}`,
+                        intent: "hook",
+                      },
 
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    Opções de ganchos virais
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="bg-item"
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          context: `EMPRESA: ${partner.title} - CONTEXTO: ${partner.context}`,
-                          intent: "reels",
-                          model: "viral",
-                          trigger,
-                          voice: partner.voice,
-                        },
+                      {
+                        action: "/handle-openai",
+                        method: "post",
+                      },
+                    );
+                  }}
+                >
+                  Opções de ganchos virais
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="bg-item"
+                  onSelect={async () => {
+                    fetcher.submit(
+                      {
+                        title: action.title,
+                        description: action.description,
+                        context: `EMPRESA: ${partner.title} - CONTEXTO: ${partner.context}`,
+                        intent: "reels",
+                        model: "viral",
+                        trigger,
+                        voice: partner.voice,
+                      },
 
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    Roteiro de Vídeo Viral
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="bg-item"
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          context: `EMPRESA: ${partner.title} - CONTEXTO: ${partner.context}`,
-                          intent: "reels",
-                          model: "list",
-                          trigger,
-                          voice: partner.voice,
-                        },
+                      {
+                        action: "/handle-openai",
+                        method: "post",
+                      },
+                    );
+                  }}
+                >
+                  Roteiro de Vídeo Viral
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="bg-item"
+                  onSelect={async () => {
+                    fetcher.submit(
+                      {
+                        title: action.title,
+                        description: action.description,
+                        context: `EMPRESA: ${partner.title} - CONTEXTO: ${partner.context}`,
+                        intent: "reels",
+                        model: "list",
+                        trigger,
+                        voice: partner.voice,
+                      },
 
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    Roteiro de Vídeo em Lista
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : null
-            // <DropdownMenu>
-            //   <DropdownMenuTrigger asChild>
-            //     <Button
-            //       size={"sm"}
-            //       className={` ${
-            //         isWorking &&
-            //         fetcher.formData?.get("intent") === "prompt" &&
-            //         "animate-colors"
-            //       }`}
-            //       variant="ghost"
-            //     >
-            //       <SparklesIcon className="size-4" />
-            //     </Button>
-            //   </DropdownMenuTrigger>
-
-            //   <DropdownMenuContent className="bg-content">
-            //     <DropdownMenuItem
-            //       className="bg-item"
-            //       onSelect={async () => {
-            //         fetcher.submit(
-            //           {
-            //             title: action.title,
-            //             description: action.description,
-            //             context: `EMPRESA: ${partner.title} - CONTEXTO: ${partner.context}`,
-            //             intent: "prompt",
-            //           },
-
-            //           {
-            //             action: "/handle-openai",
-            //             method: "post",
-            //           },
-            //         );
-            //       }}
-            //     >
-            //       Pesquisar sobre o assunto
-            //     </DropdownMenuItem>
-            //   </DropdownMenuContent>
-            // </DropdownMenu>
-          }
+                      {
+                        action: "/handle-openai",
+                        method: "post",
+                      },
+                    );
+                  }}
+                >
+                  Roteiro de Vídeo em Lista
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : null}
         </div>
       </div>
 
