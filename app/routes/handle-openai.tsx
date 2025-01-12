@@ -84,7 +84,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   } else if (intent === "caption") {
     template =
-      "Texto da legenda e hashtags SEO, use 3 hashtags bem focadas no nicho da DESCRIÇÃO. Use pelo menos um emoji por parágrafo.";
+      "Texto da legenda e hashtags, use 3 hashtags bem focadas no nicho da DESCRIÇÃO.";
 
     if (model === "aida") {
       template = `Texto da legenda seguindo o modelo AIDA bem criativo, usando técnicas de Storytelling e reforçando o CONTEXTO. Use as keywords relevantes ao CONTEXTO e encerre a legenda com 9 keywords SEO que falem tanto da DESCRIÇÃO, quanto do CONTEXTO. Siga esse modelo de AIDA: Atenção - Use emojis, perguntas diretas ou estatísticas chocantes Interesse - Faça o público se identificar com o problema ou a situação Desejo - Gere expectativa sobre a solução. Ação - Finalize com um convite claro e uma CTA estratégica.`;
@@ -118,7 +118,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     `;
     }
 
-    content = `Você é um redator experiente. Crie uma legenda para uma postagem no instagram seguindo o CONTEXTO e levando em conta a descrição da empresa. Use o gatilho mental da: ${trigger}. Use esse formato: 
+    content = `Você é um redator experiente. Crie uma legenda para uma postagem no instagram seguindo o CONTEXTO e levando em conta a descrição da empresa. Use o gatilho mental da: ${trigger}. Use bastante emojis na legenda. Use esse formato: 
     TEXTO DA LEGENDA 
 
     HASHTAGS'. 

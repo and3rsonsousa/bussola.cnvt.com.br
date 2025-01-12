@@ -239,7 +239,7 @@ body {
 }
 
 .action-item {
-  @apply ring-ring ring-offset-background bg-card hover:bg-popover inset-shadow-highlight relative flex w-full cursor-pointer rounded-md border border-transparent inset-shadow-xs shadow-sm outline-hidden transition-[background-color,box-shadow] select-none focus-within:ring-2 hover:z-10 hover:shadow-xl focus:ring-2 focus:ring-offset-2;
+  @apply ring-ring ring-offset-background bg-card hover:bg-popover inset-shadow-highlight relative z-0 flex w-full cursor-pointer rounded-md border border-transparent inset-shadow-xs shadow-sm outline-hidden transition-[background-color,box-shadow] select-none focus-within:ring-2 hover:z-10 hover:shadow-xl focus:ring-2 focus:ring-offset-2;
 }
 
 .action-item-block {

@@ -149,7 +149,7 @@ export function ActionLine({
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger className={isDragging ? "z-10" : "z-1"}>
+      <ContextMenuTrigger className={isDragging ? "z-10" : ""}>
         {isInstagramFeed(action.category) && showContent ? (
           <div
             onClick={() => {
@@ -232,8 +232,8 @@ export function ActionLine({
             {...attributes}
             style={style}
             title={action.title}
-            className={`action group/action action-item items-center gap-2 [&>*]:border-red-500 ${
-              isDragging ? "z-[100]" : "z-1"
+            className={`action group/action action-item items-center gap-2 hover:z-100 [&>*]:border-red-500 ${
+              isDragging ? "z-[100]" : "z-0"
             } ${
               short ? "px-3 py-2" : long ? "px-4 py-3" : "p-3"
             } font-base @container md:text-sm ${
@@ -568,7 +568,7 @@ export function ActionBlock({
           <div
             title={action.title}
             className={`action group/action action-item action-item-block @container cursor-pointer flex-col justify-between gap-2 text-sm ${
-              isDragging ? "z-[100]" : "z-1"
+              isDragging ? "z-[100]" : "z-0"
             } ${isSprint(action.id, sprints) && sprint ? "action-sprint" : ""}`}
             onClick={(event) => {
               event.preventDefault();
