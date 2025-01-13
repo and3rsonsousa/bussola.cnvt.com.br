@@ -3,13 +3,12 @@ import Highlight from "@tiptap/extension-highlight";
 import Subscript from "@tiptap/extension-subscript";
 import Superscrit from "@tiptap/extension-superscript";
 import Blockquote from "@tiptap/extension-blockquote";
-import {
-  BubbleMenu,
-  EditorProvider,
-  FloatingMenu,
-  useCurrentEditor,
-  type Content,
-} from "@tiptap/react";
+import Table from "@tiptap/extension-table";
+import TableHeader from "@tiptap/extension-table-header";
+import TableRow from "@tiptap/extension-table-row";
+import TableCell from "@tiptap/extension-table-cell";
+
+import { EditorProvider, useCurrentEditor, type Content } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {
   BoldIcon,
@@ -41,6 +40,11 @@ export default function Tiptap({
     Superscrit,
     Subscript,
     Blockquote,
+    Table,
+
+    TableRow,
+    TableHeader,
+    TableCell,
   ];
 
   return (
@@ -56,12 +60,12 @@ export default function Tiptap({
         slotBefore={<Menu type={1} />}
       >
         <SetContent content={content} />
-        <FloatingMenu
+        {/* <FloatingMenu
           editor={null}
           className="bg-background ml-4 rounded border p-1"
         >
           <Menu type={2} />
-        </FloatingMenu>
+        </FloatingMenu> */}
         {/* <BubbleMenu editor={null} className="bg-content rounded-lg p-1">
 					<Menu type={3} />
 				</BubbleMenu> */}
@@ -137,7 +141,7 @@ export const Menu = ({ type }: { type: 1 | 2 | 3 }) => {
             <Button
               className="grid size-8 place-content-center rounded p-0"
               variant={"ghost"}
-              onClick={() => editor?.commands.clearNodes()}
+              onClick={() => editor?.commands.unsetAllMarks()}
               title="Limpar Formatação"
             >
               <EraserIcon />

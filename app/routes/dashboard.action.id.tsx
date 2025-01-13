@@ -787,11 +787,11 @@ function RightSide({
         </>
       )}
       {/* Legenda */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <div className="text-xs font-bold tracking-wider uppercase">
           {action.category === "stories" ? "Sequência" : "Legenda"}
         </div>
-        <div className="flex gap-2 pr-1 pb-1">
+        <div className="flex gap-2 overflow-x-hidden p-1">
           <TriggersSelect trigger={trigger} setTrigger={setTrigger} />
 
           {action.category === "stories" ? (
@@ -1377,7 +1377,7 @@ export const TriggersSelect = ({
 }) => (
   <Select value={trigger} onValueChange={(value) => setTrigger(value)}>
     <SelectTrigger
-      className="h-auto gap-1 px-3 py-0.5 text-xs font-medium"
+      className="h-auto gap-1 overflow-hidden px-3 py-0.5 text-xs font-medium"
       title="Gatilho Mental"
     >
       <SelectValue />

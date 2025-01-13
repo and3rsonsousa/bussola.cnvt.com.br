@@ -829,12 +829,12 @@ export function BlockOfActions({
   return (
     <div className="@container -mx-1 h-full overflow-hidden">
       <div
-        className={`grid ${
+        className={`${
           !max
-            ? "@[600px]:grid-cols-2 @[1000px]:grid-cols-3 @[1300px]:grid-cols-4"
+            ? "grid @[600px]:grid-cols-2 @[1000px]:grid-cols-3 @[1300px]:grid-cols-4"
             : max === 2
-              ? "grid-cols-2"
-              : "items-start"
+              ? "grid grid-cols-2"
+              : "flex flex-col"
         } scrollbars-v gap-2 p-1 pb-8`}
       >
         {actions?.map((action) => (

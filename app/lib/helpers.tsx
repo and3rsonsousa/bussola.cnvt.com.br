@@ -1047,7 +1047,5 @@ export function getQueryString(qs?: string) {
 }
 
 export function getBiaMessage(message: string) {
-  return `<hr><blockquote>${
-    message
-  }<h5>βia às ${format(new Date(), "HH:mm:ss")}</h5></blockquote>`;
+  return `<hr>${message}<h5>βia às ${format(new Date(), "HH:mm:ss")}</h5>`;
 }
