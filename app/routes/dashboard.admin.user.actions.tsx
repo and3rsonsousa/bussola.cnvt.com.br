@@ -8,7 +8,7 @@ import {
   type LoaderFunctionArgs,
 } from "react-router";
 import invariant from "tiny-invariant";
-import { ListOfActions } from "~/components/Action";
+import { ActionLine, ListOfActions } from "~/components/Action";
 import { Heading } from "~/components/Headings";
 import { Button } from "~/components/ui/button";
 import { Avatar } from "~/lib/helpers";
@@ -92,6 +92,13 @@ export default function AdminPartners() {
             </Button>
           </div>
         </div>
+        {/* <div className="flex flex-col gap-2">
+          {actions
+            ?.filter((action) =>
+              viewFinished ? true : action.state !== "finished",
+            )
+            .map((action) => <ActionLine action={action} key={action.id} />)}
+        </div> */}
 
         <ListOfActions
           actions={actions?.filter((action) =>

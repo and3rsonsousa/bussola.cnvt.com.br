@@ -34,8 +34,8 @@ export default function AdminPartners() {
   const { people } = useLoaderData<typeof loader>();
   return (
     <div className="bg-background min-h-screen w-full py-8 lg:py-24">
-      <div className="px-2 pb-8 text-center md:px-8">
-        <Heading>Usuários</Heading>
+      <div className="px-2 pb-8 md:px-8">
+        <Heading className="text-center">Usuários</Heading>
 
         <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {people?.map((person: Person) => (
@@ -51,7 +51,7 @@ export default function AdminPartners() {
                   }}
                   size="lg"
                 />
-                <div className="text-2xl font-medium tracking-tighter">
+                <div className="text-left text-2xl leading-none font-medium tracking-tighter">
                   {`${person.name} ${person.surname}`}
                 </div>
               </div>

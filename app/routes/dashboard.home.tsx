@@ -9,8 +9,6 @@ import {
   formatRelative,
   isSameDay,
   isToday,
-  parse,
-  parseISO,
   startOfMonth,
   startOfWeek,
   subDays,
@@ -478,6 +476,7 @@ function WeekView({
                   date={{ timeFormat: 1 }}
                   showCategory={true}
                   short
+                  scroll
                 />
               </div>
             </div>

@@ -113,6 +113,7 @@ function KanbanColumn({
           actions={actions}
           showCategory
           date={{ timeFormat: 1 }}
+          scroll
         />
       ) : (
         <BlockOfActions max={1} actions={actions} sprint />

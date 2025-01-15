@@ -98,8 +98,6 @@ export function ActionLine({
   const [searchParams] = useSearchParams();
   const isInstagramDate = searchParams.get("instagram_date");
 
-  // console.log(Array.from(searchParams).map((k) => k[0]));
-
   const [edit, setEdit] = useState(false);
   const [isHover, setHover] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
@@ -236,7 +234,7 @@ export function ActionLine({
             className={`action group/action action-item items-center gap-2 hover:z-100 [&>*]:border-red-500 ${
               isDragging ? "z-[100]" : "z-0"
             } ${
-              short ? "px-2 py-1" : long ? "px-4 py-3" : "p-3"
+              short ? "action-item-short px-2 py-1" : long ? "px-4 py-3" : "p-3"
             } font-base @container md:text-sm ${
               showDelay &&
               isBefore(action.date, new Date()) &&
@@ -722,6 +720,7 @@ export function ListOfActions({
   orderBy = "state",
   short,
   long,
+  scroll,
 }: {
   actions?: Action[] | null;
   showCategory?: boolean;
@@ -733,6 +732,7 @@ export function ListOfActions({
   orderBy?: "state" | "priority" | "time";
   short?: boolean;
   long?: boolean;
+  scroll?: boolean;
 }) {
   const matches = useMatches();
   const { states } = matches[1].data as DashboardRootType;
@@ -748,7 +748,7 @@ export function ListOfActions({
   const foldCount = columns * 4;
   const [fold, setFold] = useState(isFoldable ? foldCount : undefined);
   return actions.length > 0 ? (
-    <div>
+    <div className="h-full">
       <div
         className={`${
           columns === 1
@@ -758,7 +758,7 @@ export function ListOfActions({
               : columns === 3
                 ? "grid sm:grid-cols-2 md:grid-cols-3"
                 : "grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6"
-        } scrollbars-v @container gap-x-4 gap-y-1 pt-1 pb-8`}
+        } ${scroll ? "scrollbars-v pt-1 pb-8" : ""} @container h-full gap-x-4 gap-y-1`}
       >
         {actions
           ?.slice(0, fold)
@@ -1103,6 +1103,12 @@ export function ContextMenuItems({
   // const partner = partners.find((p) => p.slug === action.partners[0]);
   const state = states.find((state) => state.slug === action.state);
   const _partners = getPartners(action.partners);
+
+  // console.log({
+  //   a_partners: getPartners(action.partners),
+  //   p: action.partners,
+  //   partners,
+  // });
 
   return (
     <ContextMenuContent className="bg-content">
@@ -1568,7 +1574,7 @@ export function ContextMenuItems({
         </ContextMenuSubTrigger>
         <ContextMenuPortal>
           <ContextMenuSubContent className="bg-content">
-            {getResponsibles(getPartners(action.partners)[0].users_ids).map(
+            {/* {getResponsibles(getPartners(action.partners)[0].users_ids).map(
               (person) => (
                 <ContextMenuCheckboxItem
                   checked={
@@ -1626,7 +1632,7 @@ export function ContextMenuItems({
                   {`${person.name} ${person.surname}`}
                 </ContextMenuCheckboxItem>
               ),
-            )}
+            )} */}
           </ContextMenuSubContent>
         </ContextMenuPortal>
       </ContextMenuSub>
