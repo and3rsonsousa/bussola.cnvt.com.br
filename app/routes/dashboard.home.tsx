@@ -240,7 +240,12 @@ function TodayViews({ actions }: { actions: Action[] }) {
   >("kanban");
   const [list, setList] = useState(false);
   const [currentDay, setCurrentDay] = useState(new Date());
-  const currentActions = getActionsForThisDay({ actions, date: currentDay });
+  const currentActions = getActionsForThisDay({
+    actions,
+    date: currentDay,
+    isInstagramDate: todayView === "feed",
+  });
+
   const matches = useMatches();
   const { states, partners } = matches[1].data as DashboardRootType;
 

@@ -350,14 +350,21 @@ export function getActionsByTime(actions: Action[], descending?: boolean) {
 export function getActionsForThisDay({
   actions,
   date,
+  isInstagramDate,
 }: {
   actions?: Action[] | null;
   date?: Date | null;
+  isInstagramDate?: boolean;
 }) {
   const currentDate = date || new Date();
 
   return actions
-    ? actions.filter((action) => isSameDay(parseISO(action.date), currentDate))
+    ? actions.filter((action) =>
+        isSameDay(
+          parseISO(isInstagramDate ? action.instagram_date : action.date),
+          currentDate,
+        ),
+      )
     : [];
 }
 
