@@ -12,6 +12,7 @@ import {
   AvatarGroup,
   getInstagramFeed,
   getPartners,
+  getResponsibles,
   Icons,
   isInstagramFeed,
 } from "~/lib/helpers";
@@ -280,6 +281,7 @@ export default function CreateAction({
               onCheckedChange={(responsibles) => {
                 setAction({ ...action, responsibles });
               }}
+              partner={action.partners[0]}
             />
 
             {/* Cor da ação */}
@@ -524,12 +526,14 @@ export function ResponsibleForAction({
   size,
   responsibles,
   onCheckedChange,
+  partner,
 }: {
   size?: Size;
   responsibles: string[];
   onCheckedChange: (responsibles: string[]) => void;
+  partner: string;
 }) {
-  const { people } = useMatches()[1].data as DashboardRootType;
+  const { people, partners } = useMatches()[1].data as DashboardRootType;
 
   const _responsibles: Person[] = [];
   responsibles.map((user_id) => {
@@ -555,41 +559,43 @@ export function ResponsibleForAction({
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-content">
-        {people.map((person) => (
-          <DropdownMenuCheckboxItem
-            key={person.id}
-            className="bg-select-item"
-            checked={responsibles.includes(person.user_id)}
-            onClick={(event) => {
-              const checked = responsibles.includes(person.user_id);
+        {getResponsibles(getPartners([partner], partners)[0].users_ids).map(
+          (person) => (
+            <DropdownMenuCheckboxItem
+              key={person.id}
+              className="bg-select-item"
+              checked={responsibles.includes(person.user_id)}
+              onClick={(event) => {
+                const checked = responsibles.includes(person.user_id);
 
-              if (checked && responsibles.length < 2) {
-                alert("É necessário ter pelo menos um responsável pela ação");
-                return false;
-              }
+                if (checked && responsibles.length < 2) {
+                  alert("É necessário ter pelo menos um responsável pela ação");
+                  return false;
+                }
 
-              if (event.shiftKey) {
-                onCheckedChange([person.user_id]);
-              } else {
-                const tempResponsibles = checked
-                  ? responsibles.filter((id) => id !== person.user_id)
-                  : [...responsibles, person.user_id];
+                if (event.shiftKey) {
+                  onCheckedChange([person.user_id]);
+                } else {
+                  const tempResponsibles = checked
+                    ? responsibles.filter((id) => id !== person.user_id)
+                    : [...responsibles, person.user_id];
 
-                onCheckedChange(tempResponsibles);
-              }
-            }}
-          >
-            <div className="flex items-center gap-2">
-              <Avatar
-                item={{
-                  image: person.image,
-                  short: person.initials!,
-                }}
-              />
-              <div>{person.name}</div>
-            </div>
-          </DropdownMenuCheckboxItem>
-        ))}
+                  onCheckedChange(tempResponsibles);
+                }
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <Avatar
+                  item={{
+                    image: person.image,
+                    short: person.initials!,
+                  }}
+                />
+                <div>{person.name}</div>
+              </div>
+            </DropdownMenuCheckboxItem>
+          ),
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

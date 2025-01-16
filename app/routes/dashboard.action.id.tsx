@@ -1227,6 +1227,7 @@ function LowerBar({
           onCheckedChange={(responsibles) => {
             setAction({ ...action, responsibles });
           }}
+          partner={action.partners[0]}
         />
 
         {getInstagramFeed({ actions: [action] }).length > 0 ? (
