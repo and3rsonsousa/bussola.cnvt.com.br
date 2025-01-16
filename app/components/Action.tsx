@@ -1574,7 +1574,7 @@ export function ContextMenuItems({
         </ContextMenuSubTrigger>
         <ContextMenuPortal>
           <ContextMenuSubContent className="bg-content">
-            {/* {getResponsibles(getPartners(action.partners)[0].users_ids).map(
+            {getResponsibles(getPartners(action.partners)[0].users_ids).map(
               (person) => (
                 <ContextMenuCheckboxItem
                   checked={
@@ -1632,7 +1632,7 @@ export function ContextMenuItems({
                   {`${person.name} ${person.surname}`}
                 </ContextMenuCheckboxItem>
               ),
-            )} */}
+            )}
           </ContextMenuSubContent>
         </ContextMenuPortal>
       </ContextMenuSub>
