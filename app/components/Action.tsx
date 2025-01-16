@@ -114,7 +114,7 @@ export function ActionLine({
     (partner) => partner.slug === action.partners[0],
   ) as Partner;
 
-  const responsibles = getResponsibles(action.responsibles);
+  const responsibles = getResponsibles(people, action.responsibles);
 
   function handleActions(data: {
     [key: string]: string | number | null | string[] | boolean;
@@ -526,7 +526,7 @@ export function ActionBlock({
   const matches = useMatches();
   const navigate = useNavigate();
 
-  const { categories, states, sprints, partners } = matches[1]
+  const { categories, states, sprints, partners, people } = matches[1]
     .data as DashboardRootType;
 
   const actionPartners = getPartners(action.partners, partners);
@@ -678,7 +678,9 @@ export function ActionBlock({
                   </div>
                 ) : null}
                 {/* Responsibles -  Responsáveis */}
-                <AvatarGroup people={getResponsibles(action.responsibles)} />
+                <AvatarGroup
+                  people={getResponsibles(people, action.responsibles)}
+                />
               </div>
               <div className="flex items-center justify-end gap-1 overflow-hidden text-right text-sm font-medium whitespace-nowrap opacity-50 md:text-xs">
                 <span className="@[240px]:hidden">
@@ -1560,7 +1562,7 @@ export function ContextMenuItems({
               action.responsibles.length === 1 ? "gap-2" : "-space-x-1"
             }`}
           >
-            {getResponsibles(action.responsibles).map((person) => (
+            {getResponsibles(people, action.responsibles).map((person) => (
               <Fragment key={person.id}>
                 <Avatar
                   item={{
@@ -1579,6 +1581,7 @@ export function ContextMenuItems({
         <ContextMenuPortal>
           <ContextMenuSubContent className="bg-content">
             {getResponsibles(
+              people,
               getPartners(action.partners, partners)[0].users_ids,
             ).map((person) => (
               <ContextMenuCheckboxItem

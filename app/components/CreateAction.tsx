@@ -92,8 +92,6 @@ export default function CreateAction({
     (category) => category.slug === action.category,
   ) as Category;
 
-  // const state = states.find((state) => state.slug === action.state) as State;
-
   useEffect(() => {
     if (action.partner) {
       const newPartner = partners.find((p) => p.slug === action.partner);
@@ -102,7 +100,7 @@ export default function CreateAction({
         setAction({ ...action, color: newPartner.colors[0] });
       }
     }
-  }, [action.partner]);
+  }, [action.partners]);
 
   useEffect(() => {
     if (
@@ -218,7 +216,8 @@ export default function CreateAction({
             <PartnersDropdown
               partners={action.partners}
               onSelect={(partners) => {
-                setAction({ ...action, partners });
+                setAction((action) => ({ ...action, partners }));
+                // console.log({ partners });
               }}
             />
 
@@ -487,23 +486,15 @@ export function PartnersDropdown({
             checked={partners.includes(partner.slug)}
             className="bg-select-item"
             onClick={(event) => {
-              if (event.shiftKey) {
-                onSelect([partner.slug]);
-              } else {
+              let tempPartners = [partner.slug];
+              if (!event.shiftKey) {
                 const checked = partners.includes(partner.slug);
-                const tempPartners = checked
+                tempPartners = checked
                   ? partners.filter((p) => p !== partner.slug)
                   : [...partners, partner.slug];
-
-                onSelect(tempPartners);
               }
+              onSelect(tempPartners);
             }}
-            // onCheckedChange={(checked) => {
-            // const tempPartners = checked
-            //   ? [...action.partners, partner.slug]
-            //   : action.partners.filter((p) => p !== partner.slug);
-            // onSelect(tempPartners);
-            // }}
           >
             <div className="flex items-center gap-2">
               <Avatar
@@ -524,25 +515,29 @@ export function PartnersDropdown({
 
 export function ResponsibleForAction({
   size,
-  responsibles,
+  responsibles: responsibles_ids,
   onCheckedChange,
   partner,
 }: {
   size?: Size;
   responsibles: string[];
   onCheckedChange: (responsibles: string[]) => void;
-  partner: string;
+  partner?: string;
 }) {
   const { people, partners } = useMatches()[1].data as DashboardRootType;
 
   const _responsibles: Person[] = [];
-  responsibles.map((user_id) => {
+  responsibles_ids.map((user_id) => {
     const p = people.find((person) => person.user_id === user_id) as Person;
     if (p) _responsibles.push(p);
   });
-  responsibles.filter((person) => person !== undefined);
+  responsibles_ids.filter((person) => person !== undefined);
 
-  //getResponsibleForArea(action.category);
+  const persons = partner
+    ? getResponsibles(people, getPartners([partner], partners)[0].users_ids)
+    : people;
+
+  // const persons = people;
 
   return (
     <DropdownMenu>
@@ -559,31 +554,27 @@ export function ResponsibleForAction({
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-content">
-        {(partner
-          ? getResponsibles(getPartners([partner], partners)[0].users_ids)
-          : people
-        ).map((person) => (
+        {persons.map((person) => (
           <DropdownMenuCheckboxItem
             key={person.id}
             className="bg-select-item"
-            checked={responsibles.includes(person.user_id)}
+            checked={responsibles_ids.includes(person.user_id)}
             onClick={(event) => {
-              const checked = responsibles.includes(person.user_id);
+              const checked = responsibles_ids.includes(person.user_id);
 
-              if (checked && responsibles.length < 2) {
+              if (checked && responsibles_ids.length < 2) {
                 alert("É necessário ter pelo menos um responsável pela ação");
                 return false;
               }
 
-              if (event.shiftKey) {
-                onCheckedChange([person.user_id]);
-              } else {
-                const tempResponsibles = checked
-                  ? responsibles.filter((id) => id !== person.user_id)
-                  : [...responsibles, person.user_id];
+              let tempResponsibles = [person.user_id];
 
-                onCheckedChange(tempResponsibles);
+              if (!event.shiftKey) {
+                tempResponsibles = checked
+                  ? responsibles_ids.filter((id) => id !== person.user_id)
+                  : [...responsibles_ids, person.user_id];
               }
+              onCheckedChange(tempResponsibles);
             }}
           >
             <div className="flex items-center gap-2">

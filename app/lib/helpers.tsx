@@ -534,10 +534,7 @@ export function usePendingData(): { actions: Action[]; sprints: Sprint[] } {
   };
 }
 
-export function getResponsibles(users_ids?: string[] | null) {
-  const matches = useMatches();
-  const { people } = matches[1].data as DashboardRootType;
-
+export function getResponsibles(people: Person[], users_ids?: string[] | null) {
   return people.filter((person) =>
     users_ids?.find((user) => person.user_id === user),
   );
