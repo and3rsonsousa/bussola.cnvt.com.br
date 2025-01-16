@@ -752,7 +752,7 @@ export function ListOfActions({
   const foldCount = columns * 4;
   const [fold, setFold] = useState(isFoldable ? foldCount : undefined);
   return actions.length > 0 ? (
-    <div className="h-full">
+    <div>
       <div
         className={`${
           columns === 1
