@@ -1103,9 +1103,9 @@ function LowerBar({
   const submit = useSubmit();
   const { toast } = useToast();
 
-  const { categories, priorities, areas } = matches[1]
+  const { categories, priorities, areas, partners } = matches[1]
     .data as DashboardRootType;
-  const actionPartners = getPartners(action.partners);
+  const actionPartners = getPartners(action.partners, partners);
 
   const handleActions = (data: {
     [key: string]: string | number | string[] | null | boolean;

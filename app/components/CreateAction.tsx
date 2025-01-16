@@ -177,12 +177,12 @@ export default function CreateAction({
           </ButtonCNVT>
         )}
       </PopoverTrigger>
-      <PopoverContent className="bg-content  w-[90dvw] shadow-2xl md:max-w-[500px] md:px-6 max-w-[90vw] mr-[5vw]">
+      <PopoverContent className="bg-content mr-[5vw] w-[90dvw] max-w-[90vw] shadow-2xl md:max-w-[500px] md:px-6">
         {/* Título */}
         <div className="relative">
           <textarea
             defaultValue={action.title}
-            className="text-foreground field-sizing-content placeholder:text-muted-foreground mb-1 w-full resize-none overflow-hidden bg-transparent text-3xl pr-2 font-medium tracking-tighter outline-hidden"
+            className="text-foreground placeholder:text-muted-foreground mb-1 field-sizing-content w-full resize-none overflow-hidden bg-transparent pr-2 text-3xl font-medium tracking-tighter outline-hidden"
             rows={1}
             onChange={(event) => {
               setAction({ ...action, title: event.target.value });
@@ -212,7 +212,7 @@ export default function CreateAction({
 
         <hr className="-mx-4 my-2 border-t p-1 md:-mx-6" />
         <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2 justify-between">
+          <div className="flex items-center justify-between gap-2">
             {/* Partners */}
             <PartnersDropdown
               partners={action.partners}
@@ -458,7 +458,7 @@ export function PartnersDropdown({
   partners: string[];
 }) {
   const { partners: allPartners } = useMatches()[1].data as DashboardRootType;
-  const actionPartners = getPartners(partners);
+  const actionPartners = getPartners(partners, allPartners);
 
   return (
     <DropdownMenu>
