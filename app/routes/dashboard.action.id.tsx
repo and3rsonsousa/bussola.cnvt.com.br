@@ -17,12 +17,15 @@ import {
 
 import { ptBR } from "date-fns/locale";
 import {
+  ChevronDownIcon,
   ChevronsDownUpIcon,
   ChevronsUpDownIcon,
   ImageIcon,
   Link2Icon,
   SaveIcon,
   SparklesIcon,
+  TimerIcon,
+  TimerOffIcon,
   Trash,
   Trash2Icon,
 } from "lucide-react";
@@ -32,6 +35,7 @@ import invariant from "tiny-invariant";
 
 import Tiptap from "~/components/Tiptap";
 
+import { PopoverTrigger } from "@radix-ui/react-popover";
 import ButtonCNVT from "~/components/Button";
 import {
   DateTimeAndInstagramDate,
@@ -45,9 +49,11 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { Popover, PopoverContent } from "~/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -73,8 +79,7 @@ import {
 } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
 import { cn } from "~/lib/utils";
-import { Popover, PopoverContent } from "~/components/ui/popover";
-import { PopoverTrigger } from "@radix-ui/react-popover";
+import { formatActionDatetime } from "~/components/Action";
 
 export const config = { runtime: "edge" };
 const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY;
@@ -235,7 +240,7 @@ export default function ActionPage() {
     <div
       className={cn(
         "container mx-auto flex h-full flex-col overflow-hidden px-0 pt-4",
-        isInstagramFeed(action.category, true) ? "max-w-5xl" : "max-w-3xl",
+        isInstagramFeed(action.category, true) ? "max-w-7xlxl" : "max-w-5xl",
       )}
     >
       <div className="h-full gap-4 overflow-y-auto px-4 md:px-8 lg:flex lg:overflow-hidden">
@@ -1102,6 +1107,7 @@ function LowerBar({
   const matches = useMatches();
   const submit = useSubmit();
   const { toast } = useToast();
+  const [runningTime, setRunningTime] = useState(0);
 
   const { categories, priorities, areas, partners } = matches[1]
     .data as DashboardRootType;
@@ -1122,6 +1128,25 @@ function LowerBar({
       },
     );
   };
+
+  useEffect(() => {
+    const title = `${action.title} / ʙússoʟa`;
+    let timerInterval: NodeJS.Timeout | undefined;
+    document.title = formatTimer(runningTime).concat(` / ${title}`);
+    if (runningTime > 0) {
+      timerInterval = setInterval(() => {
+        setRunningTime((rt) => rt - 1);
+        document.title = formatTimer(runningTime).concat(` / ${title}`);
+      }, 1000);
+    } else {
+      document.title = title;
+      clearInterval(timerInterval);
+    }
+
+    return () => {
+      if (timerInterval) clearInterval(timerInterval);
+    };
+  }, [runningTime]);
 
   const navigate = useNavigate();
 
@@ -1298,7 +1323,79 @@ function LowerBar({
             </Button>
           </>
         ) : null}
+        <div className="flex items-center gap-2">
+          <Button
+            size={"icon"}
+            variant={runningTime ? "destructive" : "ghost"}
+            onClick={() => {
+              if (runningTime) {
+                setRunningTime(0);
+              } else {
+                setRunningTime(action.time * 60);
+                // setRunningTime(3);
+              }
+            }}
+          >
+            {runningTime ? <TimerOffIcon /> : <TimerIcon />}
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="focus:outline-none">
+              <ChevronsUpDownIcon className="size-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuContent className="bg-content">
+                <DropdownMenuItem
+                  onClick={() => {
+                    setRunningTime(action.time * 60);
+                  }}
+                  className="bg-item"
+                >
+                  {action.time} minutos
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => {
+                    setRunningTime(5 * 60);
+                  }}
+                  className="bg-item"
+                >
+                  5 minutos
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setRunningTime(10 * 60);
+                  }}
+                  className="bg-item"
+                >
+                  10 minutos
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setRunningTime(20 * 60);
+                  }}
+                  className="bg-item"
+                >
+                  20 minutos
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setRunningTime(40 * 60);
+                  }}
+                  className="bg-item"
+                >
+                  40 minutos
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenuPortal>
+          </DropdownMenu>
+          <div className="px-2 text-2xl font-medium tabular-nums">
+            {runningTime
+              ? formatTimer(runningTime)
+              : formatTimer(action.time * 60)}
+          </div>
+        </div>
       </div>
+
       {/* Data / Deletar / Atualizar */}
       <div className="mt-4 flex items-center justify-between gap-2 overflow-hidden p-1 md:my-0">
         <DateTimeAndInstagramDate
@@ -1401,4 +1498,14 @@ function getCleanTitle(title: string) {
   return title.indexOf(" | ") >= 0
     ? title.substring(0, title.indexOf(" | "))
     : title;
+}
+
+function formatTimer(time: number) {
+  const hours = Math.floor(time / 3600);
+  const minutes = Math.floor((time % 3600) / 60);
+  const seconds = time % 60;
+
+  return (time >= 3600 ? `${String(hours).padStart(2, "0")}:` : "").concat(
+    `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
+  );
 }
