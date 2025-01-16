@@ -543,9 +543,12 @@ export function getResponsibles(users_ids?: string[] | null) {
   );
 }
 export function getPartners(partners_slug: string[], partners: Partner[]) {
-  return partners.filter((partner) =>
-    partners_slug?.find((p) => partner.slug === p),
-  );
+  if (partners_slug.length) {
+    return partners.filter((partner) =>
+      partners_slug?.find((p) => partner.slug === p),
+    );
+  }
+  return partners;
 }
 
 export function amIResponsible(responsibles: string[], user_id: string) {

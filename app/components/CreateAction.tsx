@@ -559,43 +559,44 @@ export function ResponsibleForAction({
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-content">
-        {getResponsibles(getPartners([partner], partners)[0].users_ids).map(
-          (person) => (
-            <DropdownMenuCheckboxItem
-              key={person.id}
-              className="bg-select-item"
-              checked={responsibles.includes(person.user_id)}
-              onClick={(event) => {
-                const checked = responsibles.includes(person.user_id);
+        {(partner
+          ? getResponsibles(getPartners([partner], partners)[0].users_ids)
+          : people
+        ).map((person) => (
+          <DropdownMenuCheckboxItem
+            key={person.id}
+            className="bg-select-item"
+            checked={responsibles.includes(person.user_id)}
+            onClick={(event) => {
+              const checked = responsibles.includes(person.user_id);
 
-                if (checked && responsibles.length < 2) {
-                  alert("É necessário ter pelo menos um responsável pela ação");
-                  return false;
-                }
+              if (checked && responsibles.length < 2) {
+                alert("É necessário ter pelo menos um responsável pela ação");
+                return false;
+              }
 
-                if (event.shiftKey) {
-                  onCheckedChange([person.user_id]);
-                } else {
-                  const tempResponsibles = checked
-                    ? responsibles.filter((id) => id !== person.user_id)
-                    : [...responsibles, person.user_id];
+              if (event.shiftKey) {
+                onCheckedChange([person.user_id]);
+              } else {
+                const tempResponsibles = checked
+                  ? responsibles.filter((id) => id !== person.user_id)
+                  : [...responsibles, person.user_id];
 
-                  onCheckedChange(tempResponsibles);
-                }
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <Avatar
-                  item={{
-                    image: person.image,
-                    short: person.initials!,
-                  }}
-                />
-                <div>{person.name}</div>
-              </div>
-            </DropdownMenuCheckboxItem>
-          ),
-        )}
+                onCheckedChange(tempResponsibles);
+              }
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <Avatar
+                item={{
+                  image: person.image,
+                  short: person.initials!,
+                }}
+              />
+              <div>{person.name}</div>
+            </div>
+          </DropdownMenuCheckboxItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
