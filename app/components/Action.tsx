@@ -70,6 +70,7 @@ import {
 } from "~/lib/helpers";
 import { Button } from "./ui/button";
 import { Toggle } from "./ui/toggle";
+import { toast } from "./ui/use-toast";
 
 export function ActionLine({
   action,
@@ -364,12 +365,12 @@ export function ActionLine({
 
             {partner && (showPartner || long) ? (
               <div
-                title={getPartners(action.partners)
+                title={getPartners(action.partners, partners)
                   .map((partner) => partner.title)
                   .join(" • ")}
                 className={long ? "flex w-32 shrink-0 justify-center" : ""}
               >
-                {getPartners(action.partners).length === 1 ? (
+                {getPartners(action.partners, partners).length === 1 ? (
                   <Avatar
                     item={{
                       short: partner.short,
@@ -386,14 +387,16 @@ export function ActionLine({
                         ? "ring-primary"
                         : "ring-card"
                     }
-                    avatars={getPartners(action.partners).map((partner) => ({
-                      item: {
-                        short: partner.short,
-                        bg: partner.colors[0],
-                        fg: partner.colors[1],
-                        title: partner.title,
-                      },
-                    }))}
+                    avatars={getPartners(action.partners, partners).map(
+                      (partner) => ({
+                        item: {
+                          short: partner.short,
+                          bg: partner.colors[0],
+                          fg: partner.colors[1],
+                          title: partner.title,
+                        },
+                      }),
+                    )}
                   />
                 )}
               </div>
@@ -401,7 +404,7 @@ export function ActionLine({
               action.partners.length > 1 && (
                 <div
                   className="opacity-25"
-                  title={getPartners(action.partners)
+                  title={getPartners(action.partners, partners)
                     .map((partner) => partner.title)
                     .join(" • ")}
                 >
@@ -523,9 +526,10 @@ export function ActionBlock({
   const matches = useMatches();
   const navigate = useNavigate();
 
-  const { categories, states, sprints } = matches[1].data as DashboardRootType;
+  const { categories, states, sprints, partners } = matches[1]
+    .data as DashboardRootType;
 
-  const actionPartners = getPartners(action.partners);
+  const actionPartners = getPartners(action.partners, partners);
 
   const state = states.find((state) => state.slug === action.state) as State;
 
@@ -1100,15 +1104,8 @@ export function ContextMenuItems({
 
   const [delay, setDelay] = useState({ hour: 0, day: 0, week: 0 });
 
-  // const partner = partners.find((p) => p.slug === action.partners[0]);
   const state = states.find((state) => state.slug === action.state);
-  const _partners = getPartners(action.partners);
-
-  // console.log({
-  //   a_partners: getPartners(action.partners),
-  //   p: action.partners,
-  //   partners,
-  // });
+  // const _partners = getPartners(action.partners, partners);
 
   return (
     <ContextMenuContent className="bg-content">
@@ -1389,7 +1386,7 @@ export function ContextMenuItems({
               action.partners.length === 1 ? "gap-2" : "-space-x-1"
             }`}
           >
-            {_partners.map((partner) => (
+            {getPartners(action.partners, partners).map((partner) => (
               <Fragment key={partner.id}>
                 <Avatar
                   item={{
@@ -1419,28 +1416,35 @@ export function ContextMenuItems({
                 }
                 key={partner.id}
                 className="bg-select-item flex items-center gap-2"
-                onCheckedChange={(e) => {
+                onClick={(event) => {
+                  const checked = action.partners.includes(partner.slug);
                   let r = action.partners || [partner.slug];
-                  flushSync(() => {
-                    if (e) {
-                      r = action.partners
-                        ? [...action.partners, partner.slug]
-                        : [partner.slug];
-                    } else {
-                      r = action.partners
-                        ? action.partners.filter(
-                            (partner_slug) => partner_slug !== partner.slug,
-                          )
-                        : [partner.slug];
-                    }
-                  });
 
-                  handleActions({
-                    ...action,
-                    partners: r.join(","),
+                  if (checked && action.partners.length < 2) {
+                    toast({
+                      variant: "destructive",
+                      title: "Ops!",
+                      description: "A ação precisa ter pelo menos um parceiro.",
+                    });
+                    return false;
+                  }
 
-                    intent: INTENTS.updateAction,
-                  });
+                  if (event.shiftKey) {
+                    handleActions({
+                      ...action,
+                      partners: [partner.slug],
+                      intent: INTENTS.updateAction,
+                    });
+                  } else {
+                    const tempPartners = checked
+                      ? action.partners.filter((id) => id !== partner.slug)
+                      : [...action.partners, partner.slug];
+                    handleActions({
+                      ...action,
+                      partners: tempPartners,
+                      intent: INTENTS.updateAction,
+                    });
+                  }
                 }}
               >
                 <Avatar
@@ -1574,65 +1578,65 @@ export function ContextMenuItems({
         </ContextMenuSubTrigger>
         <ContextMenuPortal>
           <ContextMenuSubContent className="bg-content">
-            {getResponsibles(getPartners(action.partners)[0].users_ids).map(
-              (person) => (
-                <ContextMenuCheckboxItem
-                  checked={
-                    action.responsibles?.find(
-                      (user_id) => user_id === person.user_id,
-                    )
-                      ? true
-                      : false
-                  }
-                  key={person.id}
-                  className="bg-select-item flex items-center gap-2"
-                  onClick={(event) => {
-                    const checked = action.responsibles.includes(
-                      person.user_id,
-                    );
+            {getResponsibles(
+              getPartners(action.partners, partners)[0].users_ids,
+            ).map((person) => (
+              <ContextMenuCheckboxItem
+                checked={
+                  action.responsibles?.find(
+                    (user_id) => user_id === person.user_id,
+                  )
+                    ? true
+                    : false
+                }
+                key={person.id}
+                className="bg-select-item flex items-center gap-2"
+                onClick={(event) => {
+                  const checked = action.responsibles.includes(person.user_id);
 
-                    if (checked && action.responsibles.length < 2) {
-                      alert(
+                  if (checked && action.responsibles.length < 2) {
+                    toast({
+                      variant: "destructive",
+                      title: "Ops!",
+                      description:
                         "É necessário ter pelo menos um responsável pela ação",
-                      );
-                      return false;
-                    }
+                    });
 
-                    if (event.shiftKey) {
-                      // onCheckedChange([person.user_id]);
-                      handleActions({
-                        ...action,
-                        responsibles: person.user_id,
+                    return false;
+                  }
 
-                        intent: INTENTS.updateAction,
-                      });
-                    } else {
-                      const tempResponsibles = checked
-                        ? action.responsibles.filter(
-                            (id) => id !== person.user_id,
-                          )
-                        : [...action.responsibles, person.user_id];
-                      handleActions({
-                        ...action,
-                        responsibles: tempResponsibles,
+                  if (event.shiftKey) {
+                    handleActions({
+                      ...action,
+                      responsibles: person.user_id,
 
-                        intent: INTENTS.updateAction,
-                      });
-                      // onCheckedChange(tempResponsibles);
-                    }
+                      intent: INTENTS.updateAction,
+                    });
+                  } else {
+                    const tempResponsibles = checked
+                      ? action.responsibles.filter(
+                          (id) => id !== person.user_id,
+                        )
+                      : [...action.responsibles, person.user_id];
+                    handleActions({
+                      ...action,
+                      responsibles: tempResponsibles,
+
+                      intent: INTENTS.updateAction,
+                    });
+                  }
+                }}
+              >
+                <Avatar
+                  item={{
+                    image: person.image,
+                    short: person.initials!,
                   }}
-                >
-                  <Avatar
-                    item={{
-                      image: person.image,
-                      short: person.initials!,
-                    }}
-                    size="sm"
-                  />
-                  {`${person.name} ${person.surname}`}
-                </ContextMenuCheckboxItem>
-              ),
-            )}
+                  size="sm"
+                />
+                {`${person.name} ${person.surname}`}
+              </ContextMenuCheckboxItem>
+            ))}
           </ContextMenuSubContent>
         </ContextMenuPortal>
       </ContextMenuSub>
@@ -1647,7 +1651,7 @@ export function ContextMenuItems({
           </ContextMenuSubTrigger>
           <ContextMenuPortal>
             <ContextMenuSubContent className="bg-content">
-              {getPartners(action.partners)[0].colors.map(
+              {getPartners(action.partners, partners)[0].colors.map(
                 (color, i) =>
                   i !== 1 && (
                     <ContextMenuItem

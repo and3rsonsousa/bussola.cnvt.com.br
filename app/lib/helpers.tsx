@@ -542,9 +542,9 @@ export function getResponsibles(users_ids?: string[] | null) {
     users_ids?.find((user) => person.user_id === user),
   );
 }
-export function getPartners(partners_slug: string[]) {
-  const matches = useMatches();
-  const { partners } = matches[1].data as DashboardRootType;
+export function getPartners(partners_slug: string[], partners: Partner[]) {
+  // const matches = useMatches();
+  // const { partners } = matches[1].data as DashboardRootType;
 
   return partners.filter((partner) =>
     partners_slug?.find((p) => partner.slug === p),
@@ -809,7 +809,9 @@ function ContentLowerBar({
   date?: dateTimeFormat;
   isOverlay?: boolean;
 }) {
-  const action_partners = getPartners(action.partners);
+  const matches = useMatches();
+  const { partners } = matches[1].data as DashboardRootType;
+  const action_partners = getPartners(action.partners, partners);
 
   return (
     <div
