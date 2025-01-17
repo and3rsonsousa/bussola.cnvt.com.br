@@ -232,7 +232,7 @@ CONTENT: ${title} - ${description}
 TOM DE VOZ: ${tone}`;
   } else if (intent === "title") {
     if (model === "viral") {
-      template = `Use esses Ganchos como modelo e se inspire para criar um título de acordo com o CONTEXT. Ganchos (${hooks.join(
+      template = `Use esses Ganchos como modelo e se inspire para criar um título de acordo com o CONTEXTO. Ganchos (${hooks.join(
         " - ",
       )})`;
     } else {
