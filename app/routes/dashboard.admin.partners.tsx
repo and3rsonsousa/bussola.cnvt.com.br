@@ -3,6 +3,7 @@ import {
   Form,
   Link,
   useLoaderData,
+  useMatches,
   type LoaderFunctionArgs,
   type MetaFunction,
 } from "react-router";
@@ -38,11 +39,10 @@ export const meta: MetaFunction = () => {
 };
 
 export default function AdminPartners() {
-  // const matches = useMatches();
-
   const { partners } = useLoaderData<typeof loader>();
 
-  // const { people } = matches[1].data as DashboardRootType;
+  const matches = useMatches();
+  const { people } = matches[1].data as DashboardRootType;
 
   return (
     <div className="px-4 py-4 lg:px-8">
@@ -79,7 +79,7 @@ export default function AdminPartners() {
                     <div>
                       <AvatarGroup
                         size="sm"
-                        avatars={getResponsibles(partner.users_ids).map(
+                        avatars={getResponsibles(people, partner.users_ids).map(
                           (r) => ({
                             item: {
                               image: r.image,

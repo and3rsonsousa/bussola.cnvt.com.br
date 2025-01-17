@@ -166,7 +166,7 @@ export default function Partner() {
   const { categoryFilter, setCategoryFilter, stateFilter, setStateFilter } =
     useOutletContext() as ContextType;
 
-  const { categories, states, person, celebrations } = matches[1]
+  const { categories, states, person, people, celebrations } = matches[1]
     .data as DashboardRootType;
 
   let params = new URLSearchParams(searchParams);
@@ -523,7 +523,7 @@ export default function Partner() {
                 >
                   {
                     <AvatarGroup
-                      avatars={getResponsibles(responsiblesFilter).map(
+                      avatars={getResponsibles(people, responsiblesFilter).map(
                         (person) => ({
                           item: {
                             short: person.short,
@@ -543,7 +543,7 @@ export default function Partner() {
               </DropdownMenuTrigger>
               <DropdownMenuPortal>
                 <DropdownMenuContent>
-                  {getResponsibles(partner.users_ids).map((person) => {
+                  {getResponsibles(people, partner.users_ids).map((person) => {
                     return (
                       <DropdownMenuCheckboxItem
                         key={person.id}

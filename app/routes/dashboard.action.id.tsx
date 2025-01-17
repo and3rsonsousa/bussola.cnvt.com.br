@@ -455,6 +455,22 @@ function Description({
   const fetcher = useFetcher({ key: "action-page" });
   const promptRef = useRef<HTMLTextAreaElement>(null);
 
+  async function askBia(prompt?: string) {
+    if (prompt) {
+      fetcher.submit(
+        {
+          prompt,
+          intent: "prompt",
+        },
+
+        {
+          action: "/handle-openai",
+          method: "post",
+        },
+      );
+    }
+  }
+
   return (
     <div className="flex h-full grow flex-col overflow-hidden lg:mb-0">
       <div className="mb-2 flex shrink-0 items-center justify-between gap-4 pt-1 pr-1">
@@ -475,6 +491,16 @@ function Description({
                     rows={2}
                     className="field-sizing-content w-full resize-none outline-none"
                     ref={promptRef}
+                    onKeyDown={async (e) => {
+                      if (
+                        e.key.toLocaleLowerCase() === "enter" &&
+                        !e.shiftKey
+                      ) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        await askBia(promptRef.current?.value);
+                      }
+                    }}
                   ></textarea>
 
                   <Button
@@ -486,21 +512,7 @@ function Description({
                     size={"icon"}
                     variant={"ghost"}
                     onClick={async () => {
-                      const prompt = promptRef.current?.value;
-
-                      if (prompt) {
-                        fetcher.submit(
-                          {
-                            prompt,
-                            intent: "prompt",
-                          },
-
-                          {
-                            action: "/handle-openai",
-                            method: "post",
-                          },
-                        );
-                      }
+                      await askBia(promptRef.current?.value);
                     }}
                   >
                     <SparklesIcon />
