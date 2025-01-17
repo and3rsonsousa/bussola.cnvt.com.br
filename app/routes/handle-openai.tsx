@@ -277,7 +277,7 @@ const hooks = [
   "Minha arma secreta para...",
   "Você também fica irritado quando vê (incluir tema)?",
   "Vou te ensinar a história por trás de (incluir tema) em 60 segundos.",
-  "Alguém mais está exausto de (incluir tema)?",
+  "Alguém mais está exausto de (incluir tema)?", //5
 
   "Cuidado, isso pode acontecer com você!",
   "Assista isso antes de...",
@@ -289,7 +289,7 @@ const hooks = [
   "Está na hora de alguém te falar a verdade.",
   "Isso vai deixar você com raiva e por um bom motivo.",
   "Por que a maioria das pessoas está errada sobre (incluir tema)?",
-  "Algo muito estranho aconteceu hoje…",
+  "Algo muito estranho aconteceu hoje…", //15
 
   "Você já percebeu que...",
   "Você nunca deve fazer isso!",
@@ -301,7 +301,7 @@ const hooks = [
   "Perdi muito tempo com (incluir tema), então mudei e...",
   "Eu sempre odiei (incluir tema) então decidi...",
   "3 segredos sobre (incluir tema) que não te contam.",
-  "Não acredito que não tentei isso antes.",
+  "Não acredito que não tentei isso antes.", //25
 
   "Sua vida não será a mesma depois...",
   "Alguém mais se sente (incluir emoção e tema) ou sou só eu?",
@@ -313,7 +313,7 @@ const hooks = [
   "Vou mudar sua opinião sobre (incluir tema) em 30 segundos.",
   "Eu sou o único que está esperando desesperadamente por...",
   "Como alguém que é (incluir tema) posso certamente te dizer que...",
-  "Curiosidade sobre mim: Eu tinha (incluir idade) anos quando...",
+  "Curiosidade sobre mim: Eu tinha (incluir idade) anos quando...", //35
 
   "Você não vai acreditar no que eu encontrei/vi ontem...",
   "(incluir tema) nunca foi tão importante quanto é agora.",
@@ -325,7 +325,7 @@ const hooks = [
   "Alguém precisava falar sobre (incluir tema).",
   "Quantas vezes você já ignorou isso?",
   "Você acha que teria coragem de fazer isso?",
-  "Se você pudesse voltar no tempo, mudaria isso?",
+  "Se você pudesse voltar no tempo, mudaria isso?", //45
 
   "Isso não faz sentido pra mim até agora.",
   "Você também sente que...",
@@ -334,5 +334,10 @@ const hooks = [
   "Eu aposto que você já se sentiu assim.", // 50
 
   "Todo mundo faz isso, mas poucos admitem.",
-  "Eu sei que você já...",
+  "Eu sei que você já (fez algo relacionado ao tema e quer resolver)",
+  "Por que ninguém está falando disso (assunto principal)?",
+  "É isso que acontece quando você (comportamento ou crença comum sobre o assunto principal)",
+  "90% das pessoas esquecem que (solução do assunto principal)", //55
+
+  "O que mudou depois que eu comecei a (nova prática sobre o assunto pincipal)",
 ];
