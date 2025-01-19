@@ -17,7 +17,6 @@ import {
 
 import { ptBR } from "date-fns/locale";
 import {
-  ChevronDownIcon,
   ChevronsDownUpIcon,
   ChevronsUpDownIcon,
   ImageIcon,
@@ -53,17 +52,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { Label } from "~/components/ui/label";
 import { Popover, PopoverContent } from "~/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { ToastAction } from "~/components/ui/toast";
 import { useToast } from "~/components/ui/use-toast";
-import { FRAMEWORKS, INTENTS, MODELS, TRIGGERS } from "~/lib/constants";
+import { FRAMEWORKS, INTENTS, TRIGGERS } from "~/lib/constants";
 import {
   Avatar,
   Bia,
@@ -79,10 +73,6 @@ import {
 } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
 import { cn } from "~/lib/utils";
-import { formatActionDatetime } from "~/components/Action";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Label } from "~/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 
 export const config = { runtime: "edge" };
 const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY;
@@ -811,16 +801,91 @@ function RightSide({
         <div className="text-xs font-bold tracking-wider uppercase">
           {action.category === "stories" ? "Sequência de Stories" : "Legenda"}
         </div>
-        <div className="flex gap-2 overflow-x-hidden p-1">
+        <div className="flex items-center gap-2 overflow-x-hidden p-1">
+          {isInstagramFeed(action.category) &&
+            action.caption &&
+            action.caption.length > 0 && (
+              <div className="flex items-center gap-1">
+                <Button
+                  variant={"ghost"}
+                  size="sm"
+                  title="Reduzir o Texto"
+                  className="h-8"
+                  onClick={async (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    fetcher.submit(
+                      {
+                        description: action.caption,
+                        intent: "shrink",
+                      },
+                      {
+                        action: "/handle-openai",
+                        method: "post",
+                      },
+                    );
+                  }}
+                >
+                  <ChevronsDownUpIcon className="size-4" />
+                </Button>
+                <Button
+                  variant={"ghost"}
+                  size={"sm"}
+                  className="h-8"
+                  title="Aumentar o texto"
+                  onClick={async (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    fetcher.submit(
+                      {
+                        description: action.caption,
+                        intent: "expand",
+                      },
+                      {
+                        action: "/handle-openai",
+                        method: "post",
+                      },
+                    );
+                  }}
+                >
+                  <ChevronsUpDownIcon className="size-4" />
+                </Button>
+              </div>
+            )}
+
           <PopoverTFM
-            title="Gerar Stories"
-            models={["Texto", "Vídeo", "Curto"]}
+            className={
+              isInstagramFeed(action.category) ? "md:max-h-[50vh]" : ""
+            }
+            title={
+              isInstagramFeed(action.category)
+                ? "Gerar Legenda"
+                : "Gerar Stories"
+            }
+            models={
+              isInstagramFeed(action.category)
+                ? [
+                    { title: "Curta", value: "short-caption" },
+                    { title: "Média", value: "medium-caption" },
+                    { title: "Longa", value: "long-caption" },
+                    { title: "Longa com dicas", value: "long-tip-caption" },
+                  ]
+                : [
+                    { title: "Texto", value: "text-stories" },
+                    { title: "Vídeo", value: "video-stories" },
+                    { title: "Curto", value: "short-stories" },
+                  ]
+            }
             onGenerate={({ framework, model, trigger }) => {
               const data = {
                 title: action.title,
                 description: action.description,
                 context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-                intent: "stories",
+                intent: isInstagramFeed(action.category)
+                  ? "caption"
+                  : "stories",
                 voice: partner.voice,
                 model,
                 trigger,
@@ -835,280 +900,6 @@ function RightSide({
           />
 
           {/* <TriggersSelect trigger={trigger} setTrigger={setTrigger} /> */}
-
-          {action.category === "stories" ? (
-            ""
-          ) : (
-            // <DropdownMenu>
-            //   <DropdownMenuTrigger asChild>
-            //     <Button
-            //       size="sm"
-            //       className={`${
-            //         isWorking &&
-            //         fetcher.formData?.get("intent") === "stories" &&
-            //         "animate-colors"
-            //       }`}
-            //       variant="ghost"
-            //       title="Gerar Stories"
-            //     >
-            //       <SparklesIcon className="size-4" />
-            //     </Button>
-            //   </DropdownMenuTrigger>
-            //   <DropdownMenuContent className="bg-content">
-            //     <DropdownMenuItem
-            //       onSelect={async () => {
-            //         fetcher.submit(
-            //           {
-            //             title: action.title,
-            //             description: action.description,
-            //             context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-            //             intent: "stories",
-            //             voice: partner.voice,
-            //             model: "static",
-            //             trigger: trigger,
-            //           },
-            //           {
-            //             action: "/handle-openai",
-            //             method: "post",
-            //           },
-            //         );
-            //       }}
-            //     >
-            //       Roteiro de Stories estáticos
-            //     </DropdownMenuItem>
-            //     <DropdownMenuItem
-            //       onSelect={async () => {
-            //         fetcher.submit(
-            //           {
-            //             title: action.title,
-            //             description: action.description,
-            //             context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-            //             intent: "stories",
-            //             voice: partner.voice,
-            //             model: "video",
-            //             trigger: trigger,
-            //           },
-            //           {
-            //             action: "/handle-openai",
-            //             method: "post",
-            //           },
-            //         );
-            //       }}
-            //     >
-            //       Roteiro de Stories em vídeo
-            //     </DropdownMenuItem>
-            //   </DropdownMenuContent>
-            // </DropdownMenu>
-            <div className="flex gap-1">
-              {action.caption && action.caption.length > 0 && (
-                <div className="flex gap-1">
-                  <Button
-                    variant={"ghost"}
-                    size="sm"
-                    title="Reduzir o Texto"
-                    onClick={async (event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-
-                      fetcher.submit(
-                        {
-                          description: action.caption,
-                          intent: "shrink",
-                        },
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    <ChevronsDownUpIcon className="size-4" />
-                  </Button>
-                  <Button
-                    variant={"ghost"}
-                    size={"sm"}
-                    title="Aumentar o texto"
-                    onClick={async (event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-
-                      fetcher.submit(
-                        {
-                          description: action.caption,
-                          intent: "expand",
-                        },
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    <ChevronsUpDownIcon className="size-4" />
-                  </Button>
-                </div>
-              )}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    size="sm"
-                    className={` ${
-                      isWorking &&
-                      fetcher.formData?.get("intent") === "caption" &&
-                      "animate-colors"
-                    }`}
-                    variant="ghost"
-                    title="Gerar legenda"
-                  >
-                    <SparklesIcon className="size-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          intent: "caption",
-                          model: "aida",
-                          trigger: trigger,
-                          voice: partner.voice,
-                        },
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    AIDA - Atenção, Interesse, Desejo e Ação
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          intent: "caption",
-                          model: "slap",
-                          trigger: trigger,
-                          voice: partner.voice,
-                        },
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    SLAP - Pare, Olhe, Aja e Converta.
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          intent: "caption",
-                          model: "pas",
-                          trigger: trigger,
-                          voice: partner.voice,
-                        },
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    PAS - Problema, Agitação e Solução
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          intent: "caption",
-                          model: "short",
-                          trigger: trigger,
-                          voice: partner.voice,
-                        },
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    Legenda curta
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          intent: "caption",
-                          model: "medium",
-                          trigger: trigger,
-                          voice: partner.voice,
-                        },
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    Legenda Média de Reforço
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          intent: "caption",
-                          model: "long",
-                          trigger: trigger,
-                          voice: partner.voice,
-                        },
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    Legenda Longa e explicativa
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={async () => {
-                      fetcher.submit(
-                        {
-                          title: action.title,
-                          description: action.description,
-                          intent: "caption",
-                          model: "long-tip",
-                          trigger: trigger,
-                          voice: partner.voice,
-                        },
-                        {
-                          action: "/handle-openai",
-                          method: "post",
-                        },
-                      );
-                    }}
-                  >
-                    Legenda Longa e com dicas.
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          )}
         </div>
       </div>
 
@@ -1551,10 +1342,12 @@ function formatTimer(time: number) {
 function PopoverTFM({
   title,
   models,
+  className,
   onGenerate,
 }: {
   title: string;
-  models?: string[];
+  models: { title: string; value: string }[];
+  className?: string;
   onGenerate?: ({
     trigger,
     framework,
@@ -1567,14 +1360,19 @@ function PopoverTFM({
 }) {
   const [trigger, setTrigger] = useState("Autoridade");
   const [framework, setFramework] = useState("pas");
-  const [model, setModel] = useState(models ? models[0] : "");
+  const [model, setModel] = useState(models[0]);
 
   return (
     <Popover>
       <PopoverTrigger className="button-trigger flex gap-2">
         <Bia size="xs" /> <SparklesIcon className="size-4" />
       </PopoverTrigger>
-      <PopoverContent className="bg-content mr-[5vw] flex max-h-[50vh] w-[90vw] flex-col overflow-hidden text-center md:mr-4 md:max-h-[80vh] md:w-lg">
+      <PopoverContent
+        className={cn(
+          `bg-content mr-[5vw] flex max-h-[50vh] w-[90vw] flex-col overflow-hidden text-center md:mr-4 md:max-h-[80vh] md:w-lg`,
+          className,
+        )}
+      >
         <div className="text-xl font-medium tracking-tighter">{title}</div>
 
         <hr className="-mx-4 mt-4" />
@@ -1640,14 +1438,16 @@ function PopoverTFM({
             <div>
               <h5 className="font-medium">Modelo</h5>
               <RadioGroup
-                defaultValue={model}
-                onValueChange={(value) => setModel(value)}
+                defaultValue={model.value}
+                onValueChange={(value) =>
+                  setModel(models.filter((model) => model.value === value)[0])
+                }
                 className="mt-2 mb-4 flex justify-center gap-1"
               >
                 {models.map((model, i) => (
-                  <div key={i} className="w-1/4">
+                  <div key={i} className="">
                     <RadioGroupItem
-                      value={model}
+                      value={model.value}
                       id={`model_${i}`}
                       className="hidden"
                     />
@@ -1656,7 +1456,7 @@ function PopoverTFM({
                       htmlFor={`model_${i}`}
                       className="peer-data-[state=checked]:bg-secondary peer-data-[state=checked]:text-secondary-foreground text-muted-foreground inline-block rounded px-3 py-2 text-center font-normal transition-colors"
                     >
-                      {model}
+                      {model.title}
                     </Label>
                   </div>
                 ))}
@@ -1665,15 +1465,16 @@ function PopoverTFM({
           )}
         </div>
         <hr className="-mx-4 mb-4" />
-        <div className="flex justify-end">
+        <div className="flex items-center justify-between">
+          <div className="pl-4 text-xs font-medium tracking-wider uppercase">{`${trigger} • ${framework} • ${model.title}`}</div>
           <Button
             onClick={() => {
               if (onGenerate) {
-                onGenerate({ trigger, framework, model });
+                onGenerate({ trigger, framework, model: model.value });
               }
             }}
           >
-            Gerar Conteúdo
+            Gerar <SparklesIcon />
           </Button>
         </div>
       </PopoverContent>

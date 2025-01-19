@@ -93,35 +93,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     TOM DE VOZ: ${tone}`;
     }
   } else if (intent === "caption") {
-    template = `Use esse framework de copy:${copyFrameworks(String(model))}`;
+    template = getModel(model.toString(), intent);
 
-    // } else if (model === "short") {
-    //   template =
-    //     "Texto da legenda com até 200 caracteres bem criativo e reforçando o CONTEXTO e com um CTA no final. Caso não haja nenhuma especificação no CONTEXTO, indique a pessoa a ir ao link da bio de modo que concorde com o CONTEXTO.";
-    // } else if (model === "medium") {
-    //   template =
-    //     "Texto da legenda com até 400 caracteres usando o CONTEXTO como base, pode ter cunho explicativo ou de reforço. Use 3 parágrafos curtos. Use de 3 a 5 hashtags bem focadas no nicho da DESCRIÇÃO.";
-    // } else if (model === "long") {
-    //   template = `Texto da legenda explicando o CONTEXTO com até 800 caracteres. Ainda que mais explicativa, o texto não pode ser cansativo e deve ser dinâmico. Cada parágrafo não deve ter mais de 30 palavras depois disso, crie novos parágrafos para manter o texto mais dinâmico. Importante separar bem a explicação Nesses parágrafos:
-    // 1 - Reforce o problema apresentado do CONTEXTO em 120 caracteres.
-    // 2 - Comece a problematizar o assunto ao jogar o contexto para o usuário gerando conexão em 120 caracteres.
-    // 3 - Aqui você usar uma lista de itens com emojis para facilitar a leitura apresentando os problemas que o usuário enfrenta, reforçando o parágrafo 2.
-    // 4 - Apresente a solução do problema de acordo com o CONTEXTO.
-    // 5 - Conclua com um CTA do CONTEXTO, se não houver indicação, peça para o usuário ir ao link da bio de uma forma mais criativa do que "agende/peça pelo link da bio.
-    // 6 - Finalize a legenda com 3 a 5 hashtags bem focadas no nicho da DESCRIÇÃO."
-    // `;
-    // } else if (model === "long-tip") {
-    //   template = `Texto da legenda explicando o CONTEXTO com até 800 caracteres. Ainda que mais explicativa, o texto não pode ser cansativo e deve ser dinâmico. Cada parágrafo não deve ter mais de 30 palavras depois disso, crie novos parágrafos para manter o texto mais dinâmico. Importante separar bem a explicação Nesses parágrafos:
-    // 1 - Comece a problematizar o assunto ao jogar o contexto para o usuário gerando conexão em 120 caracteres.
-    // 2 - Comece a apresentar que tem uma solução e que no próximo parágrafo vai trazer as dicas.
-    // 3 - Aqui você usar uma lista de itens com emojis para facilitar a leitura apresentando as soluções para os problemas que o usuário enfrenta, reforçando o parágrafo 2. Para cada item da lista, coloque uma breve explicação de até 20 palavras.
-    // 4 - Reforce que as dicas acima são ideias para lidar com o problema e caso haja mais necessidade deve buscar a empresa; atente-se ao CONTEXTO para que você não fuja da necessidade.
-    // 5 - Conclua com um CTA do CONTEXTO, se não houver indicação, peça para o usuário ir ao link da bio de uma forma mais criativa do que "agende/peça pelo link da bio.
-    // 6 - Finalize a legenda com 3 a 5 hashtags bem focadas no nicho da DESCRIÇÃO."
-    // `;
-    // }
-
-    content = `Texto da legenda e hashtags usando técnicas de Storytelling e reforçando o CONTEXTO. Use as keywords relevantes ao CONTEXTO. Use 3 hashtags bem focadas no nicho CONTEXTO. Use emojis em cada parágrafo. Cada parágrafo deve ter no máximo 20 palavras. Use o gatilho mental da: ${trigger}. Use bastante emojis na legenda. Use esse formato: 
+    content = `Texto da legenda e hashtags usando técnicas de Storytelling e reforçando o CONTEXTO. Use emojis em cada parágrafo. Use o gatilho mental da: ${trigger}. Use esse formato: 
     TEXTO DA LEGENDA 
 
     HASHTAGS
@@ -134,53 +108,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
   // Se for Stories
   else if (intent === "stories") {
-    template = getModel(model.toString());
+    template = getModel(model.toString(), intent);
     content = `Você é um estrategista de conteúdo experiente. 
     TAREFA: você vai criar uma sequência de stories usando técnicas de storytelling e finalizando sempre com um Stories com um CTA forte levando em conta o CONTEXTO e a descrição da EMPRESA. Use o FRAMEWORK DE COPY ${copyFrameworks(framework as string)?.prompt} com o gatilho metal da: ${trigger}.
     REGRA: Retorne apenas o texto sem nenhuma observação. Texto somente com parágrafos e sem tags html.
     TEMPLATE: ${template}
     CONTEXTO: ${title} - ${description}
     TOM DE VOZ: ${tone}`;
-
-    // if (model === "static") {
-    //   content = `Você é um estrategista de conteúdo experiente.
-    // TAREFA: você vai criar uma sequência de stories usando técnicas de storytelling e finalizando sempre com um Stories com um CTA forte levando em conta o CONTEXTO e a descrição da EMPRESA.
-    // REGRA: Retorne apenas o texto sem nenhuma observação. Texto somente com parágrafos e sem tags html.
-    // MODELO:
-    // [STORIES X]
-
-    // Imagem
-    // Sugestão de imagem/vídeo.
-
-    // Título
-    // Frase Principal com até 10 palavras
-
-    // Texto
-    // Texto de apoio com até 30 palavras
-
-    // EMPRESA: ${context}.
-    // CONTEXTO: ${title} - ${description}
-    // TOM DE VOZ: ${tone}`;
-    // } else if (model === "video") {
-    //   content = `Você é um estrategista de conteúdo e roteirista de video experiente.
-    // TAREFA: criar uma sequência de stories usando técnicas de storytelling. Traga as falas da pessoa que irá gravar. Cada texto de fala deve caber em um espaço de 15 a 30 segundos. Use o seguinte modelo:
-    // 1 - SLIDE 1 deve ser com um texto chamativo para o problema apresentado.
-    // 2 - SLIDE 2 deve envolver a pessoa apresentando dados e situações que abordem esse problema, como drama pessoal do próprio profissional ou de pessoas conhecidas.
-    // 3 - SLIDE 3 ao penúltimo devem abordar a proposta única de solução para o problema. (determine a quantidade de acordo com o conteúdo a ser falado)
-    // 4 - O último stories deve sempre conter um CTA, caso não haja nada no contexto sugira na fala que a pessoa visite o link da bio, mas faça isso de forma criativa.
-    // REGRA: Retorne apenas o texto sem nenhuma observação. Texto somente com parágrafos e sem tags html.
-    // TEMPLATE:
-    // [STORIES X]
-
-    // Fala:
-    // Texto para a pessoa falar.
-
-    // Interação:(opcional)
-    // Sugira aqui algum elemento de interação nos stories de acordo com o conteúdo.
-
-    // CONTEXTO: ${title} - ${description}
-    // TOM DE VOZ: ${tone}`;
-    // }
   }
   // Se for carrossel
   else if (intent === "carousel") {
@@ -363,16 +297,43 @@ const copyFrameworks = (framework: string) => {
   return new Map(Object.entries(FRAMEWORKS)).get(framework);
 };
 
-function getModel(model: string) {
+function getModel(model: string, intent: string) {
   model = model.toLowerCase();
-  let result = `TÍTULO DA SEQUÊNCIA DE STORIES
+  let result =
+    intent === "stories"
+      ? `TÍTULO DA SEQUÊNCIA DE STORIES
   -Indique qual o formato escolhido
   -qual o framework de copy
   -qual o gatilho mental]
 
-  `;
+  `
+      : ``;
+
+  console.log({ model, intent });
+
   switch (model) {
-    case "vídeo":
+    case "short-caption":
+      return "Texto da legenda com até 200 caracteres bem criativo e reforçando o CONTEXTO e com um CTA no final. Caso não haja nenhuma especificação no CONTEXTO, indique a pessoa a ir ao link da bio de modo que concorde com o CONTEXTO.";
+    case "medium-caption":
+      return "Texto da legenda com até 400 caracteres usando o CONTEXTO como base, pode ter cunho explicativo ou de reforço. Use 3 parágrafos curtos. Use de 3 a 5 hashtags bem focadas no nicho da DESCRIÇÃO.";
+    case "long-caption":
+      return `Texto da legenda explicando o CONTEXTO com até 800 caracteres. Ainda que mais explicativa, o texto não pode ser cansativo e deve ser dinâmico. Cada parágrafo não deve ter mais de 30 palavras depois disso, crie novos parágrafos para manter o texto mais dinâmico. Importante separar bem a explicação Nesses parágrafos:
+    1 - Reforce o problema apresentado do CONTEXTO em 120 caracteres.
+    2 - Comece a problematizar o assunto ao jogar o contexto para o usuário gerando conexão em 120 caracteres.
+    3 - Aqui você usar uma lista de itens com emojis para facilitar a leitura apresentando os problemas que o usuário enfrenta, reforçando o parágrafo 2.
+    4 - Apresente a solução do problema de acordo com o CONTEXTO.
+    5 - Conclua com um CTA do CONTEXTO, se não houver indicação, peça para o usuário ir ao link da bio de uma forma mais criativa do que "agende/peça pelo link da bio.
+    6 - Finalize a legenda com 3 a 5 hashtags bem focadas no nicho da DESCRIÇÃO.`;
+    case "long-tip-caption":
+      return `Texto da legenda explicando o CONTEXTO com até 800 caracteres. Ainda que mais explicativa, o texto não pode ser cansativo e deve ser dinâmico. Cada parágrafo não deve ter mais de 30 palavras depois disso, crie novos parágrafos para manter o texto mais dinâmico. Importante separar bem a explicação Nesses parágrafos:
+    1 - Comece a problematizar o assunto ao jogar o contexto para o usuário gerando conexão em 120 caracteres.
+    2 - Comece a apresentar que tem uma solução e que no próximo parágrafo vai trazer as dicas.
+    3 - Aqui você usar uma lista de itens com emojis para facilitar a leitura apresentando as soluções para os problemas que o usuário enfrenta, reforçando o parágrafo 2. Para cada item da lista, coloque uma breve explicação de até 20 palavras.
+    4 - Reforce que as dicas acima são ideias para lidar com o problema e caso haja mais necessidade deve buscar a empresa; atente-se ao CONTEXTO para que você não fuja da necessidade.
+    5 - Conclua com um CTA do CONTEXTO, se não houver indicação, peça para o usuário ir ao link da bio de uma forma mais criativa do que agende/peça pelo link da bio.
+    6 - Finalize a legenda com 3 a 5 hashtags bem focadas no nicho da DESCRIÇÃO.
+    `;
+    case "video-stories":
       return (
         result +
         `Roteiro de fala para um vídeo de 20 segundos, indique reações que as pessoas devem ter em alguns momentos da fala entre parênteses para reforçar algum ponto. Siga esse modelo:
@@ -382,7 +343,7 @@ function getModel(model: string) {
       [Inserir aqui a fala da pessoa para que seja lida com um tempo médio de 20 segundos e coloque (entre parênteses) alguma reação próximo de alguma fala.]
       `
       );
-    case "curto":
+    case "short-stories":
       return (
         result +
         `Sequência curta de stories de no máximo 3 stories com textos de 15 palavras nesse modelo:
@@ -393,7 +354,7 @@ function getModel(model: string) {
       `
       );
     //Caso não venha nada ou seja "texto"
-    case "texto":
+    case "text-stories":
     default:
       return (
         result +
