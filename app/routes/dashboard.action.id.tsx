@@ -63,7 +63,7 @@ import {
 } from "~/components/ui/select";
 import { ToastAction } from "~/components/ui/toast";
 import { useToast } from "~/components/ui/use-toast";
-import { INTENTS, TRIGGERS } from "~/lib/constants";
+import { FRAMEWORKS, INTENTS, MODELS, TRIGGERS } from "~/lib/constants";
 import {
   Avatar,
   Bia,
@@ -80,6 +80,9 @@ import {
 import { createClient } from "~/lib/supabase";
 import { cn } from "~/lib/utils";
 import { formatActionDatetime } from "~/components/Action";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Label } from "~/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 
 export const config = { runtime: "edge" };
 const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY;
@@ -522,9 +525,9 @@ function Description({
             </PopoverContent>
           </Popover>
 
-          {isInstagramFeed(action.category, true) && (
+          {/* {isInstagramFeed(action.category, true) && (
             <TriggersSelect setTrigger={setTrigger} trigger={trigger} />
-          )}
+          )} */}
           {action.category === "carousel" ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -806,73 +809,96 @@ function RightSide({
       {/* Legenda */}
       <div className="flex items-center justify-between gap-2">
         <div className="text-xs font-bold tracking-wider uppercase">
-          {action.category === "stories" ? "Sequência" : "Legenda"}
+          {action.category === "stories" ? "Sequência de Stories" : "Legenda"}
         </div>
         <div className="flex gap-2 overflow-x-hidden p-1">
-          <TriggersSelect trigger={trigger} setTrigger={setTrigger} />
+          <PopoverTFM
+            title="Gerar Stories"
+            models={["Texto", "Vídeo", "Curto"]}
+            onGenerate={({ framework, model, trigger }) => {
+              const data = {
+                title: action.title,
+                description: action.description,
+                context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+                intent: "stories",
+                voice: partner.voice,
+                model,
+                trigger,
+                framework,
+              };
+
+              fetcher.submit(data, {
+                action: "/handle-openai",
+                method: "post",
+              });
+            }}
+          />
+
+          {/* <TriggersSelect trigger={trigger} setTrigger={setTrigger} /> */}
 
           {action.category === "stories" ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  size="sm"
-                  className={`${
-                    isWorking &&
-                    fetcher.formData?.get("intent") === "stories" &&
-                    "animate-colors"
-                  }`}
-                  variant="ghost"
-                  title="Gerar Stories"
-                >
-                  <SparklesIcon className="size-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-content">
-                <DropdownMenuItem
-                  onSelect={async () => {
-                    fetcher.submit(
-                      {
-                        title: action.title,
-                        description: action.description,
-                        context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-                        intent: "stories",
-                        voice: partner.voice,
-                        model: "static",
-                        trigger: trigger,
-                      },
-                      {
-                        action: "/handle-openai",
-                        method: "post",
-                      },
-                    );
-                  }}
-                >
-                  Roteiro de Stories estáticos
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onSelect={async () => {
-                    fetcher.submit(
-                      {
-                        title: action.title,
-                        description: action.description,
-                        context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-                        intent: "stories",
-                        voice: partner.voice,
-                        model: "video",
-                        trigger: trigger,
-                      },
-                      {
-                        action: "/handle-openai",
-                        method: "post",
-                      },
-                    );
-                  }}
-                >
-                  Roteiro de Stories em vídeo
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            ""
           ) : (
+            // <DropdownMenu>
+            //   <DropdownMenuTrigger asChild>
+            //     <Button
+            //       size="sm"
+            //       className={`${
+            //         isWorking &&
+            //         fetcher.formData?.get("intent") === "stories" &&
+            //         "animate-colors"
+            //       }`}
+            //       variant="ghost"
+            //       title="Gerar Stories"
+            //     >
+            //       <SparklesIcon className="size-4" />
+            //     </Button>
+            //   </DropdownMenuTrigger>
+            //   <DropdownMenuContent className="bg-content">
+            //     <DropdownMenuItem
+            //       onSelect={async () => {
+            //         fetcher.submit(
+            //           {
+            //             title: action.title,
+            //             description: action.description,
+            //             context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+            //             intent: "stories",
+            //             voice: partner.voice,
+            //             model: "static",
+            //             trigger: trigger,
+            //           },
+            //           {
+            //             action: "/handle-openai",
+            //             method: "post",
+            //           },
+            //         );
+            //       }}
+            //     >
+            //       Roteiro de Stories estáticos
+            //     </DropdownMenuItem>
+            //     <DropdownMenuItem
+            //       onSelect={async () => {
+            //         fetcher.submit(
+            //           {
+            //             title: action.title,
+            //             description: action.description,
+            //             context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+            //             intent: "stories",
+            //             voice: partner.voice,
+            //             model: "video",
+            //             trigger: trigger,
+            //           },
+            //           {
+            //             action: "/handle-openai",
+            //             method: "post",
+            //           },
+            //         );
+            //       }}
+            //     >
+            //       Roteiro de Stories em vídeo
+            //     </DropdownMenuItem>
+            //   </DropdownMenuContent>
+            // </DropdownMenu>
             <div className="flex gap-1">
               {action.caption && action.caption.length > 0 && (
                 <div className="flex gap-1">
@@ -1478,33 +1504,33 @@ function LowerBar({
   );
 }
 
-export const TriggersSelect = ({
-  trigger,
-  setTrigger,
-}: {
-  trigger: string;
-  setTrigger: (trigger: string) => void;
-}) => (
-  <Select value={trigger} onValueChange={(value) => setTrigger(value)}>
-    <SelectTrigger
-      className="h-auto gap-1 overflow-hidden px-3 py-0.5 text-xs font-medium"
-      title="Gatilho Mental"
-    >
-      <SelectValue />
-    </SelectTrigger>
-    <SelectContent className="bg-content">
-      {TRIGGERS.map((trigger) => (
-        <SelectItem
-          className="bg-select-item"
-          key={trigger.value}
-          value={trigger.value}
-        >
-          {trigger.value}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-);
+// export const TriggersSelect = ({
+//   trigger,
+//   setTrigger,
+// }: {
+//   trigger: string;
+//   setTrigger: (trigger: string) => void;
+// }) => (
+//   <Select value={trigger} onValueChange={(value) => setTrigger(value)}>
+//     <SelectTrigger
+//       className="h-auto gap-1 overflow-hidden px-3 py-0.5 text-xs font-medium"
+//       title="Gatilho Mental"
+//     >
+//       <SelectValue />
+//     </SelectTrigger>
+//     <SelectContent className="bg-content">
+//       {TRIGGERS.map((trigger) => (
+//         <SelectItem
+//           className="bg-select-item"
+//           key={trigger.value}
+//           value={trigger.value}
+//         >
+//           {trigger.value}
+//         </SelectItem>
+//       ))}
+//     </SelectContent>
+//   </Select>
+// );
 
 function getCleanTitle(title: string) {
   return title.indexOf(" | ") >= 0
@@ -1519,5 +1545,138 @@ function formatTimer(time: number) {
 
   return (time >= 3600 ? `${String(hours).padStart(2, "0")}:` : "").concat(
     `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`,
+  );
+}
+
+function PopoverTFM({
+  title,
+  models,
+  onGenerate,
+}: {
+  title: string;
+  models?: string[];
+  onGenerate?: ({
+    trigger,
+    framework,
+    model,
+  }: {
+    trigger: string;
+    framework: string;
+    model: string;
+  }) => void;
+}) {
+  const [trigger, setTrigger] = useState("Autoridade");
+  const [framework, setFramework] = useState("pas");
+  const [model, setModel] = useState(models ? models[0] : "");
+
+  return (
+    <Popover>
+      <PopoverTrigger className="button-trigger flex gap-2">
+        <Bia size="xs" /> <SparklesIcon className="size-4" />
+      </PopoverTrigger>
+      <PopoverContent className="bg-content mr-[5vw] flex max-h-[50vh] w-[90vw] flex-col overflow-hidden text-center md:mr-4 md:max-h-[80vh] md:w-lg">
+        <div className="text-xl font-medium tracking-tighter">{title}</div>
+
+        <hr className="-mx-4 mt-4" />
+        <div className="scrollbars-v h-full py-4">
+          {/* Gatilhos */}
+          <div>
+            <h5 className="font-medium">Gatilho mental</h5>
+
+            <RadioGroup
+              defaultValue={trigger}
+              onValueChange={(value) => setTrigger(value)}
+              className="mt-2 mb-8 grid grid-cols-2 justify-center gap-1 md:grid-cols-3"
+            >
+              {TRIGGERS.map((trigger, i) => (
+                <div key={i}>
+                  <RadioGroupItem
+                    value={trigger.value}
+                    id={`trigger_${trigger.value}`}
+                    className="hidden"
+                  />
+
+                  <Label
+                    htmlFor={`trigger_${trigger.value}`}
+                    className="peer-data-[state=checked]:bg-secondary peer-data-[state=checked]:text-secondary-foreground text-muted-foreground inline-block rounded px-3 py-2 text-center font-normal transition-colors"
+                  >
+                    {trigger.value}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </div>
+
+          {/* Frameworks */}
+          <div>
+            <h5 className="font-medium">Framework</h5>
+            <RadioGroup
+              defaultValue={framework}
+              className="mt-2 mb-8 grid grid-cols-3 justify-center gap-1 md:grid-cols-4"
+              onValueChange={(value) => {
+                setFramework(value);
+              }}
+            >
+              {Object.entries(FRAMEWORKS).map(([key, value], i) => (
+                <div key={i}>
+                  <RadioGroupItem
+                    value={value.title}
+                    id={`framework_${i}`}
+                    className="hidden"
+                  />
+
+                  <Label
+                    htmlFor={`framework_${i}`}
+                    className="peer-data-[state=checked]:bg-secondary peer-data-[state=checked]:text-secondary-foreground text-muted-foreground inline-block rounded px-3 py-2 text-center font-normal uppercase transition-colors"
+                  >
+                    {value.title}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </div>
+          {/* Modelos */}
+          {models && (
+            <div>
+              <h5 className="font-medium">Modelo</h5>
+              <RadioGroup
+                defaultValue={model}
+                onValueChange={(value) => setModel(value)}
+                className="mt-2 mb-4 flex justify-center gap-1"
+              >
+                {models.map((model, i) => (
+                  <div key={i} className="w-1/4">
+                    <RadioGroupItem
+                      value={model}
+                      id={`model_${i}`}
+                      className="hidden"
+                    />
+
+                    <Label
+                      htmlFor={`model_${i}`}
+                      className="peer-data-[state=checked]:bg-secondary peer-data-[state=checked]:text-secondary-foreground text-muted-foreground inline-block rounded px-3 py-2 text-center font-normal transition-colors"
+                    >
+                      {model}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          )}
+        </div>
+        <hr className="-mx-4 mb-4" />
+        <div className="flex justify-end">
+          <Button
+            onClick={() => {
+              if (onGenerate) {
+                onGenerate({ trigger, framework, model });
+              }
+            }}
+          >
+            Gerar Conteúdo
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
