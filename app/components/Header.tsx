@@ -11,7 +11,6 @@ import {
   UserIcon,
   Users2Icon,
 } from "lucide-react";
-import { useState } from "react";
 import {
   Link,
   useFetchers,
@@ -26,8 +25,6 @@ import {
   Bussola,
   getDelayedActions,
   getMonthsActions,
-  getThisWeekActions,
-  getTodayActions,
   ReportReview,
 } from "~/lib/helpers";
 import CreateAction from "./CreateAction";
@@ -55,10 +52,6 @@ export default function Header({
   const fetchers = useFetchers();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [progressView, setProgressView] = useState<"today" | "week" | "month">(
-    "today",
-  );
-
   const showFeed = !!searchParams.get("show_feed");
   const params = new URLSearchParams(searchParams);
 
@@ -85,46 +78,6 @@ export default function Header({
       : partner;
 
   const lateActions = getDelayedActions({ actions });
-
-  const ProgressViews =
-    partner && actions
-      ? {
-          today: {
-            title: "HJ",
-            length: getTodayActions(actions).length,
-            view: (
-              <CircularProgress
-                actions={getTodayActions(actions)}
-                title="Hoje"
-              />
-            ),
-          },
-          week: {
-            title: "Sem",
-            length: getThisWeekActions(actions).length,
-            view: (
-              <CircularProgress
-                actions={getThisWeekActions(actions)}
-                title="Sem"
-              />
-            ),
-          },
-          month: {
-            title: format(new Date(), "MMM", {
-              locale: ptBR,
-            }),
-            length: getMonthsActions(actions).length,
-            view: (
-              <CircularProgress
-                actions={getMonthsActions(actions)}
-                title={format(new Date(), "MMM", {
-                  locale: ptBR,
-                })}
-              />
-            ),
-          },
-        }
-      : undefined;
 
   return (
     <header
@@ -192,31 +145,6 @@ export default function Header({
 
         {/* parceiros         */}
         <div className="flex items-center gap-0">
-          {partner && ProgressViews ? (
-            <div
-              className="relative flex cursor-pointer items-center gap-1"
-              role="button"
-              onClick={() =>
-                setProgressView((p) => {
-                  if (p === "today") return "week";
-                  if (p === "week") return "month";
-                  return "today";
-                })
-              }
-            >
-              {ProgressViews[progressView].view}
-
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center leading-none font-medium uppercase">
-                <div className="text-[8px]">
-                  {ProgressViews[progressView].title}
-                </div>
-                <div className="text-[14px] font-normal">
-                  {ProgressViews[progressView].length}
-                </div>
-              </div>
-            </div>
-          ) : null}
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -228,14 +156,33 @@ export default function Header({
                 }
               >
                 {partner ? (
-                  <>
+                  <div className="flex gap-4">
+                    <div className="relative">
+                      <Avatar
+                        size="md"
+                        item={{
+                          short: partner.short,
+                          bg: partner.colors[0],
+                          fg: partner.colors[1],
+                        }}
+                      />
+
+                      <CircularProgress
+                        actions={getMonthsActions(actions)}
+                        title={format(new Date(), "MMM", {
+                          locale: ptBR,
+                        })}
+                        className="absolute -top-1/2 -left-1/2"
+                      />
+                    </div>
                     <span className="hidden text-2xl font-bold tracking-tight md:block">
                       {partner.title}
                     </span>
-                    <span className="text-lg font-bold tracking-wide uppercase md:hidden">
+
+                    {/* <span className="text-lg font-bold tracking-wide uppercase md:hidden">
                       {partner.short}
-                    </span>
-                  </>
+                    </span> */}
+                  </div>
                 ) : (
                   "Parceiros"
                 )}
