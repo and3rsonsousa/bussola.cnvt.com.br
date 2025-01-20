@@ -71,6 +71,7 @@ import {
 import { Button } from "./ui/button";
 import { Toggle } from "./ui/toggle";
 import { toast } from "./ui/use-toast";
+import invariant from "tiny-invariant";
 
 export function ActionLine({
   action,
@@ -110,6 +111,12 @@ export function ActionLine({
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const state = states.find((state) => state.slug === action.state) as State;
+
+  if (!state) {
+    console.log({ state });
+    return false;
+  }
+
   const partner = partners.find(
     (partner) => partner.slug === action.partners[0],
   ) as Partner;
@@ -185,7 +192,7 @@ export function ActionLine({
                 date={{ timeFormat: 1 }}
                 className={`the-action-content aspect-square overflow-hidden rounded-md hover:opacity-75`}
               />
-              <div className="late-border absolute inset-0 hidden rounded-md border-2 border-rose-600"></div>
+              <div className="late-border border-background absolute inset-0 hidden rounded-md border ring-2 ring-rose-600"></div>
 
               <div className="absolute -top-3 right-2 flex gap-2">
                 {isSprint(action.id, sprints) && (
