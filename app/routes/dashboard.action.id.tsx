@@ -233,14 +233,14 @@ export default function ActionPage() {
     <div
       className={cn(
         "container mx-auto flex h-full flex-col overflow-hidden px-0 pt-4",
-        isInstagramFeed(action.category, true) ? "max-w-7xlxl" : "max-w-5xl",
+        isInstagramFeed(action.category, true) ? "max-w-7xl" : "max-w-5xl",
       )}
     >
       <div className="h-full gap-4 overflow-y-auto px-4 md:px-8 lg:flex lg:overflow-hidden">
         <div
           className={cn(
             `flex h-full w-full flex-col lg:overflow-hidden`,
-            isInstagramFeed(action.category, true) ? "lg:w-2/3" : "",
+            isInstagramFeed(action.category, true) ? "lg:w-3/4" : "",
           )}
         >
           {/* Header */}
@@ -718,7 +718,7 @@ function RightSide({
   });
 
   return isInstagramFeed(action.category, true) ? (
-    <div className="relative mt-8 w-full lg:mt-0 lg:w-1/3 lg:overflow-hidden lg:overflow-y-auto">
+    <div className="relative mt-8 w-full lg:mt-0 lg:w-1/4 lg:overflow-hidden lg:overflow-y-auto">
       {/* Arquivo */}
       {action.category !== "stories" && (
         <>
@@ -1294,34 +1294,6 @@ function LowerBar({
     </div>
   );
 }
-
-// export const TriggersSelect = ({
-//   trigger,
-//   setTrigger,
-// }: {
-//   trigger: string;
-//   setTrigger: (trigger: string) => void;
-// }) => (
-//   <Select value={trigger} onValueChange={(value) => setTrigger(value)}>
-//     <SelectTrigger
-//       className="h-auto gap-1 overflow-hidden px-3 py-0.5 text-xs font-medium"
-//       title="Gatilho Mental"
-//     >
-//       <SelectValue />
-//     </SelectTrigger>
-//     <SelectContent className="bg-content">
-//       {TRIGGERS.map((trigger) => (
-//         <SelectItem
-//           className="bg-select-item"
-//           key={trigger.value}
-//           value={trigger.value}
-//         >
-//           {trigger.value}
-//         </SelectItem>
-//       ))}
-//     </SelectContent>
-//   </Select>
-// );
 
 function getCleanTitle(title: string) {
   return title.indexOf(" | ") >= 0

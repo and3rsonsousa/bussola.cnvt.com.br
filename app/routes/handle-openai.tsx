@@ -309,8 +309,6 @@ function getModel(model: string, intent: string) {
   `
       : ``;
 
-  console.log({ model, intent });
-
   switch (model) {
     case "short-caption":
       return "Texto da legenda com até 200 caracteres bem criativo e reforçando o CONTEXTO e com um CTA no final. Caso não haja nenhuma especificação no CONTEXTO, indique a pessoa a ir ao link da bio de modo que concorde com o CONTEXTO.";
