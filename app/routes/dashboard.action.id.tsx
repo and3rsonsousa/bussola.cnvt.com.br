@@ -729,7 +729,7 @@ function RightSide({
                   ...action,
                   previews: files ? files.previews : null,
                 }}
-                aspect="feed"
+                aspect="full"
                 partner={partner}
               />
 
