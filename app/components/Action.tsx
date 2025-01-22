@@ -185,12 +185,12 @@ export function ActionLine({
             >
               {isHover && !edit ? <ShortcutActions action={action} /> : null}
               <Content
+                aspect="feed"
                 action={action}
                 partner={partner!}
-                aspect="squared"
                 showInfo
                 date={{ timeFormat: 1 }}
-                className={`the-action-content aspect-square overflow-hidden rounded-md hover:opacity-75`}
+                className={`the-action-content aspect-[4/5] overflow-hidden rounded-md hover:opacity-75`}
               />
               <div className="late-border border-background absolute inset-0 hidden rounded-md border ring-2 ring-rose-600"></div>
 
@@ -873,7 +873,7 @@ export function GridOfActions({
             to={`/dashboard/action/${action.id}${getQueryString()}`}
             key={index}
           >
-            <Content action={action} aspect="squared" partner={partner} />
+            <Content action={action} aspect="feed" partner={partner} />
           </Link>
         ))}
       </div>

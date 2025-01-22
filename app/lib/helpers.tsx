@@ -661,7 +661,7 @@ export const Content = ({
     | (Action & {
         previews: { preview: string; type: string }[] | null;
       });
-  aspect: "feed" | "full" | "squared";
+  aspect: "feed" | "full";
   partner: Partner;
   className?: string;
   showInfo?: boolean;
@@ -682,10 +682,10 @@ export const Content = ({
   let isFile = files && !["", "null", null].find((p) => p === files[0].preview);
 
   return (
-    <div className="relative">
+    <div className="group/action relative">
       {files && !["", "null", null].find((p) => p === files[0].preview) ? (
         // Se for carrossel ou Stories
-        files.length > 1 && aspect !== "squared" ? (
+        files.length > 1 && aspect != "feed" ? (
           <div
             className={clsx(
               `flex snap-x snap-mandatory gap-[1px] overflow-hidden overflow-x-auto transition-opacity ${
@@ -704,9 +704,7 @@ export const Content = ({
           <img
             src={`${files[0].preview}`}
             className={cn(
-              `object-cover transition-opacity ${
-                aspect === "squared" ? "aspect-square" : ""
-              } ${isPreview && "opacity-50"}`,
+              `object-cover transition-opacity ${isPreview && "opacity-50"}`,
               className,
             )}
             style={{ backgroundColor: action.color }}
@@ -715,13 +713,7 @@ export const Content = ({
           <video
             src={files[0].preview}
             className={clsx(
-              `w-full object-cover ${
-                aspect === "squared"
-                  ? "aspect-square"
-                  : aspect === "feed"
-                    ? "aspect-4/5"
-                    : ""
-              }`,
+              `w-full object-cover ${aspect === "feed" ? "aspect-4/5" : ""}`,
               className,
             )}
             controls
@@ -762,7 +754,7 @@ export const Post = ({
   return (
     <div
       className={clsx(
-        `@container grid aspect-square place-content-center overflow-hidden inset-ring inset-ring-black/5 transition-opacity`,
+        `@container grid aspect-[4/5] place-content-center overflow-hidden inset-ring inset-ring-black/5 transition-opacity`,
         className,
       )}
       style={{
@@ -784,15 +776,6 @@ export const Post = ({
       >
         {action.title}
       </div>
-
-      {/* {showInfo && (
-        <div
-          className="absolute bottom-0 w-full p-1 text-center text-xs font-medium opacity-75"
-          style={{ color: getTextColor(bgColor) }}
-        >
-          {formatActionDatetime({ date: action.instagram_date, dateFormat: 2 })}
-        </div>
-      )} */}
     </div>
   );
 };
@@ -812,7 +795,7 @@ function ContentLowerBar({
 
   return (
     <div
-      className={`absolute bottom-0 left-0 flex w-full justify-between rounded-b-md p-2 pt-8 text-xs font-semibold ${
+      className={`absolute bottom-0 left-0 flex w-full justify-between rounded-b-md p-2 pt-8 text-xs font-semibold opacity-0 transition-opacity group-hover/action:opacity-100 ${
         action.files?.length ? "drop-shadow-sm" : ""
       } ${isOverlay ? "bg-gradient-to-b from-transparent to-black/75" : ""}`}
       style={{
