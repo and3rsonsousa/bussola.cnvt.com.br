@@ -8,6 +8,7 @@ import {
   format,
   formatRelative,
   isSameDay,
+  isThisWeek,
   isToday,
   startOfMonth,
   startOfWeek,
@@ -261,11 +262,15 @@ function TodayViews({ actions }: { actions: Action[] }) {
                 <h2 className="text-3xl font-semibold tracking-tight capitalize">
                   {isToday(currentDay)
                     ? "hoje"
-                    : formatRelative(currentDay, new Date(), {
-                        locale: ptBR,
-                      }).split("às")[0]}
+                    : isThisWeek(currentDay)
+                      ? formatRelative(currentDay, new Date(), {
+                          locale: ptBR,
+                        }).split("às")[0]
+                      : format(currentDay, "EEEEEE, d 'de' MMMM", {
+                          locale: ptBR,
+                        })}
                 </h2>
-                <Badge value={currentActions?.length} />
+                <Badge value={currentActions?.length} isDynamic />
               </div>
               <Button
                 onClick={() => setCurrentDay(subDays(currentDay, 1))}
@@ -289,7 +294,7 @@ function TodayViews({ actions }: { actions: Action[] }) {
               {todayView === "kanban" && (
                 <div>
                   <Toggle
-                    variant={"outline"}
+                    variant={"default"}
                     onPressedChange={(pressed) => setList(pressed)}
                     pressed={list}
                     title={
