@@ -805,7 +805,7 @@ const ActionsProgress = () => {
         </Heading>
       </div>
 
-      <div className="grid w-full grid-cols-2 justify-center gap-4 rounded select-none md:grid-cols-3 lg:grid-cols-6">
+      <div className="grid w-full grid-cols-3 justify-center gap-4 rounded select-none lg:grid-cols-6">
         {[
           {
             title: "Atrasados",
@@ -845,7 +845,7 @@ const ActionsProgress = () => {
               <div className="w-full">
                 <ChartContainer
                   config={{}}
-                  className="aspect-square max-h-40 w-full"
+                  className="aspect-square max-h-24 w-full lg:max-h-32"
                 >
                   <PieChart>
                     <ChartTooltip
