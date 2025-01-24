@@ -33,6 +33,6 @@ export default [
 
   route(
     "/object-sans/subset-PPObjectSans-Bold.woff",
-    "/object-sans/subset-PPObjectSans-Bold.woff",
+    "/public/object-sans/subset-PPObjectSans-Bold.woff",
   ),
 ] satisfies RouteConfig;
