@@ -3,7 +3,7 @@ import { useMatches, useNavigate, useOutletContext } from "react-router";
 import { createBrowserClient } from "@supabase/ssr";
 import { CommandLoading } from "cmdk";
 import React, { useEffect, useState } from "react";
-import { useDebounce } from "use-debounce";
+// import { useDebounce } from "use-debounce";
 import { PRIORITIES } from "~/lib/constants";
 import { Avatar, Icons } from "~/lib/helpers";
 import {
@@ -50,7 +50,7 @@ export default function Search({
 
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
-  const [query] = useDebounce(value, 300);
+  const query = value;
   const { partners, states, categories, people, priorities, person } =
     matches[1].data as DashboardRootType;
   const { partner } = matches[2].data
