@@ -30,9 +30,4 @@ export default [
   route("ui", "routes/ui.tsx"),
   route("set-theme", "routes/set-theme.tsx"),
   route("report/:partner", "routes/report.partner.tsx"),
-
-  route(
-    "/object-sans/subset-PPObjectSans-Bold.woff",
-    "/public/object-sans/subset-PPObjectSans-Bold.woff",
-  ),
 ] satisfies RouteConfig;

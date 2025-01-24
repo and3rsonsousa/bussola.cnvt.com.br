@@ -17,6 +17,7 @@ import {
 import Loader from "./Loader";
 import { DialogTitle } from "./ui/dialog";
 import { formatActionDatetime } from "./Action";
+import { useDebounce } from "~/lib/use-debouce";
 
 type CommandItemType = {
   name: string;
@@ -50,7 +51,7 @@ export default function Search({
 
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
-  const query = value;
+  const query = useDebounce(value, 300);
   const { partners, states, categories, people, priorities, person } =
     matches[1].data as DashboardRootType;
   const { partner } = matches[2].data
