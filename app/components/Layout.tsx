@@ -53,7 +53,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <Loader />
       </div>
 
-      {/* <Search search={{ open, setOpen }} /> */}
+      <Search search={{ open, setOpen }} />
       <Toaster />
     </div>
   );
