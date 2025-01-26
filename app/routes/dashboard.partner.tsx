@@ -563,10 +563,10 @@ export default function Partner() {
                           // Se so tiver um e ele for desmarcado, mostra todos
 
                           if (checked && responsiblesFilter.length === 1) {
-                            console.log("AQUI");
                             setResponsiblesFilter(partner.users_ids);
-                          } else if (event.shiftKey) {
-                            // Se o shift estiver sendo pressionado, mostra apenas aquele usuário
+                          }
+                          // Se o shift estiver sendo pressionado, mostra apenas aquele usuário
+                          if (event.shiftKey) {
                             setResponsiblesFilter([person.user_id]);
                           } else {
                             const tempResponsibles = checked

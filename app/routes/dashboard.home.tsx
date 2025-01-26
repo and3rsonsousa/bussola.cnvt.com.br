@@ -8,8 +8,10 @@ import {
   format,
   formatRelative,
   isSameDay,
+  isSameMonth,
   isThisWeek,
   isToday,
+  parseISO,
   startOfMonth,
   startOfWeek,
   subDays,
@@ -218,6 +220,10 @@ export default function DashboardIndex() {
       {/* Hoje */}
       <TodayViews actions={actions as Action[]} />
 
+      {/* Mês */}
+
+      <CalendarMonth actions={actions} />
+
       {/* Próximas Ações */}
       <NextActions actions={nextActions as Action[]} />
 
@@ -407,6 +413,77 @@ function TodayViews({ actions }: { actions: Action[] }) {
         </div>
       </>
     )
+  );
+}
+
+function CalendarMonth({ actions }: { actions: Action[] | null }) {
+  if (!actions) return null;
+
+  const currentDate = new Date();
+
+  const days = eachDayOfInterval({
+    start: startOfWeek(startOfMonth(currentDate)),
+    end: endOfWeek(endOfMonth(currentDate)),
+  });
+
+  const calendar = days.map((day) => {
+    return {
+      date: format(day, "yyyy-MM-dd"),
+      actions: actions?.filter((action) =>
+        isSameDay(parseISO(action.date), day),
+      ),
+    };
+  });
+
+  return (
+    <>
+      <div className="border-b"></div>
+      <div className="py-8 lg:py-24">
+        <Heading className="text-center">
+          {format(new Date(), "MMMM", { locale: ptBR })}
+        </Heading>
+        {/* Calendar Header */}
+        <div className="scrollbars-h px-2 md:px-8">
+          <div className="min-w-[1440px]">
+            <div className="grid grid-cols-7 border-b py-2 text-center text-xs font-medium tracking-wider uppercase">
+              {eachDayOfInterval({
+                start: startOfWeek(new Date()),
+                end: endOfWeek(new Date()),
+              }).map((day) => (
+                <div key={day.getDate()}>
+                  <span className="lg:hidden">
+                    {format(day, "iiiiii", { locale: ptBR })}
+                  </span>
+                  <span className="hidden lg:inline-block">
+                    {format(day, "iiii", { locale: ptBR })}
+                  </span>
+                </div>
+              ))}
+            </div>
+            {/* Calendar Body */}
+            <div className="grid grid-cols-7">
+              {calendar.map(({ date, actions }, i) => {
+                return (
+                  <div key={i} className="rounded p-1">
+                    <div
+                      className={`mb-2 ${!isSameMonth(new Date(), date) ? "opacity-25" : ""}`}
+                    >
+                      <div
+                        className={`grid size-8 place-content-center rounded-full ${isToday(date) ? "bg-primary" : ""}`}
+                      >
+                        {format(date, "d")}
+                      </div>
+                    </div>
+
+                    <ListOfActions actions={actions} isHair />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 

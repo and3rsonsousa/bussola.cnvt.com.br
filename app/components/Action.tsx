@@ -71,7 +71,6 @@ import {
 import { Button } from "./ui/button";
 import { Toggle } from "./ui/toggle";
 import { toast } from "./ui/use-toast";
-import invariant from "tiny-invariant";
 
 export function ActionLine({
   action,
@@ -83,6 +82,7 @@ export function ActionLine({
   showDelay,
   showContent,
   showPartner,
+  isHair,
 }: {
   action: Action;
   date?: dateTimeFormat;
@@ -93,6 +93,7 @@ export function ActionLine({
   showDelay?: boolean;
   showContent?: boolean;
   showPartner?: boolean;
+  isHair?: boolean;
 }) {
   const navigate = useNavigate();
   const submit = useSubmit();
@@ -157,7 +158,39 @@ export function ActionLine({
   return (
     <ContextMenu>
       <ContextMenuTrigger className={isDragging ? "z-10" : ""}>
-        {isInstagramFeed(action.category) && showContent ? (
+        {isHair ? (
+          <div
+            onClick={() => {
+              navigate(`/dashboard/action/${action.id}${getQueryString()}`);
+            }}
+            ref={setNodeRef}
+            {...listeners}
+            {...attributes}
+            style={style}
+          >
+            <div
+              className={`flex cursor-pointer items-center justify-between gap-2 overflow-hidden transition-all ${
+                isBefore(action.date, new Date()) && state.slug !== "finished"
+                  ? "bg-error/20 text-error"
+                  : "hover:bg-muted/50"
+              } `}
+            >
+              <div className="flex items-center gap-2 overflow-hidden">
+                <div
+                  className="h-6 w-1 shrink-0"
+                  style={{ backgroundColor: state.color }}
+                ></div>
+
+                <div className="overflow-hidden text-sm tracking-tight text-ellipsis whitespace-nowrap">
+                  {action.title}
+                </div>
+              </div>
+              <div className="pr-2 text-[10px] tracking-tighter opacity-50">
+                {formatActionDatetime({ date: action.date, timeFormat: 1 })}
+              </div>
+            </div>
+          </div>
+        ) : isInstagramFeed(action.category) && showContent ? (
           <div
             onClick={() => {
               navigate(`/dashboard/action/${action.id}${getQueryString()}`);
@@ -734,6 +767,7 @@ export function ListOfActions({
   short,
   long,
   scroll,
+  isHair,
 }: {
   actions?: Action[] | null;
   showCategory?: boolean;
@@ -746,6 +780,7 @@ export function ListOfActions({
   short?: boolean;
   long?: boolean;
   scroll?: boolean;
+  isHair?: boolean;
 }) {
   const matches = useMatches();
   const { states } = matches[1].data as DashboardRootType;
@@ -771,7 +806,7 @@ export function ListOfActions({
               : columns === 3
                 ? "grid sm:grid-cols-2 md:grid-cols-3"
                 : "grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6"
-        } ${scroll ? "scrollbars-v pt-1 pb-8" : ""} @container h-full gap-x-4 gap-y-1`}
+        } ${scroll ? "scrollbars-v pt-1 pb-8" : ""} ${isHair ? "gap-y-[1px]" : "gap-y-1"} @container h-full gap-x-4`}
       >
         {actions
           ?.slice(0, fold)
@@ -784,6 +819,7 @@ export function ListOfActions({
               showCategory={showCategory}
               showPartner={showPartner}
               date={date}
+              isHair={isHair}
             />
           ))}
       </div>
@@ -1040,6 +1076,23 @@ function ShortcutActions({ action }: { action: Action }) {
   return <></>;
 }
 
+/**
+ * Retorna a formatação da data e da hora de acordo com os parâmetros
+ *  DATA
+ *  0 - Sem informação de data
+ *  1 - Distância
+ *  2 - Curta
+ *  3 - Média
+ *  4 - Longa
+ *
+ * HORA
+ *  0 - Sem informação de horas
+ *  1 - Com horas
+ * @param {string | Date} date - data em formato de string ou Date
+ * @param {number | undefined} dateFormat - Formato da data de 0 a 4
+ * @param {number | undefined} timeFormat - Fomrato da hora de 0 a 1
+ * @returns {string} O texto explicativo para a IA usar
+ * */
 export function formatActionDatetime({
   date,
   dateFormat,
@@ -1049,15 +1102,6 @@ export function formatActionDatetime({
   dateFormat?: 0 | 1 | 2 | 3 | 4;
   timeFormat?: 0 | 1;
 }) {
-  // 0 - Sem informação de data
-  // 1 - Distância
-  // 2 - Curta
-  // 3 - Média
-  // 4 - Longa
-
-  // 0 - Sem informação de horas
-  // 1 - Com horas
-
   date = typeof date === "string" ? parseISO(date) : date;
   const formatString = (
     dateFormat === 2
