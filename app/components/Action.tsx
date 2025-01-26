@@ -174,7 +174,14 @@ export function ActionLine({
                   ? "bg-error/20 text-error"
                   : "hover:bg-muted/50"
               } `}
+              onMouseEnter={() => {
+                setHover(true);
+              }}
+              onMouseLeave={() => {
+                setHover(false);
+              }}
             >
+              {isHover && !edit ? <ShortcutActions action={action} /> : null}
               <div className="flex items-center gap-2 overflow-hidden">
                 <div
                   className="h-6 w-1 shrink-0"
