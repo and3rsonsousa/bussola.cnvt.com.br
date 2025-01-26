@@ -171,7 +171,7 @@ export function ActionLine({
             <div
               className={`flex cursor-pointer items-center justify-between gap-2 overflow-hidden transition-all ${
                 isBefore(action.date, new Date()) && state.slug !== "finished"
-                  ? "bg-error/20 text-error"
+                  ? "bg-error/5 hover:bg-error/20 text-error"
                   : "hover:bg-muted/50"
               } `}
               onMouseEnter={() => {
@@ -188,7 +188,7 @@ export function ActionLine({
                   style={{ backgroundColor: state.color }}
                 ></div>
 
-                <div className="overflow-hidden text-sm tracking-tight text-ellipsis whitespace-nowrap">
+                <div className="overflow-hidden text-xs tracking-tight text-ellipsis whitespace-nowrap">
                   {action.title}
                 </div>
               </div>
