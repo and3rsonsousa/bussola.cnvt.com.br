@@ -213,6 +213,9 @@ export default function DashboardIndex() {
       {/* Sprint */}
       <Sprint />
 
+      {/* Parceiros */}
+      <Partners actions={actions as Action[]} />
+
       {/* Ações em Atraso */}
 
       <DelayedActions actions={lateActions} />
@@ -227,11 +230,8 @@ export default function DashboardIndex() {
       {/* Próximas Ações */}
       <NextActions actions={nextActions as Action[]} />
 
-      {/* Parceiros */}
-      <Partners actions={actions as Action[]} />
-
       {/* Ações da Semana */}
-      <WeekView weekActions={weekActions} />
+      {/* <WeekView weekActions={weekActions} /> */}
     </div>
   );
 }
@@ -419,16 +419,29 @@ function TodayViews({ actions }: { actions: Action[] }) {
 function CalendarMonth({ actions }: { actions: Action[] | null }) {
   if (!actions) return null;
 
-  const currentDate = new Date();
+  const [currentDate, setCurrentDate] = useState(
+    format(
+      new Date().getDay() === 0 ? addDays(new Date(), 1) : new Date(),
+      "yyyy-MM-dd",
+    ),
+  );
 
-  const days = eachDayOfInterval({
-    start: startOfWeek(startOfMonth(currentDate)),
-    end: endOfWeek(endOfMonth(currentDate)),
-  });
+  const [view, setView] = useState<"week" | "month">("week");
+
+  const days =
+    view === "month"
+      ? eachDayOfInterval({
+          start: startOfWeek(startOfMonth(currentDate)),
+          end: endOfWeek(endOfMonth(currentDate)),
+        })
+      : eachDayOfInterval({
+          start: startOfWeek(currentDate),
+          end: endOfWeek(currentDate),
+        });
 
   const calendar = days.map((day) => {
     return {
-      date: format(day, "yyyy-MM-dd"),
+      date: format(day, "yyyy-MM-dd", { locale: ptBR }),
       actions: actions?.filter((action) =>
         isSameDay(parseISO(action.date), day),
       ),
@@ -439,9 +452,35 @@ function CalendarMonth({ actions }: { actions: Action[] | null }) {
     <>
       <div className="border-b"></div>
       <div className="py-8 lg:py-24">
-        <Heading className="text-center">
-          {format(new Date(), "MMMM", { locale: ptBR })}
-        </Heading>
+        <div className="flex justify-between gap-4 px-2 py-2 md:px-8">
+          <h3 className="leading-none font-semibold tracking-tighter lg:text-2xl">
+            {`${format(
+              days[0],
+              "d".concat(
+                !isSameMonth(days[0], days[days.length - 1])
+                  ? " 'de' MMMM"
+                  : "",
+              ),
+              {
+                locale: ptBR,
+              },
+            )} a ${format(days[days.length - 1], " d 'de' MMMM", { locale: ptBR })}`}
+          </h3>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => setView("month")}
+              variant={view === "month" ? "secondary" : "ghost"}
+            >
+              Mês
+            </Button>
+            <Button
+              onClick={() => setView("week")}
+              variant={view === "week" ? "secondary" : "ghost"}
+            >
+              Semana
+            </Button>
+          </div>
+        </div>
         {/* Calendar Header */}
         <div className="scrollbars-h px-2 md:px-8">
           <div className="min-w-[1440px]">
@@ -466,12 +505,12 @@ function CalendarMonth({ actions }: { actions: Action[] | null }) {
                 return (
                   <div key={i} className="rounded p-1">
                     <div
-                      className={`mb-2 ${!isSameMonth(new Date(), date) ? "opacity-25" : ""}`}
+                      className={`mb-2 ${!isSameMonth(parseISO(date), new Date()) ? "opacity-25" : ""}`}
                     >
                       <div
-                        className={`grid size-8 place-content-center rounded-full ${isToday(date) ? "bg-primary" : ""}`}
+                        className={`grid size-8 place-content-center rounded-full ${isToday(parseISO(date)) ? "bg-primary" : ""}`}
                       >
-                        {format(date, "d")}
+                        {parseISO(date).getDate()}
                       </div>
                     </div>
 
