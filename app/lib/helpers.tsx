@@ -46,7 +46,7 @@ import {
   UsersIcon,
   type LucideIcon,
 } from "lucide-react";
-import { useEffect, useState, type CSSProperties } from "react";
+import React, { useEffect, useState, type CSSProperties } from "react";
 import { type DateRange } from "react-day-picker";
 import invariant from "tiny-invariant";
 import { formatActionDatetime } from "~/components/Action";
@@ -793,14 +793,23 @@ function ContentLowerBar({
   const { partners } = matches[1].data as DashboardRootType;
   const action_partners = getPartners(action.partners, partners);
 
+  // ${isOverlay ? "bg-gradient-to-b from-transparent to-black/75" : ""}
+
   return (
     <div
-      className={`absolute bottom-0 left-0 flex w-full justify-between rounded-b-md p-2 pt-8 text-xs font-semibold opacity-0 transition-opacity group-hover/action:opacity-100 ${
+      className={`absolute bottom-0 left-0 flex w-full justify-between rounded-b-md p-2 pt-8 text-xs font-semibold drop-shadow-xs transition-opacity ${
         action.files?.length ? "drop-shadow-sm" : ""
-      } ${isOverlay ? "bg-gradient-to-b from-transparent to-black/75" : ""}`}
-      style={{
-        color: action.files?.length ? "white" : getTextColor(action.color),
-      }}
+      } `}
+      style={
+        action.files?.length
+          ? ({
+              color: "white",
+              "--drop-shadow-xs": "0 1px 1px rgb(0 0 0 / 0.5)",
+            } as React.CSSProperties)
+          : {
+              color: getTextColor(action.color),
+            }
+      }
     >
       <Icons id={action.category} className="size-4" />
       {/* {action.partners.length > 1 && (
