@@ -482,7 +482,7 @@ function Description({
                 <div className="bg-input relative rounded-sm border p-2 pb-10">
                   <textarea
                     rows={2}
-                    className="field-sizing-content w-full resize-none outline-none"
+                    className="field-sizing-content max-h-[50vh] w-full resize-none outline-none"
                     ref={promptRef}
                     onKeyDown={async (e) => {
                       if (

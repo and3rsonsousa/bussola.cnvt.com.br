@@ -302,6 +302,10 @@ export default function Partner() {
     return () => document.removeEventListener("keydown", keyDown);
   }, []);
 
+  useEffect(() => {
+    setResponsiblesFilter(partner.users_ids);
+  }, [partner]);
+
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     const date = over?.id as string;
     const actionDate = isInstagramDate
