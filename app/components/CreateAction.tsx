@@ -93,8 +93,8 @@ export default function CreateAction({
   ) as Category;
 
   useEffect(() => {
-    if (action.partner) {
-      const newPartner = partners.find((p) => p.slug === action.partner);
+    if (action.partners) {
+      const newPartner = partners.find((p) => p.slug === action.partners[0]);
       if (newPartner) {
         setPartner(newPartner);
         setAction({ ...action, color: newPartner.colors[0] });
@@ -217,7 +217,6 @@ export default function CreateAction({
               partners={action.partners}
               onSelect={(partners) => {
                 setAction((action) => ({ ...action, partners }));
-                // console.log({ partners });
               }}
             />
 
@@ -288,7 +287,7 @@ export default function CreateAction({
               <DropdownMenu>
                 <DropdownMenuTrigger className="button-trigger">
                   <div
-                    className="size-8 rounded"
+                    className="border-foreground/10 size-8 rounded border"
                     style={{
                       backgroundColor: action.color,
                     }}
@@ -299,6 +298,7 @@ export default function CreateAction({
                     (color, i) =>
                       i !== 1 && (
                         <DropdownMenuItem
+                          className="bg-item py-4"
                           key={i}
                           onSelect={() => {
                             setAction({
@@ -308,7 +308,7 @@ export default function CreateAction({
                           }}
                         >
                           <div
-                            className="h-4 w-full rounded-[4px]"
+                            className="border-foreground/10 h-8 w-full rounded-sm border"
                             style={{
                               backgroundColor: color,
                             }}
@@ -474,6 +474,8 @@ export function PartnersDropdown({
                 title: partner.title,
               },
             }))}
+            ringColor="ring-popover"
+            size="md"
           />
         ) : (
           "Parceiros"
@@ -551,6 +553,7 @@ export function ResponsibleForAction({
               title: person.name,
             },
           }))}
+          ringColor="ring-popover"
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-content">

@@ -114,7 +114,6 @@ export function ActionLine({
   const state = states.find((state) => state.slug === action.state) as State;
 
   if (!state) {
-    console.log({ state });
     return false;
   }
 

@@ -196,13 +196,13 @@ export function Avatar({
     ? {
         xs: "",
         sm: "scale-[0.8]",
-        md: "1.3",
+        md: "scale-[1.3]",
         lg: "scale-[1.6]",
         xl: "scale-[2]",
       }
     : {
         xs: "",
-        sm: "scale-[0.75]",
+        sm: "scale-[0.6]",
         md: "scale-[0.85]",
         lg: "scale-[1.3]",
         xl: "scale-[1.6]",
@@ -222,9 +222,9 @@ export function Avatar({
               : size === "lg"
                 ? "size-12"
                 : "size-16",
-        ring ? "ring-background ring-2" : "ring-foreground/5 ring-1",
+        ring ? "ring-background ring-2" : "",
 
-        "block",
+        "border-foreground/10 block border",
 
         className,
       ])}
