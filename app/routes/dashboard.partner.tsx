@@ -148,8 +148,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
+    { title: data?.partner?.title.concat(" - ʙússoʟa") },
     {
-      title: data?.partner?.title,
+      name: "description",
+      content:
+        "Aplicativo de Gestão de Projetos Criado e Mantido pela Agência CNVT®. ",
     },
   ];
 };
