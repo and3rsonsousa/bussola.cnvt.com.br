@@ -1034,16 +1034,40 @@ export function useDocumentSize() {
 export function getQueryString(qs?: string) {
   if (typeof window !== "undefined") {
     const searchParams = new URLSearchParams(location.search).toString();
-    qs = qs ? `&${qs}` : "";
+    qs = qs ? `${qs}` : "";
 
-    return searchParams ? `?${searchParams}${qs}` : qs;
+    return searchParams ? `?${searchParams}&${qs}` : `?${qs}`;
   } else {
     const [searchParams] = useSearchParams();
-    qs = qs ? `&${qs}` : "";
-    return searchParams.toString() ? `?${searchParams.toString()}${qs}` : qs;
+    qs = qs ? `${qs}` : "";
+    return searchParams.toString()
+      ? `?${searchParams.toString()}&${qs}`
+      : `?${qs}`;
   }
 }
 
 export function getBiaMessage(message: string) {
   return `<hr>${message}<h5>βia às ${format(new Date(), "HH:mm:ss")}</h5>`;
+}
+
+export function getCategoriesQueryString(category?: string) {
+  let categories = "";
+
+  if (typeof window !== "undefined") {
+    const searchParams = new URLSearchParams(location.search);
+    categories = searchParams.get("categories") || "";
+    categories =
+      categories !== "" && category !== undefined
+        ? `${categories}-${category}`
+        : category || "";
+  } else {
+    const [searchParams] = useSearchParams();
+    categories = searchParams.get("categories") || "";
+    categories =
+      categories !== "" && category !== undefined
+        ? `${categories}-${category}`
+        : category || "";
+  }
+
+  return categories;
 }

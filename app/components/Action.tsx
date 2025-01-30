@@ -1803,7 +1803,12 @@ export function getNewDateValues(
       minutes,
     );
 
-  if (isInstagramDate) {
+  // Se a visualização for pela data do Instagram e se a ação for de instagram
+
+  if (isInstagramFeed(action.category, true) && isInstagramDate) {
+    // Se a data de fazer ação for depois da data de postagem
+    // define uma nova data de postagem, sendo uma hora antes da data da ação
+
     if (isAfter(action.date, newDate)) {
       values = {
         date: format(subHours(newDate, 1), "yyyy-MM-dd HH:mm:ss"),
@@ -1815,16 +1820,9 @@ export function getNewDateValues(
       };
     }
   } else {
-    if (isAfter(newDate, action.instagram_date)) {
-      values = {
-        date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
-        instagram_date: format(addHours(newDate, 1), "yyyy-MM-dd HH:mm:ss"),
-      };
-    } else {
-      values = {
-        date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
-      };
-    }
+    values = {
+      date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
+    };
   }
 
   return values;

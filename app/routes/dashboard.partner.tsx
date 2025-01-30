@@ -35,6 +35,7 @@ import {
   type MetaFunction,
   redirect,
   useLoaderData,
+  useLocation,
   useMatches,
   useOutletContext,
   useSearchParams,
@@ -72,6 +73,7 @@ import {
   Avatar,
   AvatarGroup,
   Icons,
+  getCategoriesQueryString,
   getCategoriesSortedByContent,
   getInstagramFeed,
   getResponsibles,
@@ -158,13 +160,14 @@ export default function Partner() {
   const matches = useMatches();
   const submit = useSubmit();
   const id = useId();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams(useLocation().search);
   const [responsiblesFilter, setResponsiblesFilter] = useState<string[]>(
     partner.users_ids,
   );
 
-  const { categoryFilter, setCategoryFilter, stateFilter, setStateFilter } =
-    useOutletContext() as ContextType;
+  const [categoryFilter, setCategoryFilter] = useState<Category[]>([]);
+
+  const { stateFilter, setStateFilter } = useOutletContext() as ContextType;
 
   const { categories, states, person, people, celebrations } = matches[1]
     .data as DashboardRootType;
@@ -299,12 +302,23 @@ export default function Partner() {
 
     document.addEventListener("keydown", keyDown);
 
+    setCategoryFilter([]);
+
     return () => document.removeEventListener("keydown", keyDown);
   }, []);
 
   useEffect(() => {
     setResponsiblesFilter(partner.users_ids);
   }, [partner]);
+
+  useEffect(() => {
+    let _params = params.get("categories")?.split("-");
+    let _categories = categories.filter((category) =>
+      _params?.find((_p) => _p === category.slug),
+    );
+
+    setCategoryFilter(_categories);
+  }, [searchParams]);
 
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     const date = over?.id as string;
@@ -677,6 +691,8 @@ export default function Partner() {
                   className="bg-select-item flex gap-2"
                   checked={categoryFilter?.length == 0}
                   onCheckedChange={() => {
+                    params.delete("categories");
+                    setSearchParams(params);
                     setCategoryFilter([]);
                   }}
                 >
@@ -694,13 +710,18 @@ export default function Partner() {
                   }
                   onCheckedChange={(checked) => {
                     if (checked) {
-                      setCategoryFilter(
-                        categories.filter((category) =>
-                          isInstagramFeed(category.slug),
-                        ),
+                      let _categories = categories.filter((category) =>
+                        isInstagramFeed(category.slug),
                       );
+                      params.set(
+                        "categories",
+                        _categories.map((_c) => _c.slug).join("-"),
+                      );
+                      setSearchParams(params);
+                      setCategoryFilter(_categories);
                     } else {
-                      setCategoryFilter([]);
+                      params.delete("categories");
+                      setSearchParams(params);
                     }
                   }}
                 >
@@ -720,24 +741,24 @@ export default function Partner() {
                         : false
                     }
                     onCheckedChange={(checked) => {
-                      if (
-                        !checked &&
-                        categoryFilter?.findIndex(
-                          (c) => category.slug === c.slug,
-                        ) >= 0
-                      ) {
-                        const filters = categoryFilter.filter(
-                          (c) => c.slug != category.slug,
-                        );
+                      let _categories_slugs = getCategoriesQueryString();
+                      let _categories = categories.filter((category) =>
+                        _categories_slugs.split("-").includes(category.slug),
+                      );
 
-                        setCategoryFilter(filters);
-                      } else {
-                        setCategoryFilter(
-                          categoryFilter
-                            ? [...categoryFilter, category]
-                            : [category],
+                      if (checked) {
+                        params.set(
+                          "categories",
+                          getCategoriesQueryString().concat(category.slug),
                         );
+                      } else {
+                        _categories_slugs = _categories_slugs
+                          .split("-")
+                          .filter((c) => c !== category.slug && c !== "")
+                          .join("-");
+                        params.set("categories", _categories_slugs);
                       }
+                      setSearchParams(params);
                     }}
                   >
                     <Icons id={category.slug} className="h-3 w-3" />

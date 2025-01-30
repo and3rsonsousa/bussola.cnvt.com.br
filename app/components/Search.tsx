@@ -1,11 +1,16 @@
 /* eslint-disable jsx-a11y/no-autofocus */
-import { useMatches, useNavigate, useOutletContext } from "react-router";
+import {
+  useMatches,
+  useNavigate,
+  useOutletContext,
+  useSearchParams,
+} from "react-router";
 import { createBrowserClient } from "@supabase/ssr";
 import { CommandLoading } from "cmdk";
 import React, { useEffect, useState } from "react";
 // import { useDebounce } from "use-debounce";
 import { PRIORITIES } from "~/lib/constants";
-import { Avatar, Icons } from "~/lib/helpers";
+import { Avatar, getCategoriesQueryString, Icons } from "~/lib/helpers";
 import {
   CommandDialog,
   CommandEmpty,
@@ -51,6 +56,9 @@ export default function Search({
 
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+
   const query = useDebounce(value, 300);
   const { partners, states, categories, people, priorities, person } =
     matches[1].data as DashboardRootType;
@@ -58,8 +66,7 @@ export default function Search({
     ? (matches[2].data as DashboardPartnerType)
     : {};
 
-  const { setCategoryFilter, categoryFilter, setStateFilter } =
-    useOutletContext() as ContextType;
+  const { setStateFilter } = useOutletContext() as ContextType;
 
   let startSections: CommandItemType[] = [
     {
@@ -108,7 +115,8 @@ export default function Search({
                 id: "clean-category",
                 title: "Remover filtro de Categoria",
                 click: () => {
-                  setCategoryFilter([]);
+                  params.delete("categories");
+                  setSearchParams(params);
                 },
                 options: [
                   "categoria remover",
@@ -121,7 +129,11 @@ export default function Search({
                 title: category.title,
 
                 click: () => {
-                  setCategoryFilter([category, ...categoryFilter]);
+                  params.set(
+                    "categories",
+                    getCategoriesQueryString(category.slug),
+                  );
+                  setSearchParams(params);
                 },
                 options: [
                   "categoria ".concat(category.title),

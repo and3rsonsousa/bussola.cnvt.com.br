@@ -97,7 +97,6 @@ export default function App() {
   const [showFeed, setShowFeed] = useState(false);
   const [isTransitioning, setTransitioning] = useState(false);
   const [stateFilter, setStateFilter] = useState<State>();
-  const [categoryFilter, setCategoryFilter] = useState<Category[]>([]);
 
   return (
     <Outlet
@@ -105,11 +104,9 @@ export default function App() {
         showFeed,
         isTransitioning,
         stateFilter,
-        categoryFilter,
         setShowFeed,
         setTransitioning,
         setStateFilter,
-        setCategoryFilter,
       }}
     />
   );
