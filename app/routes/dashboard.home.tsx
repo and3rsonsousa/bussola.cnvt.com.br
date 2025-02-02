@@ -508,7 +508,7 @@ function CalendarMonth({ actions }: { actions: Action[] | null }) {
                       className={`mb-2 ${!isSameMonth(parseISO(date), new Date()) ? "opacity-25" : ""}`}
                     >
                       <div
-                        className={`grid size-8 place-content-center rounded-full ${isToday(parseISO(date)) ? "bg-primary" : ""}`}
+                        className={`grid size-8 place-content-center rounded-full ${isToday(parseISO(date)) ? "bg-primary text-primary-foreground" : ""}`}
                       >
                         {parseISO(date).getDate()}
                       </div>

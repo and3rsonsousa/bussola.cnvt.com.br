@@ -61,7 +61,7 @@
     --destructive-foreground: 250 20% 98%;
 
     --highlight: 210 15% 30%;
-    --border: 220 10% 20%;
+    --border: 220 10% 25%;
     --input: 220 10% 10%;
     --ring: 80 90% 50%;
   }
@@ -206,6 +206,10 @@ body {
 
 .bg-content {
   @apply bg-popover ring-border/50 rounded-xl border-0 ring shadow-2xl;
+}
+
+.dark .bg-content {
+  @apply ring-border shadow-black;
 }
 
 .bg-label {
