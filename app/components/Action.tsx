@@ -550,7 +550,11 @@ export function ActionLine({
           </div>
         )}
       </ContextMenuTrigger>
-      <ContextMenuItems action={action} handleActions={handleActions} />
+      <ContextMenuItems
+        action={action}
+        handleActions={handleActions}
+        isInstagramDate={Boolean(isInstagramDate)}
+      />
     </ContextMenu>
   );
 }
@@ -1142,9 +1146,11 @@ export function formatActionDatetime({
 
 export function ContextMenuItems({
   action,
+  isInstagramDate,
   handleActions,
 }: {
   action: Action;
+  isInstagramDate?: boolean;
   handleActions: (data: {
     [key: string]: string | number | null | string[] | boolean;
   }) => void;
@@ -1226,8 +1232,10 @@ export function ContextMenuItems({
                     handleActions({
                       intent: INTENTS.updateAction,
                       ...action,
-                      date: format(
-                        new Date(action.date).setHours(i + 6, 0),
+                      [isInstagramDate ? "instagram_date" : "date"]: format(
+                        new Date(
+                          isInstagramDate ? action.instagram_date : action.date,
+                        ).setHours(i + 6, 0),
                         "yyyy-MM-dd HH:mm:ss",
                       ),
                     });
