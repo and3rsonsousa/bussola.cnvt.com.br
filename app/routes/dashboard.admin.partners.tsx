@@ -45,8 +45,8 @@ export default function AdminPartners() {
   const { people } = matches[1].data as DashboardRootType;
 
   return (
-    <div className="px-4 py-4 lg:px-8">
-      <div className="scrollbars">
+    <div className="scrollbars-v">
+      <div className="px-4 py-4 lg:px-8">
         <Heading>Parceiros</Heading>
         <div className="grid items-center gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {partners?.map((partner: Partner) => (
