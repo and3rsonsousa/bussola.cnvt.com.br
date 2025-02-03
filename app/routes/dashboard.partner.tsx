@@ -919,11 +919,12 @@ export const CalendarDay = ({
         {/* Actions and Celebration */}
         <div className="flex h-full flex-col justify-between">
           <div className="relative flex h-full grow flex-col gap-3">
-            {showContent
-              ? day.actions?.filter((action) =>
+            {showContent ? (
+              <div className="flex flex-col gap-3">
+                {day.actions?.filter((action) =>
                   isInstagramFeed(action.category),
                 ).length !== 0 && (
-                  <div className="flex flex-col gap-3">
+                  <>
                     <div className="mb-2 flex items-center gap-1 text-[12px] font-medium">
                       <Grid3x3Icon className="size-4" />
                       <div>Feed</div>
@@ -948,48 +949,51 @@ export const CalendarDay = ({
                           />
                         ))}
                     </div>
-                    <div className="flex flex-col gap-3">
-                      {categories
-                        .filter((category) => !isInstagramFeed(category.slug))
-                        .map((category) => ({
-                          category,
-                          actions: day.actions?.filter(
-                            (action) => category.slug === action.category,
-                          ),
-                        }))
-                        .map(({ category, actions }) => (
-                          <CategoryActions
-                            showResponsibles={showResponsibles}
-                            category={category}
-                            actions={actions}
-                            short={short}
-                            showContent
-                            key={category.id}
-                          />
-                        ))}
-                    </div>
-                  </div>
-                )
-              : categories
-                  .map((category) => ({
-                    category,
-                    actions: day.actions?.filter(
-                      (action) => category.slug === action.category,
-                    ),
-                  }))
-                  .map(
-                    ({ category, actions }, i) =>
-                      actions &&
-                      actions.length > 0 && (
-                        <CategoryActions
-                          showResponsibles={showResponsibles}
-                          category={category}
-                          actions={actions}
-                          short={short}
-                          key={category.id}
-                        />
+                  </>
+                )}
+                <div className="flex flex-col gap-3">
+                  {categories
+                    .filter((category) => !isInstagramFeed(category.slug))
+                    .map((category) => ({
+                      category,
+                      actions: day.actions?.filter(
+                        (action) => category.slug === action.category,
                       ),
-                  )}
+                    }))
+                    .map(({ category, actions }) => (
+                      <CategoryActions
+                        showResponsibles={showResponsibles}
+                        category={category}
+                        actions={actions}
+                        short={short}
+                        showContent
+                        key={category.id}
+                      />
+                    ))}
+                </div>
+              </div>
+            ) : (
+              categories
+                .map((category) => ({
+                  category,
+                  actions: day.actions?.filter(
+                    (action) => category.slug === action.category,
+                  ),
+                }))
+                .map(
+                  ({ category, actions }, i) =>
+                    actions &&
+                    actions.length > 0 && (
+                      <CategoryActions
+                        showResponsibles={showResponsibles}
+                        category={category}
+                        actions={actions}
+                        short={short}
+                        key={category.id}
+                      />
+                    ),
+                )
+            )}
           </div>
 
           {day.celebrations && day.celebrations.length > 0 && (

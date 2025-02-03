@@ -169,7 +169,7 @@ export default function Header({
 
                       <CircularProgress
                         actions={getMonthsActions(actions)}
-                        title={format(new Date(), "MMM", {
+                        title={format(new Date(), "MMMM 'de' yyyy", {
                           locale: ptBR,
                         })}
                         className="absolute -top-1/2 -left-1/2"
