@@ -920,36 +920,56 @@ export const CalendarDay = ({
         <div className="flex h-full flex-col justify-between">
           <div className="relative flex h-full grow flex-col gap-3">
             {showContent
-              ? getCategoriesSortedByContent(categories).map((section, i) => (
-                  <div key={i} className={i === 0 ? "flex flex-col gap-3" : ""}>
-                    {i === 0 &&
-                      day.actions?.filter((action) =>
-                        isInstagramFeed(action.category),
-                      ).length !== 0 && (
-                        <div className="mb-2 flex items-center gap-1 text-[12px] font-medium">
-                          <Grid3x3Icon className="size-4" />
-                          <div>Feed</div>
-                        </div>
-                      )}
-                    {section
-                      .map((category) => ({
-                        category,
-                        actions: day.actions?.filter(
-                          (action) => action.category === category.slug,
-                        ),
-                      }))
-                      .map(({ actions, category }) => (
-                        <CategoryActions
-                          showResponsibles={showResponsibles}
-                          category={category}
-                          actions={actions}
-                          short={short}
-                          showContent
-                          key={category.id}
-                        />
-                      ))}
+              ? day.actions?.filter((action) =>
+                  isInstagramFeed(action.category),
+                ).length !== 0 && (
+                  <div className="flex flex-col gap-3">
+                    <div className="mb-2 flex items-center gap-1 text-[12px] font-medium">
+                      <Grid3x3Icon className="size-4" />
+                      <div>Feed</div>
+                    </div>
+                    <div className="mb-4 flex flex-col gap-3">
+                      {day.actions
+                        ?.sort((a, b) =>
+                          isAfter(a.instagram_date, b.instagram_date) ? 1 : -1,
+                        )
+                        ?.filter((action) => isInstagramFeed(action.category))
+                        .map((action) => (
+                          <ActionLine
+                            showContent={showContent}
+                            short={short}
+                            showResponsibles={showResponsibles}
+                            showDelay
+                            action={action}
+                            key={action.id}
+                            date={{
+                              timeFormat: 1,
+                            }}
+                          />
+                        ))}
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      {categories
+                        .filter((category) => !isInstagramFeed(category.slug))
+                        .map((category) => ({
+                          category,
+                          actions: day.actions?.filter(
+                            (action) => category.slug === action.category,
+                          ),
+                        }))
+                        .map(({ category, actions }) => (
+                          <CategoryActions
+                            showResponsibles={showResponsibles}
+                            category={category}
+                            actions={actions}
+                            short={short}
+                            showContent
+                            key={category.id}
+                          />
+                        ))}
+                    </div>
                   </div>
-                ))
+                )
               : categories
                   .map((category) => ({
                     category,
@@ -971,6 +991,7 @@ export const CalendarDay = ({
                       ),
                   )}
           </div>
+
           {day.celebrations && day.celebrations.length > 0 && (
             <div className="mt-4 space-y-2 text-[10px] opacity-50">
               {day.celebrations?.map((celebration) => (
@@ -1000,8 +1021,9 @@ function CategoryActions({
   showResponsibles?: boolean;
 }) {
   actions = actions?.sort((a, b) =>
-    isAfter(b.instagram_date, a.instagram_date) ? 1 : -1,
+    isAfter(a.instagram_date, b.instagram_date) ? 1 : -1,
   );
+
   return actions && actions.length > 0 ? (
     <div key={category.slug} className="flex flex-col gap-3">
       {!(showContent && isInstagramFeed(category.slug)) && (
@@ -1013,6 +1035,7 @@ function CategoryActions({
           <div>{category.title}</div>
         </div>
       )}
+
       <div className={`flex flex-col gap-1`}>
         {actions?.map((action) => (
           <ActionLine
