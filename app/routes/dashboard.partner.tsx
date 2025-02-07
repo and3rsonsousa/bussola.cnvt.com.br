@@ -257,7 +257,7 @@ export default function Partner() {
       left: day.offsetLeft - 48,
       behavior: "smooth",
     });
-    calendar.scrollTo({ top: day.offsetTop - 120, behavior: "smooth" });
+    calendar.scrollTo({ top: day.offsetTop - 160, behavior: "smooth" });
 
     function keyDown(event: KeyboardEvent) {
       if (event.shiftKey && event.altKey) {

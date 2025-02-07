@@ -911,6 +911,10 @@ export function GridOfActions({
   actions?: Action[];
   partner: Partner;
 }) {
+  actions = actions?.sort((a, b) =>
+    isAfter(a.instagram_date, b.instagram_date) ? 1 : -1,
+  );
+
   return (
     <div className="scrollbars-v">
       <div className="grid grid-cols-3 gap-[2px] overflow-hidden rounded-xl">

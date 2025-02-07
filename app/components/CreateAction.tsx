@@ -454,9 +454,11 @@ export function StateSelect({
 export function PartnersDropdown({
   onSelect,
   partners,
+  ringColor = "",
 }: {
   onSelect: (partners: string[]) => void;
   partners: string[];
+  ringColor?: string;
 }) {
   const { partners: allPartners } = useMatches()[1].data as DashboardRootType;
   const actionPartners = getPartners(partners, allPartners);
