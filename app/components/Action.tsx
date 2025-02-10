@@ -912,7 +912,7 @@ export function GridOfActions({
   partner: Partner;
 }) {
   actions = actions?.sort((a, b) =>
-    isAfter(a.instagram_date, b.instagram_date) ? 1 : -1,
+    isAfter(a.instagram_date, b.instagram_date) ? -1 : 1,
   );
 
   return (
