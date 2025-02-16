@@ -224,7 +224,7 @@ export function Avatar({
                 : "size-16",
         ring ? "ring-background ring-2" : "",
 
-        "border-foreground/10 block border",
+        "block border",
 
         className,
       ])}

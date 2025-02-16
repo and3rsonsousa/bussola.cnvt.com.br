@@ -205,6 +205,7 @@ export function ActionLine({
             {...listeners}
             {...attributes}
             style={style}
+            className="outline-none"
           >
             <div
               title={action.title}
@@ -923,7 +924,12 @@ export function GridOfActions({
             to={`/dashboard/action/${action.id}${getQueryString()}`}
             key={index}
           >
-            <Content action={action} aspect="feed" partner={partner} />
+            <Content
+              showFinished
+              action={action}
+              aspect="feed"
+              partner={partner}
+            />
           </Link>
         ))}
       </div>

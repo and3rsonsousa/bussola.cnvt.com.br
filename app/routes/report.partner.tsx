@@ -512,7 +512,7 @@ const CalendarReportView = ({
                   >
                     <Content
                       action={action as Action}
-                      aspect="squared"
+                      aspect="feed"
                       partner={partner}
                       showFinished
                       showInfo
@@ -556,7 +556,7 @@ const InstagramReportView = ({
           <div key={i} className="relative">
             <Content
               action={action as Action}
-              aspect="squared"
+              aspect="feed"
               partner={partner}
               showInfo
               showFinished
