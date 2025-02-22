@@ -211,8 +211,9 @@ export function ActionLine({
               title={action.title}
               className={`action ring-ring ring-offset-background relative cursor-pointer rounded ring-offset-2 outline-hidden focus-within:ring-3 ${
                 showDelay &&
-                isBefore(action.date, new Date()) &&
-                state.slug !== "finished"
+                state.slug !== "finished" &&
+                (isBefore(action.instagram_date, new Date()) ||
+                  isBefore(action.date, new Date()))
                   ? "action-content-delayed rounded-md"
                   : " "
               }`}
