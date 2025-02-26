@@ -304,7 +304,7 @@ function PartnerCombobox({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger className="outline-none" asChild>
-        <div className="flex items-center gap-2 text-sm font-medium">
+        <div className="flex cursor-pointer items-center gap-2">
           {partner ? (
             <div className="flex gap-4">
               <div className="relative">
@@ -330,7 +330,7 @@ function PartnerCombobox({
               </span>
             </div>
           ) : (
-            "Parceiros"
+            <div className="text-sm font-medium">Parceiros</div>
           )}
           <ChevronsUpDownIcon className="size-4" />
         </div>
