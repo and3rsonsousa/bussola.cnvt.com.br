@@ -1,7 +1,6 @@
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import {
   ArchiveIcon,
+  ChevronsUpDownIcon,
   Grid3x3Icon,
   HandshakeIcon,
   HelpCircle,
@@ -11,6 +10,7 @@ import {
   UserIcon,
   Users2Icon,
 } from "lucide-react";
+import { useState } from "react";
 import {
   Link,
   useFetchers,
@@ -24,22 +24,34 @@ import {
   Avatar,
   Bussola,
   getDelayedActions,
-  getMonthsActions,
   ReportReview,
 } from "~/lib/helpers";
 import CreateAction from "./CreateAction";
 import Loader from "./Loader";
-import { CircularProgress } from "./Progress";
 import { ThemeColorToggle, ThemeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "./ui/command";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { CircularProgress } from "./Progress";
+import { ptBR } from "date-fns/locale";
+import { format } from "date-fns";
+
+import { getMonthsActions } from "~/lib/helpers";
 
 export default function Header({
   setOpen,
@@ -145,102 +157,7 @@ export default function Header({
 
         {/* parceiros         */}
         <div className="flex items-center gap-0">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant={"ghost"}
-                className={
-                  partner
-                    ? "rounded-full px-4 py-2"
-                    : `text-ellipsis whitespace-nowrap`
-                }
-              >
-                {partner ? (
-                  <div className="flex gap-4">
-                    <div className="relative">
-                      <Avatar
-                        size="md"
-                        item={{
-                          short: partner.short,
-                          bg: partner.colors[0],
-                          fg: partner.colors[1],
-                        }}
-                      />
-
-                      <CircularProgress
-                        actions={getMonthsActions(actions)}
-                        title={format(new Date(), "MMMM 'de' yyyy", {
-                          locale: ptBR,
-                        })}
-                        className="absolute -top-1/2 -left-1/2"
-                      />
-                    </div>
-                    <span className="hidden text-2xl font-bold tracking-tight md:block">
-                      {partner.title}
-                    </span>
-
-                    {/* <span className="text-lg font-bold tracking-wide uppercase md:hidden">
-                      {partner.short}
-                    </span> */}
-                  </div>
-                ) : (
-                  "Parceiros"
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-content mr-8">
-              <DropdownMenuLabel className="bg-label">
-                Consultoria de Marketing
-              </DropdownMenuLabel>
-              {partners.map(
-                (partner) =>
-                  partner.sow === SOW.marketing && (
-                    <DropdownMenuItem
-                      className="bg-item"
-                      onSelect={() => navigate(`/dashboard/${partner.slug}`)}
-                      key={partner.slug}
-                      id={partner.slug}
-                    >
-                      {partner.title}
-                    </DropdownMenuItem>
-                  ),
-              )}
-              <DropdownMenuSeparator />
-              <DropdownMenuLabel className="bg-label">
-                Social Media
-              </DropdownMenuLabel>
-              {partners.map(
-                (partner) =>
-                  partner.sow === SOW.socialmedia && (
-                    <DropdownMenuItem
-                      className="bg-item"
-                      onSelect={() => navigate(`/dashboard/${partner.slug}`)}
-                      key={partner.slug}
-                      id={partner.slug}
-                    >
-                      {partner.title}
-                    </DropdownMenuItem>
-                  ),
-              )}
-              <DropdownMenuSeparator />
-              <DropdownMenuLabel className="bg-label">
-                Demanda
-              </DropdownMenuLabel>
-              {partners.map(
-                (partner) =>
-                  partner.sow === SOW.demand && (
-                    <DropdownMenuItem
-                      className="bg-item"
-                      onSelect={() => navigate(`/dashboard/${partner.slug}`)}
-                      key={partner.slug}
-                      id={partner.slug}
-                    >
-                      {partner.title}
-                    </DropdownMenuItem>
-                  ),
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <PartnerCombobox partner={partner} actions={actions} />
         </div>
 
         {/* menu de ações */}
@@ -361,3 +278,160 @@ export default function Header({
     </header>
   );
 }
+
+function PartnerCombobox({
+  partner,
+  actions,
+}: {
+  partner: Partner;
+  actions: Action[];
+}) {
+  const matches = useMatches();
+  const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
+
+  const { partners } = matches[1].data as DashboardRootType;
+  const partnersBySOW = [
+    { category: SOW.marketing, title: "Consultoria de Marketing" },
+    { category: SOW.socialmedia, title: "Social Media" },
+    { category: SOW.demand, title: "Sob demanda" },
+  ].map((sow) => ({
+    title: sow.title,
+    partners: partners.filter((partner) => partner.sow === sow.category),
+  }));
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger className="outline-none" asChild>
+        <div className="flex items-center gap-2 text-sm font-medium">
+          {partner ? (
+            <div className="flex gap-4">
+              <div className="relative">
+                <Avatar
+                  size="md"
+                  item={{
+                    short: partner.short,
+                    bg: partner.colors[0],
+                    fg: partner.colors[1],
+                  }}
+                />
+
+                <CircularProgress
+                  actions={getMonthsActions(actions)}
+                  title={format(new Date(), "MMMM 'de' yyyy", {
+                    locale: ptBR,
+                  })}
+                  className="absolute -top-1/2 -left-1/2"
+                />
+              </div>
+              <span className="hidden text-2xl font-bold tracking-tight md:block">
+                {partner.title}
+              </span>
+            </div>
+          ) : (
+            "Parceiros"
+          )}
+          <ChevronsUpDownIcon className="size-4" />
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="bg-content mx-8 p-0">
+        <Command className="outline-none">
+          <CommandInput />
+          <CommandList>
+            <CommandEmpty>Nenhum Parceiro encontrado</CommandEmpty>
+            {partnersBySOW.map((sow) => (
+              <>
+                <CommandGroup heading={sow.title}>
+                  {sow.partners.map((partner) => (
+                    <CommandItem
+                      value={partner.slug}
+                      key={partner.slug}
+                      className="bg-item flex"
+                      onSelect={(value) => {
+                        navigate(`/dashboard/${value}`);
+                        setOpen(false);
+                      }}
+                    >
+                      {partner.title}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+                <CommandSeparator />
+              </>
+            ))}
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+// <DropdownMenu>
+//             <DropdownMenuTrigger asChild>
+//               <Button
+//                 variant={"ghost"}
+//                 className={
+//                   partner ? "px-4 py-7" : `text-ellipsis whitespace-nowrap`
+//                 }
+//               >
+//                 {partner ? (
+
+//                 ) : (
+//                   "Parceiros"
+//                 )}
+//               </Button>
+//             </DropdownMenuTrigger>
+//             <DropdownMenuContent className="bg-content mr-8">
+//               <DropdownMenuLabel className="bg-label">
+//                 Consultoria de Marketing
+//               </DropdownMenuLabel>
+//               {partners.map(
+//                 (partner) =>
+//                   partner.sow === SOW.marketing && (
+//                     <DropdownMenuItem
+//                       className="bg-item"
+//                       onSelect={() => navigate(`/dashboard/${partner.slug}`)}
+//                       key={partner.slug}
+//                       id={partner.slug}
+//                     >
+//                       {partner.title}
+//                     </DropdownMenuItem>
+//                   ),
+//               )}
+//               <DropdownMenuSeparator />
+//               <DropdownMenuLabel className="bg-label">
+//                 Social Media
+//               </DropdownMenuLabel>
+//               {partners.map(
+//                 (partner) =>
+//                   partner.sow === SOW.socialmedia && (
+//                     <DropdownMenuItem
+//                       className="bg-item"
+//                       onSelect={() => navigate(`/dashboard/${partner.slug}`)}
+//                       key={partner.slug}
+//                       id={partner.slug}
+//                     >
+//                       {partner.title}
+//                     </DropdownMenuItem>
+//                   ),
+//               )}
+//               <DropdownMenuSeparator />
+//               <DropdownMenuLabel className="bg-label">
+//                 Demanda
+//               </DropdownMenuLabel>
+//               {partners.map(
+//                 (partner) =>
+//                   partner.sow === SOW.demand && (
+//                     <DropdownMenuItem
+//                       className="bg-item"
+//                       onSelect={() => navigate(`/dashboard/${partner.slug}`)}
+//                       key={partner.slug}
+//                       id={partner.slug}
+//                     >
+//                       {partner.title}
+//                     </DropdownMenuItem>
+//                   ),
+//               )}
+//             </DropdownMenuContent>
+//           </DropdownMenu>

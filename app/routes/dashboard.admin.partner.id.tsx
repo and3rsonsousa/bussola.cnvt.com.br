@@ -324,7 +324,9 @@ export default function AdminPartners() {
           </div>
 
           <div className="pb-8 text-right">
-            <Button type="submit">Atualizar</Button>
+            <Button type="submit" size={"lg"}>
+              Atualizar
+            </Button>
           </div>
         </Form>
       </div>
