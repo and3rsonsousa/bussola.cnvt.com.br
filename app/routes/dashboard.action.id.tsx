@@ -57,7 +57,7 @@ import { Popover, PopoverContent } from "~/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { ToastAction } from "~/components/ui/toast";
 import { useToast } from "~/components/ui/use-toast";
-import { FRAMEWORKS, INTENTS, TRIGGERS } from "~/lib/constants";
+import { FRAMEWORKS, INTENTS, SOULS, TRIGGERS } from "~/lib/constants";
 import {
   Avatar,
   Bia,
@@ -382,6 +382,34 @@ function Title({
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className="bg-content">
+            {Object.entries(SOULS).map(([key, soul]) => {
+              return (
+                <DropdownMenuItem
+                  key={key}
+                  className="bg-item"
+                  onSelect={async () => {
+                    fetcher.submit(
+                      {
+                        title: getCleanTitle(action.title),
+                        description: action.description,
+                        context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+                        intent: "title",
+                        voice: partner.voice,
+                        soulg: soul.slug,
+                      },
+                      {
+                        action: "/handle-openai",
+                        method: "post",
+                      },
+                    );
+                  }}
+                >
+                  {soul.title}
+                </DropdownMenuItem>
+              );
+            })}
+
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               className="bg-item"
               onSelect={async () => {

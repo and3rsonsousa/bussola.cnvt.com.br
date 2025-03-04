@@ -1,6 +1,6 @@
 import { OpenAI } from "openai";
 import type { ActionFunctionArgs } from "react-router";
-import { FRAMEWORKS } from "~/lib/constants";
+import { FRAMEWORKS, SOULS } from "~/lib/constants";
 
 export const config = { runtime: "edge" };
 
@@ -16,6 +16,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     trigger,
     framework,
     voice,
+    soul,
   } = Object.fromEntries(formData.entries());
 
   if (!intent) {
@@ -176,8 +177,11 @@ MODELO: ${template}
 CONTENT: ${title} - ${description}
 TOM DE VOZ: ${tone}`;
   } else if (intent === "title") {
-    if (model === "viral") {
-      template = `Use esses Ganchos como modelo e se inspire para criar um título de acordo com o CONTEXTO. Ganchos (${hooks.join(
+    if (soul) {
+      const _soul = new Map(Object.entries(SOULS)).get(soul.toString())!;
+      template = _soul.prompt;
+    } else if (model === "viral") {
+      template = `Use esses Ganchos como modelo e se inspire para criar um título de acordo com o CONTEXTO, mas que sejam diferentes desses. Ganchos (${hooks.join(
         " - ",
       )})`;
     } else {
