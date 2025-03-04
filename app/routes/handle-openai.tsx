@@ -304,7 +304,7 @@ function getModel(model: string, intent: string) {
       ? `TÍTULO DA SEQUÊNCIA DE STORIES
   -Indique qual o formato escolhido
   -qual o framework de copy
-  -qual o gatilho mental]
+  -qual o gatilho mental
 
   `
       : ``;
@@ -313,7 +313,7 @@ function getModel(model: string, intent: string) {
     case "short-caption":
       return "Texto da legenda com até 200 caracteres bem criativo e reforçando o CONTEXTO e com um CTA no final. Caso não haja nenhuma especificação no CONTEXTO, indique a pessoa a ir ao link da bio de modo que concorde com o CONTEXTO.";
     case "medium-caption":
-      return "Texto da legenda com até 400 caracteres usando o CONTEXTO como base, pode ter cunho explicativo ou de reforço. Use 3 parágrafos curtos. Use de 3 a 5 hashtags bem focadas no nicho da DESCRIÇÃO.";
+      return "Texto da legenda com até 400 caracteres usando o CONTEXTO como base, pode ter cunho explicativo ou de reforço. Use 3 parágrafos curtos. Use de 3 hashtags bem focadas no nicho da DESCRIÇÃO.";
     case "long-caption":
       return `Texto da legenda explicando o CONTEXTO com até 800 caracteres. Ainda que mais explicativa, o texto não pode ser cansativo e deve ser dinâmico. Cada parágrafo não deve ter mais de 30 palavras depois disso, crie novos parágrafos para manter o texto mais dinâmico. Importante separar bem a explicação Nesses parágrafos:
     1 - Reforce o problema apresentado do CONTEXTO em 120 caracteres.
@@ -321,7 +321,7 @@ function getModel(model: string, intent: string) {
     3 - Aqui você usar uma lista de itens com emojis para facilitar a leitura apresentando os problemas que o usuário enfrenta, reforçando o parágrafo 2.
     4 - Apresente a solução do problema de acordo com o CONTEXTO.
     5 - Conclua com um CTA do CONTEXTO, se não houver indicação, peça para o usuário ir ao link da bio de uma forma mais criativa do que "agende/peça pelo link da bio.
-    6 - Finalize a legenda com 3 a 5 hashtags bem focadas no nicho da DESCRIÇÃO.`;
+    6 - Finalize a legenda com 3 hashtags bem focadas no nicho da DESCRIÇÃO.`;
     case "long-tip-caption":
       return `Texto da legenda explicando o CONTEXTO com até 800 caracteres. Ainda que mais explicativa, o texto não pode ser cansativo e deve ser dinâmico. Cada parágrafo não deve ter mais de 30 palavras depois disso, crie novos parágrafos para manter o texto mais dinâmico. Importante separar bem a explicação Nesses parágrafos:
     1 - Comece a problematizar o assunto ao jogar o contexto para o usuário gerando conexão em 120 caracteres.
@@ -329,7 +329,7 @@ function getModel(model: string, intent: string) {
     3 - Aqui você usar uma lista de itens com emojis para facilitar a leitura apresentando as soluções para os problemas que o usuário enfrenta, reforçando o parágrafo 2. Para cada item da lista, coloque uma breve explicação de até 20 palavras.
     4 - Reforce que as dicas acima são ideias para lidar com o problema e caso haja mais necessidade deve buscar a empresa; atente-se ao CONTEXTO para que você não fuja da necessidade.
     5 - Conclua com um CTA do CONTEXTO, se não houver indicação, peça para o usuário ir ao link da bio de uma forma mais criativa do que agende/peça pelo link da bio.
-    6 - Finalize a legenda com 3 a 5 hashtags bem focadas no nicho da DESCRIÇÃO.
+    6 - Finalize a legenda com 3 hashtags bem focadas no nicho da DESCRIÇÃO.
     `;
     case "video-stories":
       return (

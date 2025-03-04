@@ -542,7 +542,10 @@ export function ActionLine({
               date && (
                 <div className="hidden shrink grow-0 text-right text-xs whitespace-nowrap opacity-50 md:text-[10px] @[130px]:block">
                   {formatActionDatetime({
-                    date: action.date,
+                    date:
+                      isInstagramDate && isInstagramFeed(action.category, true)
+                        ? action.instagram_date
+                        : action.date,
                     dateFormat: date.dateFormat,
                     timeFormat: date.timeFormat,
                   })}

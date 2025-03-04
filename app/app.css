@@ -176,8 +176,9 @@
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
-  --font-sans: "PP Object Sans", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans:
+    "PP Object Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   @keyframes accordion-down {
     from {
@@ -205,7 +206,7 @@ body {
 }
 
 .bg-content {
-  @apply bg-popover ring-border/50 rounded-xl border-0 ring shadow-2xl;
+  @apply bg-popover ring-border/50 rounded-xl border-0 shadow-2xl ring;
 }
 
 .dark .bg-content {
@@ -243,11 +244,11 @@ body {
 }
 
 .action-item {
-  @apply ring-ring ring-offset-background bg-card hover:bg-popover inset-shadow-highlight relative z-0 flex w-full cursor-pointer rounded-md border border-transparent inset-shadow-xs shadow-sm outline-hidden transition-[background-color,box-shadow] select-none focus-within:ring-2 hover:z-10 hover:shadow-xl focus:ring-2 focus:ring-offset-2;
+  @apply ring-ring ring-offset-background bg-card hover:bg-popover inset-shadow-highlight relative z-0 flex w-full cursor-pointer rounded-md border border-transparent shadow-sm inset-shadow-xs outline-hidden transition-[background-color,box-shadow] select-none focus-within:ring-2 hover:z-10 hover:shadow-xl focus:ring-2 focus:ring-offset-2;
 }
 
 .action-item-short {
-  @apply rounded-sm;
+  @apply rounded-sm text-xs;
 }
 
 .action-item-block {
