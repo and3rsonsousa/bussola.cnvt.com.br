@@ -346,7 +346,7 @@ function PartnerCombobox({
                   {sow.partners.map((partner) => (
                     <CommandItem
                       value={partner.slug}
-                      key={partner.slug}
+                      key={partner.id}
                       className="bg-item flex"
                       onSelect={(value) => {
                         navigate(`/dashboard/${value}`);
