@@ -395,7 +395,7 @@ function Title({
                         context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
                         intent: "title",
                         voice: partner.voice,
-                        soulg: soul.slug,
+                        soul: soul.slug,
                       },
                       {
                         action: "/handle-openai",
