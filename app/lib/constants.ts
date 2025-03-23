@@ -170,7 +170,7 @@ export const SOULS = {
     slug: "positioning",
     title: "Posicionamento",
     prompt:
-      "O conteúdo deve transmitir uma opinião, crença ou filosofia clara relacionada ao Emagrecimento, com o objetivo de inspirar o público ou mudar sua percepção. Evite focar em passos práticos ou histórias pessoais detalhadas; em vez disso, destaque uma ideia central que desafie visões comuns ou proponha uma nova perspectiva sobre o Emagrecimento. Use um tom assertivo e motivacional.",
+      "O conteúdo deve transmitir uma opinião, crença ou filosofia clara relacionada ao [CONTEXTO], com o objetivo de inspirar o público ou mudar sua percepção. Evite focar em passos práticos ou histórias pessoais detalhadas; em vez disso, destaque uma ideia central que desafie visões comuns ou proponha uma nova perspectiva sobre o [CONTEXTO]. Use um tom assertivo e motivacional.",
     // "O conteúdo deve posicionar a marca, o produto ou o serviço como uma solução valiosa e relevante para o público. Destaque os benefícios, diferenciais e vantagens competitivas de forma clara e objetiva. Use um tom confiante, assertivo e persuasivo, como se estivesse convencendo o público de que sua oferta é a melhor opção para resolver um problema ou atender a uma necessidade específica. O resultado deve sempre priorizar a credibilidade e a persuasão."
   },
   storytelling: {
@@ -178,7 +178,6 @@ export const SOULS = {
     title: "Storytelling",
     prompt:
       "O conteúdo deve ser uma narrativa envolvente e relacionada que conecte o [CONTEXTO] a uma experiência pessoal ou história fictícia. Foque em criar uma jornada com começo, desafio e resolução, usando detalhes que gerem emoção ou identificação no público. Evite ser excessivamente técnico ou opinativo; o objetivo é engajar por meio da história ligada ao [CONTEXTO]. ",
-    // "O conteúdo deve contar uma história envolvente, emocionante ou inspiradora relacionada ao Emagrecimento, com o objetivo de gerar identificação, empatia ou engajamento emocional. Evite focar em informações técnicas ou dados objetivos; em vez disso, destaque personagens, conflitos e transformações que despertem sentimentos e conexões emocionais com o público. Use um tom narrativo, descritivo e envolvente, como se estivesse contando uma história real ou fictícia sobre o Emagrecimento. O resultado deve sempre priorizar a emoção e a conexão."
   },
   update: {
     slug: "update",
