@@ -340,9 +340,9 @@ function PartnerCombobox({
           <CommandInput />
           <CommandList>
             <CommandEmpty>Nenhum Parceiro encontrado</CommandEmpty>
-            {partnersBySOW.map((sow) => (
+            {partnersBySOW.map((sow, i) => (
               <>
-                <CommandGroup heading={sow.title}>
+                <CommandGroup heading={sow.title} key={i}>
                   {sow.partners.map((partner) => (
                     <CommandItem
                       value={partner.slug}

@@ -140,7 +140,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .eq("slug", params["partner"]!)
         .single(),
     ]);
-
   invariant(partner);
 
   return { actions, actionsChart, partner, person, date };
