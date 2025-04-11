@@ -378,7 +378,7 @@ export default function Partner() {
                 >
                   <Button
                     variant={"ghost"}
-                    className="cursor-pointer text-xl font-bold"
+                    className="cursor-pointer text-xl font-bold md:w-40"
                   >
                     {format(currentDate, "MMMM", {
                       locale: ptBR,
