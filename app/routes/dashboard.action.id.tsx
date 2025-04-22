@@ -20,6 +20,7 @@ import {
   ChevronsDownUpIcon,
   ChevronsUpDownIcon,
   ImageIcon,
+  LightbulbIcon,
   Link2Icon,
   SaveIcon,
   SparklesIcon,
@@ -178,6 +179,7 @@ export default function ActionPage() {
   // Atualizar a Inserir o conteúdo da IA
   useEffect(() => {
     if (fetcher.data && intent) {
+      // Título
       if (intent === "title") {
         setAction(() => ({
           ...action,
@@ -186,7 +188,7 @@ export default function ActionPage() {
             .concat((fetcher.data as { message: string }).message),
         }));
       } else if (
-        ["carousel", "prompt", "hook", "reels"].find(
+        ["carousel", "prompt", "hook", "reels", "ideas"].find(
           (category) => category === intent,
         )
       ) {
@@ -543,9 +545,32 @@ function Description({
             </PopoverContent>
           </Popover>
 
-          {/* {isInstagramFeed(action.category, true) && (
-            <TriggersSelect setTrigger={setTrigger} trigger={trigger} />
-          )} */}
+          {isInstagramFeed(action.category, true) && (
+            <Button
+              className={`h-7 w-7 p-1 ${
+                isWorking &&
+                fetcher.formData?.get("intent") === "ideas" &&
+                "animate-colors"
+              }`}
+              variant="ghost"
+              onMouseDown={async () => {
+                fetcher.submit(
+                  {
+                    description: action.description,
+                    intent: "ideas",
+                    voice: partner.voice,
+                  },
+                  {
+                    action: "/handle-openai",
+                    method: "post",
+                  },
+                );
+              }}
+            >
+              <LightbulbIcon />
+            </Button>
+          )}
+
           {action.category === "carousel" ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -801,7 +826,7 @@ function RightSide({
                             });
                             setFiles(null);
                           }}
-                          className="grid h-6 w-6 place-content-center rounded-sm bg-black/25 p-1"
+                          className="bg-foreground/25 hover:bg-foreground/50 text-background grid h-6 w-6 cursor-pointer place-content-center rounded-sm p-1"
                         >
                           <Trash className="size-4" />
                         </button>
@@ -810,7 +835,7 @@ function RightSide({
                           onClick={(event) => {
                             event.stopPropagation();
                           }}
-                          className="grid h-6 w-6 place-content-center rounded-sm bg-black/25 p-1"
+                          className="bg-foreground/25 hover:bg-foreground/50 text-background grid h-6 w-6 cursor-pointer place-content-center rounded-sm p-1"
                         >
                           <SaveIcon className="size-4" />
                         </button>

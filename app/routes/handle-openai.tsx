@@ -36,7 +36,88 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   trigger = trigger || "Autoridade";
 
   // Se for legenda
-  if (intent === "shrink") {
+  if (intent === "ideas") {
+    template = `Você é Jéssica, uma Social Media Storyteller, especialista em transformar uma única ideia em vários conteúdos envolventes para o Instagram, seguindo a metodologia do ebook "1 ideia em 10 conteúdos". Sua tarefa é pegar um tópico central fornecido pelo usuário e gerar 10 conteúdos únicos em português, adaptados ao nicho e público-alvo especificados, se fornecidos. Se não houver nicho ou público definido, assuma um público geral e crie conteúdos amplamente atraentes.`;
+
+    content = `Requisitos de Entrada:
+- Esse é o tópico central: ${description}.
+- Opcionalmente, o usuário pode especificar um nicho (ex.: nutrição, educação, relacionamentos) e público-alvo (ex.: jovens adultos, casais, entusiastas de fitness).
+- Requisitos de Saída:Gere 10 conteúdos para o Instagram baseados no tópico central, usando os seguintes formatos:
+
+
+- Carrossel com Storytelling
+- Carrossel com Conteúdo Técnico
+- Reel Narrado
+- Reel Tutorial
+- Carrossel com Indicação
+- Carrossel com Estudo de Caso
+- Reel POV
+- Reel Técnico
+- Carrossel com Posicionamento
+- Stories
+
+Para cada conteúdo:
+
+- Forneça um Título (cativante e envolvente, máx. 10 palavras).
+- Forneça uma Descrição (explique o conteúdo, incluindo pontos-chave, tom e como engaja o público, máx. 100 palavras).
+- Inclua um Chamada para Ação (CTA) (ex.: "Comente sua experiência!" ou "Salve este post!").
+- Mantenha consistência de marca com um tom coeso (ex.: educativo, inspirador, divertido) e alinhado ao nicho/público.
+- Incentive a interação do público (ex.: perguntas, enquetes ou conteúdo compartilhável).
+
+Passos a Seguir:
+
+- Use o tópico central como base para todos os conteúdos.
+- Adapte o tópico a cada um dos 10 formatos, garantindo variedade na abordagem (ex.: histórias pessoais, insights técnicos, tutoriais).
+- Diversifique os conteúdos para atrair diferentes segmentos do público (ex.: consumo rápido vs. aprofundado).
+- Siga as melhores práticas: planeje postagens espaçadas, mantenha consistência e diversifique formatos para evitar saturação.
+
+Restrições:
+
+- Todos os conteúdos devem ser em português.
+- Os conteúdos devem ser autênticos, envolventes e alinhados ao ecossistema dinâmico do Instagram (Reels, Stories, Carrosséis).
+- Evite linguagem excessivamente promocional, a menos que especificado; foque em conteúdos baseados em valor (ex.: educação, inspiração).
+- Se não houver nicho especificado, crie conteúdos adaptáveis a múltiplos nichos.
+- Não repita a mesma abordagem ou mensagem entre os formatos; cada peça deve ser única.
+
+
+
+Exemplo de Saída (para um formato):
+
+<h3>Tópico Central: "Alimentos sem glúten"</h3>
+<p>
+<strong>Nicho</strong>: Nutrição <br/>
+<strong>Público-Alvo:</strong> Pessoas com intolerância ao glúten 
+</p>
+
+<h4>1 - Carrossel com Storytelling</h4>
+<p>
+<strong>Título</strong>: "Minha jornada sem glúten mudou tudo!" <br/>
+<strong>Descrição</strong>: Compartilhe uma história pessoal sobre descobrir a intolerância ao glúten, com 5 slides detalhando sintomas, desafios e adaptações. Use tom emotivo para criar conexão, incluindo uma citação inspiradora. Engaja ao mostrar vulnerabilidade e inspirar mudanças.<br/>
+<strong>CTA</strong>: "Conte sua história nos comentários!"<br/>
+</p>
+
+Tom e Estilo:
+
+- Use um tom conversacional e acessível, como se estivesse falando com um amigo.
+- Incorpore nuances culturais brasileiras se adequado ao público.
+- Seja criativa, prática e inspiradora, refletindo a ênfase em storytelling e engajamento.
+
+Notas Adicionais:
+
+- Se o usuário fornecer uma marca ou contexto específico, incorpore isso no tom e nos visuais.
+- Para Stories, inclua elementos interativos como enquetes, quizzes ou stickers de perguntas.
+- Para Reels, priorize conteúdos dinâmicos e curtos (15-30 segundos) com áudio em alta ou transições suaves.
+
+Orientações sobre o retorno:
+
+- Retorne o conteúdo em formato de parágrafos, com cada item numerado e separado por quebras de linha.
+- Use apenas tags HTML para formatação como <p> e <br>.
+- NÃO USE markdown.
+- Não inclua informações adicionais ou comentários pessoais; concentre-se apenas no conteúdo solicitado.
+- Retorne apenas o conteúdo sem aspas.
+
+`;
+  } else if (intent === "shrink") {
     template = "você é um copywritter experiente.";
     content = `Reduza o TEXTO em 25% sem alterar o sentido ou mudar o tom de voz, mas pode reescrever e mudar o número de parágrafos. TEXTO: ${description}.`;
   } else if (intent === "expand") {
