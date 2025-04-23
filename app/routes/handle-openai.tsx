@@ -1,45 +1,34 @@
 import { OpenAI } from "openai";
 import type { ActionFunctionArgs } from "react-router";
-import { FRAMEWORKS, SOULS } from "~/lib/constants";
 
 export const config = { runtime: "edge" };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  let {
-    title,
-    description,
-    prompt,
-    intent,
-    model,
-    context,
-    trigger,
-    framework,
-    voice,
-    soul,
-  } = Object.fromEntries(formData.entries());
+  let { title, description, prompt, intent, model, context } =
+    Object.fromEntries(formData.entries()) as Record<string, string>;
 
   if (!intent) {
     return { message: "Defina a sua intenção nesse comando." };
   }
 
-  let vx = String(voice).split(",");
-
-  let tone = `Use o tom de voz de acordo com os seguintes atributos e suas notas. A escala vai de 0 a 5, onde 5 é o valor máximo e 0 é o extremo oposto desse atributo. Não existe neutralidade. Formalidade: ${vx[0]} - Emocionalidade: ${vx[1]} - Humor: ${vx[2]} - Tecnicidade: ${vx[3]} - Autoridade: ${vx[4]} - Proximidade: ${vx[5]} - Entusiasmo: ${vx[6]} - Complexidade: ${vx[7]} - Inovação Linguística: ${vx[8]} - Persuasão: ${vx[9]} - Urgência: ${vx[10]} - Inclusividade: ${vx[11]} - Tradicionalismo: ${vx[12]} - Assertividade: ${vx[13]} - Empatia: ${vx[14]}`;
+  let system =
+    "Você é um especialista em storytelling e copywriting para redes sociais.";
 
   const openai = new OpenAI({
     apiKey: process.env["OPENAI_API_KEY"],
   });
 
-  let template = "";
   let content = "";
-  trigger = trigger || "Autoridade";
 
-  // Se for legenda
   if (intent === "ideas") {
-    template = `Você é Jéssica, uma Social Media Storyteller, especialista em transformar uma única ideia em vários conteúdos envolventes para o Instagram, seguindo a metodologia do ebook "1 ideia em 10 conteúdos". Sua tarefa é pegar um tópico central fornecido pelo usuário e gerar 10 conteúdos únicos em português, adaptados ao nicho e público-alvo especificados, se fornecidos. Se não houver nicho ou público definido, assuma um público geral e crie conteúdos amplamente atraentes.`;
+    // Gera ideias PDF 1 idea 10 conteúdos
+    system =
+      "Você é Jéssica, uma Social Media Storyteller, especialista em transformar uma única ideia em vários conteúdos envolventes para o Instagram.";
 
-    content = `Requisitos de Entrada:
+    content = `Sua tarefa é pegar um tópico central fornecido pelo usuário e gerar 10 conteúdos únicos em português, adaptados ao nicho e público-alvo especificados, se fornecidos. Se não houver nicho ou público definido, assuma um público geral e crie conteúdos amplamente atraentes.
+    
+    Requisitos de Entrada:
 - Esse é o tópico central: ${description}.
 - Opcionalmente, o usuário pode especificar um nicho (ex.: nutrição, educação, relacionamentos) e público-alvo (ex.: jovens adultos, casais, entusiastas de fitness).
 - Requisitos de Saída:Gere 10 conteúdos para o Instagram baseados no tópico central, usando os seguintes formatos:
@@ -118,12 +107,15 @@ Orientações sobre o retorno:
 
 `;
   } else if (intent === "shrink") {
-    template = "você é um copywritter experiente.";
+    // Reduzir o texto
+    system = "Você é um copywritter experiente.";
     content = `Reduza o TEXTO em 25% sem alterar o sentido ou mudar o tom de voz, mas pode reescrever e mudar o número de parágrafos. TEXTO: ${description}.`;
   } else if (intent === "expand") {
-    template = "você é um copywritter experiente.";
+    // Aumentar o texto
+    system = "Você é um copywritter experiente.";
     content = `Aumente o TEXTO em 25% sem alterar o sentido ou mudar o tom de voz. TEXTO: ${description}.`;
   } else if (intent === "prompt") {
+    // Executa o prompt
     const chatCompletion = await openai.chat.completions.create({
       messages: [
         {
@@ -135,318 +127,767 @@ Orientações sobre o retorno:
     });
 
     return { message: chatCompletion.choices[0].message.content };
-  } else if (intent === "hook") {
-    template =
-      "Lista com 5 Ganchos Virais para iniciar vídeos no Instagram/TikTok. Cada frase deve ter no máximo 2 segundos.";
-    content = `Pegue o CONTEXTO e crie 5 opções de ganchos virais impossíveis de serem ignorados e retorne uma lista. Use o gatilho da ${trigger}
-    EMPRESA: ${context}.
-    REGRAS: Retorne apenas o texto sem nenhuma observação. Texto com parágrafos e tags html. Retorne apenas uma frase sem aspas.
-    CONTEXTO: Título da ação: '${title}, descrição: ${description}'
-    TOM DE VOZ: ${tone}`;
-  } else if (intent === "reels") {
-    template = "Roteiro de vídeo viral.";
+  } else if (
+    ["reels", "title", "carousel", "caption", "stories"].find(
+      (i) => i === intent,
+    )
+  ) {
+    switch (intent) {
+      case "reels": {
+        system =
+          "Você é um especialista em storytelling e copywriting para redes sociais com ampla experiência em criar vídeos virais.";
+        content = `Sua missão é transformar o seguinte conteúdo em um post para Instagram, utilizando o modelo narrativo definido em ${storytellingModels.reel[model as keyof typeof storytellingModels.reel].title}.
 
-    if (model === "viral") {
-      content = `Crie um roteiro de vídeo viral seguindo essa lógica e identificando cada uma das partes (GANCHO, DESENVOLVIMENTO, CTA INICIAL, DESENVOLVIMENTO, CTA FINAL) Após cada um desse subtítulo, insira um parágrafo. 
-    GANCHO: 
-    (Frase chamativa baseada no CONTEXTO impossível de ser ignorada com 2 segundos)
-    DESENVOLVIMENTO 1: 
-    (Problematize o contexto, apresentando por um lado onde o expectador conhece essa situação. De 5 a 10 segundos.)
-    CTA INICIAL: 
-    (Insira aqui um gancho criativo pedindo para a pessoa curtir o vídeo e seguir o perfil em até 3 segundos).
-    DESENVOLVIMENTO 2: 
-    (Apresente uma solução ou desfecho para a problematização de acordo com o CONTEXTO em no máximo 10 segundos)
-    CTA FINAL: 
-    (Incentive o expectador a interagir, comentando ou compartilhando o vídeo em 5 segundos)
-    REGRAS: Retorne apenas o texto sem nenhuma observação. Texto com parágrafos e tags html. Retorne apenas uma frase sem aspas. Traga o texto com no máximo 300 palavras. 
-    EMPRESA: ${context}.
-    CONTEXTO: Título da ação: '${title}, descrição: ${description}'
-    TOM DE VOZ: ${tone}`;
-    } else {
-      content = `Crie um roteiro de vídeo viral em formato de lista seguindo essa lógica e identificando cada uma das partes (GANCHO, DESENVOLVIMENTO, DICA N, CTA INICIAL, DESENVOLVIMENTO, CTA FINAL) Após cada um desse subtítulo, insira um parágrafo. 
-    GANCHO - Frase chamativa baseada no CONTEXTO impossível de ser ignorada indicando quantas dicas teremos no vídeo. (2 segundos)
-    DESENVOLVIMENTO 1 - Apresente metade das dicas. (10 a 20 segundos)
-    CTA INICIAL - Insira aqui um gancho criativo pedindo para a pessoa curtir o vídeo e seguir o perfil. (3 segundos)
-    DESENVOLVIMENTO 2 - Apresente as outras dicas. (10 segundos)
-    CTA FINAL - Incentive o expectador a interagir, comentando ou compartilhando o vídeo. (5 segundos)
-    REGRAS: Retorne apenas o texto sem nenhuma observação. Texto com parágrafos e tags html. Retorne apenas uma frase sem aspas. Traga o texto com no máximo 300 palavras. 
-    EMPRESA: ${context}.
-    CONTEXTO: Título da ação: '${title}, descrição: ${description}'
-    TOM DE VOZ: ${tone}`;
+    Siga a estrutura abaixo:
+${storytellingModels.reel[model as keyof typeof storytellingModels.reel].structure}
+
+O objetivo principal é gerar ${storytellingModels.reel[model as keyof typeof storytellingModels.reel].effect.toLowerCase()}.
+
+
+Importante:
+- Utilize linguagem acessível e humana, adaptada para Instagram.
+- Não use títulos genéricos. Comece com um gancho real que pare o scroll.
+- Limite cada bloco (slide, cena ou etapa) a no máximo 40 palavras.
+- Finalize com um CTA alinhado à intenção do modelo.
+- O formato de saída deve ser HTML puro, com a estrutura abaixo:
+
+<h4>Slide 1</h4>
+<p>Seu conteúdo aqui</p>
+
+<h4>Slide 2</h4>
+<p>Seu conteúdo aqui</p>
+
+... e assim por diante até o encerramento com CTA
+Não use aspas, bullet points, markdown ou comentários adicionais.
+O resultado deve conter somente o texto solicitado.
+
+Tema a ser desenvolvido: ${title} - ${description}
+`;
+
+        break;
+      }
+      case "carousel": {
+        content = `Sua missão é transformar o seguinte conteúdo em um post para Instagram, utilizando o modelo narrativo definido em ${storytellingModels.carrossel[model as keyof typeof storytellingModels.carrossel].title}.
+
+    Siga a estrutura abaixo:
+${storytellingModels.carrossel[model as keyof typeof storytellingModels.carrossel].structure}
+
+O objetivo principal é gerar ${storytellingModels.carrossel[model as keyof typeof storytellingModels.carrossel].effect.toLowerCase()}.
+
+
+Importante:
+- Utilize linguagem acessível e humana, adaptada para Instagram.
+- Não use títulos genéricos. Comece com um gancho real que pare o scroll.
+- Limite cada bloco (slide, cena ou etapa) a no máximo 40 palavras.
+- Finalize com um CTA alinhado à intenção do modelo.
+- O formato de saída deve ser HTML puro, com a estrutura abaixo:
+
+<h4>Slide 1</h4>
+<p>Seu conteúdo aqui</p>
+
+<h4>Slide 2</h4>
+<p>Seu conteúdo aqui</p>
+
+... e assim por diante até o encerramento com CTA
+Não use aspas, bullet points, markdown ou comentários adicionais.
+O resultado deve conter somente o texto solicitado.
+
+Tema a ser desenvolvido: ${title} - ${description}
+`;
+
+        break;
+      }
+      case "title": {
+        content = `Sua missão é transformar o seguinte conteúdo em um post para Instagram, utilizando o modelo narrativo definido em ${storytellingModels.titulos[model as keyof typeof storytellingModels.titulos].title}.
+
+    Siga os exemplos abaixo:
+${storytellingModels.titulos[model as keyof typeof storytellingModels.titulos].examples.join("\n")}
+
+
+Importante:
+- Utilize linguagem acessível e humana, adaptada para Instagram.
+- Não use títulos genéricos. Comece com um gancho real que pare o scroll.
+- Limite a 12 palavras.
+- O formato de saída deve ser sem nenhuma formatação puro
+- Não use aspas, bullet points, markdown ou comentários adicionais.
+- O resultado deve conter somente o texto solicitado.
+
+Tema a ser desenvolvido: ${title} - ${description}
+`;
+        break;
+      }
+      case "caption": {
+        content = `Sua missão é transformar o seguinte conteúdo em um post para Instagram, utilizando o modelo narrativo definido em ${storytellingModels.legenda[model as keyof typeof storytellingModels.legenda].title}.
+
+    Siga a estrutura abaixo:
+${storytellingModels.legenda[model as keyof typeof storytellingModels.legenda].description}
+
+O objetivo principal é gerar ${storytellingModels.legenda[model as keyof typeof storytellingModels.legenda].effect.toLowerCase()}.
+
+
+Importante:
+- Utilize linguagem acessível e humana, adaptada para Instagram.
+- Não use expressões genéricos.
+- Limite cada bloco a no máximo 40 palavras.
+- Finalize com um CTA alinhado à intenção do modelo.
+- Não use tags, aspas, bullet points, markdown ou comentários adicionais.
+- O resultado deve conter somente o texto solicitado.
+- Inclua pelo menos um emoji por parágrafo
+- Coloque no final 3 hashtags estratégicas
+
+Tema a ser desenvolvido: ${title} - ${description}
+`;
+        break;
+      }
+      case "stories": {
+        content = `Sua missão é transformar o seguinte conteúdo em um post para Instagram, utilizando o modelo narrativo definido em ${storytellingModels.stories[model as keyof typeof storytellingModels.stories].title}.
+
+    Siga a estrutura abaixo:
+${storytellingModels.stories[model as keyof typeof storytellingModels.stories].structure}
+
+O objetivo principal é gerar ${storytellingModels.stories[model as keyof typeof storytellingModels.stories].effect.toLowerCase()}.
+
+
+Importante:
+- Utilize linguagem acessível e humana, adaptada para Instagram.
+- Não use títulos genéricos. Comece com um gancho real que pare o scroll.
+- Limite cada bloco a no máximo 40 palavras.
+- Finalize com um CTA alinhado à intenção do modelo.
+- O formato de saída deve ser a estrutura abaixo:
+- Sugira um elemento de engajamento dos stories de acordo com a necessidade
+
+Story 1
+Seu conteúdo aqui
+Elemento de engajamento (Se for necessário)
+
+Slide 2
+Seu conteúdo aqui
+Elemento de engajamento (Se for necessário)
+
+... e assim por diante até o encerramento com CTA
+Não use aspas, bullet points, tags, markdown ou comentários adicionais.
+O resultado deve conter somente o texto solicitado.
+
+Tema a ser desenvolvido: ${title} - ${description}
+`;
+        break;
+      }
     }
-  } else if (intent === "caption") {
-    template = getModel(model.toString(), intent);
-
-    content = `Texto da legenda e hashtags usando técnicas de Storytelling e reforçando o CONTEXTO. Use emojis em cada parágrafo. Use o gatilho mental da: ${trigger}. Use esse formato: 
-    TEXTO DA LEGENDA 
-
-    HASHTAGS
-    
-  REGRAS: Retorne apenas o texto sem nenhuma observação. Texto somente com parágrafos e sem tags html e sem markdown. 
-  TEMPLATE: ${template}.
-  EMPRESA: ${context}.
-  CONTEXTO: Título do post: '${title}, descrição: ${description}'
-  TOM DE VOZ: ${tone}`;
-  }
-  // Se for Stories
-  else if (intent === "stories") {
-    template = getModel(model.toString(), intent);
-    content = `Você é um estrategista de conteúdo experiente. 
-    TAREFA: você vai criar uma sequência de stories usando técnicas de storytelling e finalizando sempre com um Stories com um CTA forte levando em conta o CONTEXTO e a descrição da EMPRESA. Use o FRAMEWORK DE COPY ${copyFrameworks(framework as string)?.prompt} com o gatilho metal da: ${trigger}.
-    REGRA: Retorne apenas o texto sem nenhuma observação. Texto somente com parágrafos e sem tags html.
-    TEMPLATE: ${template}
-    CONTEXTO: ${title} - ${description}
-    TOM DE VOZ: ${tone}`;
   }
   // Se for carrossel
   else if (intent === "carousel") {
-    //base
+    type Modelkey = keyof typeof storytellingModels.carrossel;
+    const typedModel = model as Modelkey;
 
-    let rules = "";
+    content = `Sua missão é transformar o seguinte conteúdo em um post para Instagram, utilizando o modelo narrativo definido em ${storytellingModels.carrossel[typedModel].title}.
 
-    template = `<h3>SLIDE 1</h3> (use um Gancho forte para chamar a atenção do usuário)
-    <h4>Frase do título aqui.</h4> (Frase principal do Carrossel. Deve ser chamativa e apelar para o gatilho mental: ${trigger})
-    
-    
-    <h3>SLIDE 2</h3> (desenvolva o problema e retenha o usuário)
-      <h4>Conteúdo do título aqui</h4> (Frase principal do slide com até 15 palavras)
-      <p>Conteúdo do Texto aqui</p> (Texto de apoio com até 60 palavras)
-      <strong>Observação:</strong> (opcional - Insira algum texto com até 15 palavras apenas quando for necessário reforçar algo.)
-      Conteúdo da observação aqui
-    
+    Siga a estrutura abaixo:
+${storytellingModels.carrossel[typedModel].structure}
 
-    SLIDE X (de 3 a 8 - desenvolva a proposta única para esse tema.)
-    Título (Frase principal do slide com até 15 palavras)
-    Texto (Texto de apoio com até 60 palavras)
-    Observação (opcional - Insira algum texto com até 15 palavras apenas quando for necessário reforçar algo.)
+O objetivo principal é gerar ${storytellingModels.carrossel[typedModel].effect.toLowerCase()}.
 
-    SLIDE X (penúltimo) ( Após apresentar a proposta única, crie desejo no usuário.)
-    Título (Frase principal do slide com até 15 palavras)
-    Texto (Texto de apoio com até 60 palavras)
-    Observação (opcional - Insira algum texto com até 15 palavras apenas quando for necessário reforçar algo.)
 
-    SLIDE X (último) ( Finalize com uma chamada para a ação.)
-    Título (Frase principal do slide com até 15 palavras)
-    Texto (Texto de apoio com até 60 palavras)
-    Ação (Insira uma chamada de ação)
-    `;
-    if (model === "twitter") {
-      rules =
-        "Insira sempre um emoji de acordo com a frase no final de cada frase. O texto deve ter no máximo 280 caracteres.";
-      template = `<h3>SLIDE 1</h3> 
-    <p>Frase do título aqui.</p> (Frase principal do Carrossel. Use um Gancho forte para chamar a atenção do usuário. Deve ser chamativo e apelar para o gatilho mental: ${trigger})
-    <p>Sugestão de imagem</p>
-    <h3>SLIDE 2</h3> (desenvolva o problema e retenha o usuário)
-    <p>Sugestão de imagem</p>
-    <p>Conteúdo do Texto aqui</p>
-    SLIDE X (de 3 a 8 - desenvolva a proposta única para esse tema.)
-    <p>Conteúdo do Texto aqui</p>
-    <p>Sugestão de imagem</p>
-    SLIDE X (penúltimo) ( Após apresentar a proposta única, crie desejo no usuário.)
-    <p>Sugestão de imagem</p>
-    <p>Conteúdo do Texto aqui</p>
-    SLIDE X (último) ( Finalize com uma chamada para a ação.)
-    <p>Conteúdo do Texto aqui</p>
-    `;
-    }
+Importante:
+- Utilize linguagem acessível e humana, adaptada para Instagram.
+- Não use títulos genéricos. Comece com um gancho real que pare o scroll.
+- Limite cada bloco (slide, cena ou etapa) a no máximo 40 palavras.
+- Finalize com um CTA alinhado à intenção do modelo.
+- O formato de saída deve ser HTML puro, com a estrutura abaixo:
 
-    content = `Você é um estrategista de conteúdo experiente e trabalha principalmente com técnicas de storytelling para envolver o usuário levando em conta o CONTENT e a descrição da EMPRESA. 
-TAREFA: Criar um post em formato carrossel envolvente e que prendam o usuário usando o gatilho mental: ${trigger}.
-REGRAS: Retorne apenas o texto sem nenhuma informação sua e formatado com tags HTML. ${rules} 
-MODELO: ${template}
- EMPRESA: ${context}
-CONTENT: ${title} - ${description}
-TOM DE VOZ: ${tone}`;
+<h4>Slide 1</h4>
+<p>Seu conteúdo aqui</p>
+
+<h4>Slide 2</h4>
+<p>Seu conteúdo aqui</p>
+
+... e assim por diante até o encerramento com CTA
+Não use aspas, bullet points, markdown ou comentários adicionais.
+O resultado deve conter somente o texto solicitado.
+
+Tema a ser desenvolvido: ${title} - ${description}
+`;
   } else if (intent === "title") {
-    if (soul) {
-      const _soul = new Map(Object.entries(SOULS)).get(soul.toString())!;
-      template = _soul.prompt;
-    } else if (model === "viral") {
-      template = `Use esses Ganchos como modelo e se inspire para criar um título de acordo com o CONTEXTO, mas que sejam diferentes desses. Ganchos (${hooks.join(
-        " - ",
-      )})`;
-    } else {
-      template = `Use esses 3 princípios: Princípio da especificidade, Princípio da curiosidade e Princípio do “sequestro da atenção”. Evite palavras genéricas como: Descubra, Aprenda, método, segredo, dica.
-      `;
-    }
+    system = `Você é um copywriter jovem e astuto especializado em stotytelling.`;
 
-    content = `Você é um copywriter jovem e astuto. Sua missão é criar títulos antiflop para postagens no Instagram.
+    content = `Sua missão é criar títulos antiflop para postagens no Instagram.
     
   REGRAS: Retorne apenas o texto sem nenhuma observação. Texto somente com parágrafos e sem tags html. Retorne apenas uma frase sem aspas. O título deve ter no máximo 12 palavras. 
-  TEMPLATE: ${template}.
   EMPRESA: ${context}.
   CONTEXTO: Título do post: '${title}, descrição: ${description}'
-  TOM DE VOZ: ${tone}`;
-  }
-
-  if (template === "") {
-    throw new Error(
-      `Solicitação imcompleta. Confira os dados enviados:${JSON.stringify(
-        { title, description, intent, model, context, trigger },
-        undefined,
-        2,
-      )}`,
-    );
+  `;
   }
 
   const chatCompletion = await openai.chat.completions.create({
     messages: [
+      {
+        role: "system",
+        content: system,
+      },
       {
         role: "user",
         content,
       },
     ],
     model: "gpt-4o-mini",
+    // model: "o4-mini",
   });
 
   return { message: chatCompletion.choices[0].message.content };
 };
 
-const hooks = [
-  "E se eu te disser que (incluir tema) não é verdade?",
-  "Minha arma secreta para...",
-  "Você também fica irritado quando vê (incluir tema)?",
-  "Vou te ensinar a história por trás de (incluir tema) em 60 segundos.",
-  "Alguém mais está exausto de (incluir tema)?", //5
+export const storytellingModels = {
+  carrossel: {
+    storytelling: {
+      title: "Storytelling Clássico",
+      structure: `
+  <h4>Slide 1</h4>
+  <p>Gancho forte, emocional ou provocativo</p>
+  <h4>Slide 2</h4>
+  <p>Contexto inicial do personagem ou situação</p>
+  <h4>Slide 3</h4>
+  <p>Desejo ou objetivo do personagem</p>
+  <h4>Slide 4</h4>
+  <p>Obstáculo, desafio ou conflito</p>
+  <h4>Slide 5</h4>
+  <p>Virada, descoberta ou mudança</p>
+  <h4>Slide 6</h4>
+  <p>Resultado ou transformação</p>
+  <h4>Slide 7</h4>
+  <p>Encerramento com chamada para ação (CTA)</p>
+      `.trim(),
+      effect: "Conexão emocional, empatia e identificação",
+    },
+    educacional: {
+      title: "Educacional / Conteúdo Rico",
+      structure: `
+  <h4>Slide 1</h4>
+  <p>Título claro que mostra o valor do conteúdo</p>
+  <h4>Slide 2–6</h4>
+  <p>Conceito explicado em blocos simples e objetivos</p>
+  <h4>Slide Final</h4>
+  <p>Conclusão resumida + CTA direto</p>
+      `.trim(),
+      effect: "Credibilidade, valor prático e autoridade",
+    },
+    checklist: {
+      title: "Checklist / Passo a Passo",
+      structure: `
+  <h4>Slide 1</h4>
+  <p>Promessa de transformação ou ganho ao seguir os passos</p>
+  <h4>Slide 2–6</h4>
+  <p>Etapas claras e numeradas</p>
+  <h4>Slide Final</h4>
+  <p>Reforço do benefício + chamada para ação</p>
+      `.trim(),
+      effect: "Organização, ação imediata e clareza",
+    },
+    mitos: {
+      title: "Mitos vs Verdades",
+      structure: `
+  <h4>Slide 1</h4>
+  <p>Mito forte que o público provavelmente acredita</p>
+  <h4>Slide 2–6</h4>
+  <p>Mito → Verdade explicada e justificada</p>
+  <h4>Slide Final</h4>
+  <p>Reflexão ou alerta + CTA</p>
+      `.trim(),
+      effect: "Quebra de crenças, educação com impacto",
+    },
+    comparativo: {
+      title: "Comparativo / A vs B",
+      structure: `
+  <h4>Slide 1</h4>
+  <p>Pergunta ou título provocativo do tipo: “Você faz isso ou aquilo?”</p>
+  <h4>Slide 2–6</h4>
+  <p>Comparações (ex: antes/depois, certo/errado, com/sem)</p>
+  <h4>Slide Final</h4>
+  <p>Resumo e convite à ação ou reflexão</p>
+      `.trim(),
+      effect: "Valorização de solução, contraste visual e clareza",
+    },
+    frases: {
+      title: "Frases Fragmentadas",
+      structure: `
+  <h4>Slide 1–6</h4>
+  <p>Frases curtas, fortes e impactantes, uma por slide</p>
+  <h4>Slide Final</h4>
+  <p>Conclusão com moral + CTA emocional</p>
+      `.trim(),
+      effect: "Impacto emocional, estilo literário e compartilhamento",
+    },
+    bastidores: {
+      title: "Bastidores / Diário Pessoal",
+      structure: `
+  <h4>Slide 1</h4>
+  <p>Introdução de uma situação pessoal ou confissão real</p>
+  <h4>Slide 2–5</h4>
+  <p>Detalhes do que aconteceu, como se sentiu, o que fez</p>
+  <h4>Slide Final</h4>
+  <p>Aprendizado ou reflexão + CTA</p>
+      `.trim(),
+      effect: "Humanização, autenticidade e aproximação",
+    },
+    analise: {
+      title: "Análise de Caso",
+      structure: `
+  <h4>Slide 1</h4>
+  <p>Nome, contexto ou título do caso</p>
+  <h4>Slide 2–5</h4>
+  <p>Situação, análise, o que funcionou ou não</p>
+  <h4>Slide Final</h4>
+  <p>Aprendizado central + chamada pra ação</p>
+      `.trim(),
+      effect: "Autoridade técnica com provas reais",
+    },
+    refraseamento: {
+      title: "Refraseamento Estratégico",
+      structure: `
+  <h4>Slide 1</h4>
+  <p>Frase problemática ou erro comum de comunicação</p>
+  <h4>Slide 2–5</h4>
+  <p>Antes: como é dito errado / Depois: como falar melhor</p>
+  <h4>Slide Final</h4>
+  <p>Conclusão com reforço de clareza + CTA</p>
+      `.trim(),
+      effect: "Clareza de comunicação, evolução de linguagem",
+    },
+    critica: {
+      title: "Crítica Construtiva",
+      structure: `
+  <h4>Slide 1</h4>
+  <p>Declaração crítica ou provocativa</p>
+  <h4>Slide 2–4</h4>
+  <p>Justificativa, exemplos, argumentação</p>
+  <h4>Slide Final</h4>
+  <p>Nova perspectiva e convite à ação</p>
+      `.trim(),
+      effect: "Engajamento crítico, polarização saudável",
+    },
+    ctaInvertido: {
+      title: "CTA Invertido",
+      structure: `
+  <h4>Slide 1</h4>
+  <p>Chamada direta pra ação (ex: agende agora, leia isso etc.)</p>
+  <h4>Slide 2–5</h4>
+  <p>Justificativas e reforços para essa chamada</p>
+  <h4>Slide Final</h4>
+  <p>Encerramento e reforço emocional do CTA</p>
+      `.trim(),
+      effect: "Cliques rápidos, senso de urgência, mobilização",
+    },
+    guiaSituacional: {
+      title: "Mini Guia de Situação",
+      structure: `
+  <h4>Slide 1</h4>
+  <p>Cenário real ou dúvida comum</p>
+  <h4>Slide 2–5</h4>
+  <p>O que fazer, como agir, pontos de atenção</p>
+  <h4>Slide Final</h4>
+  <p>Resumo e orientação final + CTA</p>
+      `.trim(),
+      effect: "Ajuda prática em contexto real, preparação",
+    },
+  } as const,
+  reel: {
+    storytelling: {
+      title: "Storytelling Emocional",
+      structure: `
+  <h4>Gancho (0–3s)</h4>
+  <p>Imagem ou fala que chama atenção. Pode ser um momento real ou uma pergunta provocativa.</p>
+  <h4>Contexto (4–10s)</h4>
+  <p>Apresentação rápida da situação ou personagem.</p>
+  <h4>Conflito / Virada (10–20s)</h4>
+  <p>Algo inesperado, preocupante ou revelador.</p>
+  <h4>Transformação / Solução (20–35s)</h4>
+  <p>O que mudou após a ação ou descoberta.</p>
+  <h4>Encerramento + CTA (35–60s)</h4>
+  <p>Reflexão final ou chamada direta: "Agende", "Compartilhe", "Comente".</p>
+      `.trim(),
+      effect: "Conexão profunda, emoção, identificação",
+    },
+    educacional: {
+      title: "Reels Educacional",
+      structure: `
+  <h4>Gancho (0–3s)</h4>
+  <p>Pergunta comum, erro frequente ou estatística chocante.</p>
+  <h4>Explicação (4–15s)</h4>
+  <p>Entregue o valor com clareza. Pode usar tópicos curtos.</p>
+  <h4>Exemplificação (15–30s)</h4>
+  <p>Mostre uma aplicação, um caso ou um visual que facilite o entendimento.</p>
+  <h4>Resumo + CTA (30–60s)</h4>
+  <p>“Se isso faz sentido pra você… salva esse vídeo e compartilha.”</p>
+      `.trim(),
+      effect: "Credibilidade, autoridade, valor prático",
+    },
+    provocativo: {
+      title: "Reels Provocativo",
+      structure: `
+  <h4>Frase de impacto (0–3s)</h4>
+  <p>Algo que quebre expectativa, gere discordância ou dúvida.</p>
+  <h4>Justificativa (4–15s)</h4>
+  <p>Mostre por que você acredita naquilo. Exponha o erro comum.</p>
+  <h4>Reenquadramento (15–30s)</h4>
+  <p>Apresente uma nova forma de pensar sobre o assunto.</p>
+  <h4>Fechamento + Convite à discussão (30–60s)</h4>
+  <p>“Concorda ou discorda? Me diz nos comentários.”</p>
+      `.trim(),
+      effect: "Engajamento polêmico, quebra de crenças, reação emocional",
+    },
+    checklist: {
+      title: "Checklist em Reels",
+      structure: `
+  <h4>Introdução (0–3s)</h4>
+  <p>“5 sinais de que seu filho precisa de avaliação oftalmológica”</p>
+  <h4>Lista sequencial (4–25s)</h4>
+  <p>Apresente os itens um por um, com texto e/ou voz. Use cortes rápidos.</p>
+  <h4>Conclusão prática (25–45s)</h4>
+  <p>“Se você marcou 2 ou mais… atenção!”</p>
+  <h4>Chamada direta (45–60s)</h4>
+  <p>“Salva esse vídeo e marque a consulta agora mesmo.”</p>
+      `.trim(),
+      effect: "Clareza, ação rápida, utilidade prática",
+    },
+    bastidor: {
+      title: "Reels de Bastidor",
+      structure: `
+  <h4>Abertura natural (0–3s)</h4>
+  <p>Imagem real, não roteirizada. Algo cotidiano.</p>
+  <h4>Contexto leve (4–15s)</h4>
+  <p>O que tá acontecendo? Por que você tá mostrando isso?</p>
+  <h4>Momento-chave (15–30s)</h4>
+  <p>Decisão, fala sincera ou reação espontânea que marca o vídeo.</p>
+  <h4>Reflexão (30–45s)</h4>
+  <p>“Nem todo mundo mostra isso. Mas é aqui que tudo acontece.”</p>
+  <h4>Encerramento (45–60s)</h4>
+  <p>“Se você gostou de ver esse lado, comenta aqui.”</p>
+      `.trim(),
+      effect: "Humanização, verdade, aproximação real com o público",
+    },
+    mitos: {
+      title: "Reels Mitos vs Verdades",
+      structure: `
+  <h4>Introdução provocativa (0–3s)</h4>
+  <p>“Você acha que coçar o olho é normal? MITO.”</p>
+  <h4>Mito 1 + Verdade (4–15s)</h4>
+  <p>Explica rapidamente e com clareza.</p>
+  <h4>Mito 2 + Verdade (15–30s)</h4>
+  <p>Continua mostrando contradições comuns.</p>
+  <h4>Resumo e CTA (30–60s)</h4>
+  <p>“Agora você já sabe. Compartilhe com quem ainda acha que isso é bobagem.”</p>
+      `.trim(),
+      effect: "Choque informativo, reposicionamento mental",
+    },
+    textOnly: {
+      title: "Reels de Texto Sequencial",
+      structure: `
+  <h4>Slide 1 (0–3s)</h4>
+  <p>Frase de impacto ou provocação inicial. Ex: “Você não percebe, mas tá perdendo a visão dele.”</p>
+  <h4>Slide 2 (4–8s)</h4>
+  <p>Frase 2: Tensão crescente. Ex: “Coçar o olho TODO DIA não é normal.”</p>
+  <h4>Slide 3 (8–13s)</h4>
+  <p>Frase 3: Início de solução. Ex: “Pode ser alergia ocular. Pode ser ceratocone.”</p>
+  <h4>Slide 4 (13–18s)</h4>
+  <p>Frase 4: Consequência real. Ex: “Ignorar agora pode custar caro depois.”</p>
+  <h4>Slide 5 (18–25s)</h4>
+  <p>Frase final + CTA. Ex: “Leve pro especialista. Marque a consulta. Não espera piorar.”</p>
+      `.trim(),
+      effect:
+        "Impacto emocional rápido, fácil consumo, altamente compartilhável",
+    },
+  } as const,
 
-  "Cuidado, isso pode acontecer com você!",
-  "Assista isso antes de...",
-  "Eu só percebi isso depois de anos cometendo o mesmo erro.",
-  "Por que ninguém faz (incluir tema) direito?",
-  "Essa é a maior mentira que te contaram até hoje.", // 10
+  titulos: {
+    question: {
+      title: "Pergunta Provocativa",
+      structure:
+        "Use uma pergunta que provoque reflexão ou insegurança no leitor.",
+      examples: [
+        "Seu filho coça os olhos... ou você que não quer ver o problema?",
+        "Você esperaria seu filho reclamar de dor pra marcar uma consulta?",
+        "Por que ninguém te contou isso sobre alergia ocular infantil?",
+      ],
+    },
+    statement: {
+      title: "Declaração Impactante",
+      structure: "Faça uma afirmação curta e direta que choque ou intrigue.",
+      examples: [
+        "Coçar o olho TODO DIA não é normal.",
+        "Ignorar hoje pode custar a visão amanhã.",
+        "A visão do seu filho tá pedindo socorro. E você não percebeu.",
+      ],
+    },
+    promise: {
+      title: "Promessa Direta",
+      structure: "Mostre o benefício claro que o conteúdo vai entregar.",
+      examples: [
+        "3 formas simples de evitar problemas visuais em crianças",
+        "Como proteger a visão do seu filho com uma ação por mês",
+        "O passo a passo para evitar danos causados por alergia ocular",
+      ],
+    },
+    error: {
+      title: "Erro Comum",
+      structure: "Apresente um erro que o público comete e não percebe.",
+      examples: [
+        "O erro silencioso que muitos pais cometem na introdução alimentar",
+        "A coceira que parece inofensiva... mas não é",
+        "Por que tratar em casa pode ser um problema sério",
+      ],
+    },
+    checklist: {
+      title: "Checklist camuflado",
+      structure:
+        "Antecipe que o conteúdo será uma lista sem entregar tudo no título.",
+      examples: [
+        "Se seu filho faz isso, você precisa ler esse post",
+        "5 sinais de que algo está errado com a visão do seu filho",
+        "Como saber se essa coceira é realmente só uma alergia",
+      ],
+    },
+    story: {
+      title: "Story Hook",
+      structure:
+        "Comece com uma frase de história real ou fictícia, gerando tensão.",
+      examples: [
+        "Achei que era só uma alergia. Hoje ele usa lente rígida.",
+        "Ela só coçava o olho. Agora não consegue mais enxergar sem ajuda.",
+        "Tudo começou com um colírio. E terminou numa cirurgia.",
+      ],
+    },
+    contrast: {
+      title: "Choque de Realidade",
+      formula: "Crie contraste entre o que as pessoas pensam e a realidade.",
+      examples: [
+        "Você acha que coçar o olho é normal? A ciência diz outra coisa.",
+        "A maioria só age quando é tarde demais.",
+        "Não é frescura. É ceratocone em estágio inicial.",
+      ],
+    },
+  } as const,
+  legenda: {
+    complementary: {
+      title: "Complementar",
+      description:
+        "Expande o conteúdo do carrossel ou Reels com explicações adicionais.",
+      effect:
+        "Aprofunda a mensagem e gera autoridade através de clareza e contexto.",
+      useWhen:
+        "Quando o post é mais visual ou resumido e precisa de um complemento explicativo.",
+    },
+    confessional: {
+      title: "Confessional",
+      description:
+        "Traz vulnerabilidade, bastidores e humanidade. Fala de forma pessoal.",
+      effect: "Gera empatia e conexão emocional com o público.",
+      useWhen: "Quando você quer humanizar a marca ou reforçar autenticidade.",
+    },
+    educational: {
+      title: "Educativa",
+      description:
+        "Funciona como um mini-post técnico ou informativo na legenda.",
+      effect: "Constrói autoridade, educa e gera salvamentos.",
+      useWhen:
+        "Quando o conteúdo tem potencial técnico e valor didático por si só.",
+    },
+    provocative: {
+      title: "Provocativa",
+      description:
+        "Continua o tom de tensão ou desconstrução do conteúdo principal.",
+      effect: "Choca, provoca reflexão ou engajamento emocional forte.",
+      useWhen:
+        "Quando você quer manter o impacto do post e incentivar reação ou debate.",
+    },
+    conversational: {
+      title: "Conversacional",
+      description: "Texto leve e direto, como um papo informal com o seguidor.",
+      effect: "Gera proximidade, facilita comentários e compartilhamento.",
+      useWhen:
+        "Quando quer soar mais humano, gerar conversa e descomplicar o tom.",
+    },
+    emotionalPitch: {
+      title: "Vendedora com Contexto Emocional",
+      description:
+        "Chama para ação de forma suave, com base em uma emoção real.",
+      effect: "Gera conversão com empatia, sem parecer agressivo.",
+      useWhen:
+        "Quando você precisa vender consulta, produto ou serviço, mas com contexto sensível.",
+    },
 
-  "Eu não acredito que as pessoas ainda fazem isso!",
-  "Está na hora de alguém te falar a verdade.",
-  "Isso vai deixar você com raiva e por um bom motivo.",
-  "Por que a maioria das pessoas está errada sobre (incluir tema)?",
-  "Algo muito estranho aconteceu hoje…", //15
+    checklistExplained: {
+      title: "Checklist Prático com Explicação",
+      description:
+        "Lista enumerada com dicas e explicações diretas para o seguidor aplicar no dia a dia.",
+      effect: "Organiza informações de forma clara, útil e com valor imediato.",
+      useWhen:
+        "Quando você quer entregar conteúdo prático que resolve dores ou dúvidas comuns.",
+    },
+    diagnosticList: {
+      title: "Lista Diagnóstica",
+      description:
+        "Lista de comportamentos ou sinais que levam o seguidor a perceber um problema ou necessidade de ajuda.",
+      effect: "Gera autoavaliação, senso de urgência e ação.",
+      useWhen:
+        "Quando você quer provocar o público e levá-lo à reflexão ou busca por atendimento.",
+    },
+    quickChecklist: {
+      title: "Checklist Rápido",
+      description:
+        "Lista direta de itens para fazer ou evitar, sem explicações detalhadas.",
+      effect: "Rapidez, clareza e consumo instantâneo.",
+      useWhen:
+        "Quando você quer entregar valor rápido ou reforçar visualmente uma ideia sem aprofundamento.",
+    },
 
-  "Você já percebeu que...",
-  "Você nunca deve fazer isso!",
-  "O que você faria se (incluir tema)?",
-  "Se você tivesse que escolher entre...",
-  "Essa é a decisão mais difícil que já tomei.", // 20
+    descriptiveDesire: {
+      title: "Desejo & Sensação (Gastronômico)",
+      description:
+        "Ativa o apetite e a curiosidade sensorial com frases que provocam a imaginação do sabor, textura e cheiro.",
+      effect: "Gera desejo visceral e vontade imediata de provar.",
+      useWhen:
+        "Quando você quer apresentar um prato ou bebida e fazer o público salivar.",
+    },
+    processBackstage: {
+      title: "Bastidor Real (Processo e Cuidado)",
+      description:
+        "Mostra os bastidores do preparo, segredos da cozinha ou diferenciais do produto.",
+      effect: "Valorização do trabalho artesanal e percepção de qualidade.",
+      useWhen:
+        "Quando você quer mostrar que o produto é feito com atenção e não é mais do mesmo.",
+    },
+    eitherOr: {
+      title: "Escolha do Dia (Interativo)",
+      description:
+        "Compara duas opções e estimula a participação do seguidor com perguntas simples.",
+      effect: "Engajamento leve e interação nos comentários.",
+      useWhen:
+        "Quando você quer movimentar o perfil sem necessariamente fazer uma oferta.",
+    },
+    provocativeTaste: {
+      title: "Provocação Gastronômica",
+      description:
+        "Posiciona o produto contra opções de baixa qualidade, ativando o senso de merecimento do público.",
+      effect: "Reposicionamento com personalidade, reforça diferenciação.",
+      useWhen:
+        "Quando você quer mostrar que seu produto vale mais que o concorrente genérico.",
+    },
+    memoryHook: {
+      title: "História & Emoção (Memória Afetiva)",
+      description:
+        "Usa storytelling afetivo para conectar o prato a lembranças, família ou tradições.",
+      effect: "Conexão emocional e valorização simbólica do produto.",
+      useWhen: "Quando você quer humanizar a marca e criar vínculo afetivo.",
+    },
+    tastyGuide: {
+      title: "Guia de Combinações (Mini Educativo)",
+      description:
+        "Sugere combinações de sabores, harmonizações ou dicas gastronômicas práticas.",
+      effect: "Autoridade leve + inspiração imediata.",
+      useWhen: "Quando você quer ensinar e entreter ao mesmo tempo.",
+    },
+  },
 
-  "Isso vai mudar a maneira como você vê (incluir tema).",
-  "Perdi muito tempo com (incluir tema), então mudei e...",
-  "Eu sempre odiei (incluir tema) então decidi...",
-  "3 segredos sobre (incluir tema) que não te contam.",
-  "Não acredito que não tentei isso antes.", //25
-
-  "Sua vida não será a mesma depois...",
-  "Alguém mais se sente (incluir emoção e tema) ou sou só eu?",
-  "5 erros que eu cometi quando (incluir tema).",
-  "A razão pela qual você se sente como (incluir emoção) é porque (incluir tema)",
-  "Sinto muito por te dar de más notícias, mas...", // 30
-
-  "Você viu as notícias sobre (incluir tema)? Se não...",
-  "Vou mudar sua opinião sobre (incluir tema) em 30 segundos.",
-  "Eu sou o único que está esperando desesperadamente por...",
-  "Como alguém que é (incluir tema) posso certamente te dizer que...",
-  "Curiosidade sobre mim: Eu tinha (incluir idade) anos quando...", //35
-
-  "Você não vai acreditar no que eu encontrei/vi ontem...",
-  "(incluir tema) nunca foi tão importante quanto é agora.",
-  "Se você ignorar isso, vai se arrepender depois.",
-  "Por que ninguém fala disso quando é tão óbvio?",
-  "Eu não sei como você ainda não percebeu isso.", // 40
-
-  "Isso vai mudar o jogo.",
-  "Alguém precisava falar sobre (incluir tema).",
-  "Quantas vezes você já ignorou isso?",
-  "Você acha que teria coragem de fazer isso?",
-  "Se você pudesse voltar no tempo, mudaria isso?", //45
-
-  "Isso não faz sentido pra mim até agora.",
-  "Você também sente que...",
-  "Quem nunca passou por isso, não sabe o que é sofrer.",
-  "Isso acontece com todo mundo, mas ninguém fala.",
-  "Eu aposto que você já se sentiu assim.", // 50
-
-  "Todo mundo faz isso, mas poucos admitem.",
-  "Eu sei que você já (fez algo relacionado ao tema e quer resolver)",
-  "Por que ninguém está falando disso (assunto principal)?",
-  "É isso que acontece quando você (comportamento ou crença comum sobre o assunto principal)",
-  "90% das pessoas esquecem que (solução do assunto principal)", //55
-
-  "O que mudou depois que eu comecei a (nova prática sobre o assunto pincipal)",
-];
-/**
- * Descrição da função
- * @param {string} framework - Modelo do Framework
- * @returns {string} O texto explicativo para a IA usar
- * */
-const copyFrameworks = (framework: string) => {
-  framework = framework || "aida";
-
-  return new Map(Object.entries(FRAMEWORKS)).get(framework);
+  stories: {
+    miniStory: {
+      title: "Mini Story (Jornada Pessoal ou de um Paciente)",
+      structure: `
+    <h4>Story 1</h4>
+    <p>“Deixa eu te contar uma coisa que aconteceu…”</p>
+    <h4>Story 2</h4>
+    <p>Situação incômoda ou início do problema</p>
+    <h4>Story 3</h4>
+    <p>Virada ou descoberta</p>
+    <h4>Story 4</h4>
+    <p>Solução aplicada ou conselho</p>
+    <h4>Story 5</h4>
+    <p>CTA leve: “Responde aqui”, “Me chama”, “Desliza pro lado”</p>
+        `.trim(),
+      effect: "Conexão e identificação com a audiência",
+      useWhen: "Quando quiser gerar empatia e contexto antes de converter",
+    },
+    triviaStory: {
+      title: "Você Sabia? (Storytelling Educacional + Curiosidade)",
+      structure: `
+    <h4>Story 1</h4>
+    <p>Pergunta intrigante ou dado curioso</p>
+    <h4>Story 2</h4>
+    <p>Explicação simplificada com contexto</p>
+    <h4>Story 3</h4>
+    <p>“Isso acontece porque…”</p>
+    <h4>Story 4</h4>
+    <p>Dica ou orientação prática</p>
+    <h4>Story 5</h4>
+    <p>CTA: “Quer saber mais? Me chama ou clica no link”</p>
+        `.trim(),
+      effect: "Educação com valor prático",
+      useWhen: "Quando quiser ensinar sem parecer palestra",
+    },
+    errorChallenge: {
+      title: "Desafio ou Erro Comum",
+      structure: `
+    <h4>Story 1</h4>
+    <p>“Se você faz isso com seu filho…”</p>
+    <h4>Story 2</h4>
+    <p>Expõe o erro ou crença comum</p>
+    <h4>Story 3</h4>
+    <p>Mostra o risco/consequência</p>
+    <h4>Story 4</h4>
+    <p>“Aqui tá o que eu recomendo”</p>
+    <h4>Story 5</h4>
+    <p>CTA com caixa de pergunta, DM ou link</p>
+        `.trim(),
+      effect: "Tensão e correção de rota",
+      useWhen: "Quando quiser desafiar, reposicionar ou vender",
+    },
+    timeline: {
+      title: "Linha do Tempo",
+      structure: `
+    <h4>Story 1</h4>
+    <p>“Antes…” (como era a situação)</p>
+    <h4>Story 2</h4>
+    <p>“O que estava dando errado”</p>
+    <h4>Story 3</h4>
+    <p>“O que mudou”</p>
+    <h4>Story 4</h4>
+    <p>“Como está hoje”</p>
+    <h4>Story 5</h4>
+    <p>CTA com print, depoimento ou agendamento</p>
+        `.trim(),
+      effect: "Prova social e construção de autoridade",
+      useWhen: "Quando quiser mostrar transformação real",
+    },
+    interactiveDecision: {
+      title: "Você Faria Isso? (Decisão Interativa)",
+      structure: `
+    <h4>Story 1</h4>
+    <p>Situação real: “A criança coça o olho todo dia…”</p>
+    <h4>Story 2</h4>
+    <p>Enquete com decisão (ex: Levar no médico / Esperar?)</p>
+    <h4>Story 3</h4>
+    <p>Revelação do certo com justificativa</p>
+    <h4>Story 4</h4>
+    <p>Explicação educativa breve</p>
+    <h4>Story 5</h4>
+    <p>CTA: “Quer mais? Responde aqui”</p>
+        `.trim(),
+      effect: "Engajamento + educação + leads quentes",
+      useWhen: "Quando quiser puxar interação e começar diálogo",
+    },
+    empathyPulse: {
+      title: "Você Se Identifica? (Reflexão com Dor e Consolo)",
+      structure: `
+    <h4>Story 1</h4>
+    <p>“Você sente isso também?”</p>
+    <h4>Story 2</h4>
+    <p>Descreve um problema emocional ou comum</p>
+    <h4>Story 3</h4>
+    <p>Mostra que outras pessoas passam por isso</p>
+    <h4>Story 4</h4>
+    <p>Apresenta solução ou direção</p>
+    <h4>Story 5</h4>
+    <p>CTA com caixinha ou convite pra conversar</p>
+        `.trim(),
+      effect: "Acolhimento e conversão suave",
+      useWhen: "Quando o público tá na dor, mas ainda resiste à venda",
+    },
+  } as const,
 };
-
-function getModel(model: string, intent: string) {
-  model = model.toLowerCase();
-  let result =
-    intent === "stories"
-      ? `TÍTULO DA SEQUÊNCIA DE STORIES
-  -Indique qual o formato escolhido
-  -qual o framework de copy
-  -qual o gatilho mental
-
-  `
-      : ``;
-
-  switch (model) {
-    case "short-caption":
-      return "Texto da legenda com até 200 caracteres bem criativo e reforçando o CONTEXTO e com um CTA no final. Caso não haja nenhuma especificação no CONTEXTO, indique a pessoa a ir ao link da bio de modo que concorde com o CONTEXTO.";
-    case "medium-caption":
-      return "Texto da legenda com até 400 caracteres usando o CONTEXTO como base, pode ter cunho explicativo ou de reforço. Use 3 parágrafos curtos. Use de 3 hashtags bem focadas no nicho da DESCRIÇÃO.";
-    case "long-caption":
-      return `Texto da legenda explicando o CONTEXTO com até 800 caracteres. Ainda que mais explicativa, o texto não pode ser cansativo e deve ser dinâmico. Cada parágrafo não deve ter mais de 30 palavras depois disso, crie novos parágrafos para manter o texto mais dinâmico. Importante separar bem a explicação Nesses parágrafos:
-    1 - Reforce o problema apresentado do CONTEXTO em 120 caracteres.
-    2 - Comece a problematizar o assunto ao jogar o contexto para o usuário gerando conexão em 120 caracteres.
-    3 - Aqui você usar uma lista de itens com emojis para facilitar a leitura apresentando os problemas que o usuário enfrenta, reforçando o parágrafo 2.
-    4 - Apresente a solução do problema de acordo com o CONTEXTO.
-    5 - Conclua com um CTA do CONTEXTO, se não houver indicação, peça para o usuário ir ao link da bio de uma forma mais criativa do que "agende/peça pelo link da bio.
-    6 - Finalize a legenda com 3 hashtags bem focadas no nicho da DESCRIÇÃO.`;
-    case "long-tip-caption":
-      return `Texto da legenda explicando o CONTEXTO com até 800 caracteres. Ainda que mais explicativa, o texto não pode ser cansativo e deve ser dinâmico. Cada parágrafo não deve ter mais de 30 palavras depois disso, crie novos parágrafos para manter o texto mais dinâmico. Importante separar bem a explicação Nesses parágrafos:
-    1 - Comece a problematizar o assunto ao jogar o contexto para o usuário gerando conexão em 120 caracteres.
-    2 - Comece a apresentar que tem uma solução e que no próximo parágrafo vai trazer as dicas.
-    3 - Aqui você usar uma lista de itens com emojis para facilitar a leitura apresentando as soluções para os problemas que o usuário enfrenta, reforçando o parágrafo 2. Para cada item da lista, coloque uma breve explicação de até 20 palavras.
-    4 - Reforce que as dicas acima são ideias para lidar com o problema e caso haja mais necessidade deve buscar a empresa; atente-se ao CONTEXTO para que você não fuja da necessidade.
-    5 - Conclua com um CTA do CONTEXTO, se não houver indicação, peça para o usuário ir ao link da bio de uma forma mais criativa do que agende/peça pelo link da bio.
-    6 - Finalize a legenda com 3 hashtags bem focadas no nicho da DESCRIÇÃO.
-    `;
-    case "video-stories":
-      return (
-        result +
-        `Roteiro de fala para um vídeo de 20 segundos, indique reações que as pessoas devem ter em alguns momentos da fala entre parênteses para reforçar algum ponto. Siga esse modelo:
-      STORY X
-      
-      Fala:
-      [Inserir aqui a fala da pessoa para que seja lida com um tempo médio de 20 segundos e coloque (entre parênteses) alguma reação próximo de alguma fala.]
-      `
-      );
-    case "short-stories":
-      return (
-        result +
-        `Sequência curta de stories de no máximo 3 stories com textos de 15 palavras nesse modelo:
-      STORY X
-      
-      Texto
-  [Texto principal com no máximo 15 palavras]
-      `
-      );
-    //Caso não venha nada ou seja "texto"
-    case "text-stories":
-    default:
-      return (
-        result +
-        `Sequência de Stories em Texto nesse modelo:
-      STORY X
-
-      Texto:
-      [Texto com no máximo 30 palavras]
-      `
-      );
-  }
-}

@@ -45,6 +45,14 @@ import {
 } from "~/components/CreateAction";
 import { Button } from "~/components/ui/button";
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "~/components/ui/command";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -58,7 +66,7 @@ import { Popover, PopoverContent } from "~/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { ToastAction } from "~/components/ui/toast";
 import { useToast } from "~/components/ui/use-toast";
-import { FRAMEWORKS, INTENTS, SOULS, TRIGGERS } from "~/lib/constants";
+import { FRAMEWORKS, INTENTS, TRIGGERS } from "~/lib/constants";
 import {
   Avatar,
   Bia,
@@ -74,6 +82,7 @@ import {
 } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
 import { cn } from "~/lib/utils";
+import { storytellingModels } from "./handle-openai";
 
 export const config = { runtime: "edge" };
 const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY;
@@ -383,21 +392,25 @@ function Title({
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent className="bg-content">
-            {Object.entries(SOULS).map(([key, soul]) => {
+          <DropdownMenuContent>
+            {Object.keys(storytellingModels.titulos).map((k) => {
+              const model =
+                storytellingModels.titulos[
+                  k as keyof typeof storytellingModels.titulos
+                ];
+
               return (
                 <DropdownMenuItem
-                  key={key}
                   className="bg-item"
                   onSelect={async () => {
                     fetcher.submit(
                       {
-                        title: getCleanTitle(action.title),
+                        title: action.title,
                         description: action.description,
                         context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
                         intent: "title",
+                        model: k,
                         voice: partner.voice,
-                        soul: soul.slug,
                       },
                       {
                         action: "/handle-openai",
@@ -406,53 +419,10 @@ function Title({
                     );
                   }}
                 >
-                  {soul.title}
+                  {model.title}
                 </DropdownMenuItem>
               );
             })}
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="bg-item"
-              onSelect={async () => {
-                fetcher.submit(
-                  {
-                    title: getCleanTitle(action.title),
-                    description: action.description,
-                    context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-                    intent: "title",
-                    voice: partner.voice,
-                  },
-                  {
-                    action: "/handle-openai",
-                    method: "post",
-                  },
-                );
-              }}
-            >
-              3 Princípios
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="bg-item"
-              onSelect={async () => {
-                fetcher.submit(
-                  {
-                    title: getCleanTitle(action.title),
-                    description: action.description,
-                    context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-                    intent: "title",
-                    model: "viral",
-                    voice: partner.voice,
-                  },
-                  {
-                    action: "/handle-openai",
-                    method: "post",
-                  },
-                );
-              }}
-            >
-              Headlines Virais
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -547,7 +517,8 @@ function Description({
 
           {isInstagramFeed(action.category, true) && (
             <Button
-              className={`h-7 w-7 p-1 ${
+              size={"sm"}
+              className={` ${
                 isWorking &&
                 fetcher.formData?.get("intent") === "ideas" &&
                 "animate-colors"
@@ -575,7 +546,8 @@ function Description({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
-                  className={`h-7 w-7 p-1 ${
+                  size={"sm"}
+                  className={` ${
                     isWorking &&
                     fetcher.formData?.get("intent") === "carousel" &&
                     "animate-colors"
@@ -587,49 +559,42 @@ function Description({
               </DropdownMenuTrigger>
 
               <DropdownMenuContent className="bg-content">
-                <DropdownMenuItem
-                  className="bg-item"
-                  onSelect={async () => {
-                    fetcher.submit(
-                      {
-                        title: action.title,
-                        description: action.description,
-                        context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-                        intent: "carousel",
-                        trigger,
-                        voice: partner.voice,
-                      },
-                      {
-                        action: "/handle-openai",
-                        method: "post",
-                      },
-                    );
-                  }}
-                >
-                  Modelo Comum
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="bg-item"
-                  onSelect={async () => {
-                    fetcher.submit(
-                      {
-                        title: action.title,
-                        description: action.description,
-                        context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-                        intent: "carousel",
-                        model: "twitter",
-                        trigger,
-                        voice: partner.voice,
-                      },
-                      {
-                        action: "/handle-openai",
-                        method: "post",
-                      },
-                    );
-                  }}
-                >
-                  Modelo Twitter
-                </DropdownMenuItem>
+                {Object.keys(storytellingModels.carrossel).map((k) => {
+                  const model =
+                    storytellingModels.carrossel[
+                      k as keyof typeof storytellingModels.carrossel
+                    ];
+
+                  return (
+                    <DropdownMenuItem
+                      className="bg-item"
+                      onSelect={async () => {
+                        fetcher.submit(
+                          {
+                            title: action.title,
+                            description: action.description,
+                            context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+                            intent: "carousel",
+                            model: k,
+                            trigger,
+                            voice: partner.voice,
+                          },
+                          {
+                            action: "/handle-openai",
+                            method: "post",
+                          },
+                        );
+                      }}
+                    >
+                      <p>
+                        {model.title} <br />
+                        <span className="text-xs opacity-50">
+                          {model.effect}
+                        </span>
+                      </p>
+                    </DropdownMenuItem>
+                  );
+                })}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : action.category === "reels" ? (
@@ -639,10 +604,7 @@ function Description({
                   size={"sm"}
                   className={` ${
                     isWorking &&
-                    ["hook", "reels"].find(
-                      (category) =>
-                        category === fetcher.formData?.get("intent"),
-                    ) &&
+                    "reels" === fetcher.formData?.get("intent") &&
                     "animate-colors"
                   }`}
                   variant="ghost"
@@ -652,72 +614,42 @@ function Description({
               </DropdownMenuTrigger>
 
               <DropdownMenuContent className="bg-content">
-                <DropdownMenuItem
-                  className="bg-item"
-                  onSelect={async () => {
-                    fetcher.submit(
-                      {
-                        title: action.title,
-                        description: action.description,
-                        context: `EMPRESA: ${partner.title} - CONTEXTO: ${partner.context}`,
-                        intent: "hook",
-                      },
+                {Object.keys(storytellingModels.reel).map((k) => {
+                  const model =
+                    storytellingModels.reel[
+                      k as keyof typeof storytellingModels.reel
+                    ];
 
-                      {
-                        action: "/handle-openai",
-                        method: "post",
-                      },
-                    );
-                  }}
-                >
-                  Opções de ganchos virais
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="bg-item"
-                  onSelect={async () => {
-                    fetcher.submit(
-                      {
-                        title: action.title,
-                        description: action.description,
-                        context: `EMPRESA: ${partner.title} - CONTEXTO: ${partner.context}`,
-                        intent: "reels",
-                        model: "viral",
-                        trigger,
-                        voice: partner.voice,
-                      },
-
-                      {
-                        action: "/handle-openai",
-                        method: "post",
-                      },
-                    );
-                  }}
-                >
-                  Roteiro de Vídeo Viral
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="bg-item"
-                  onSelect={async () => {
-                    fetcher.submit(
-                      {
-                        title: action.title,
-                        description: action.description,
-                        context: `EMPRESA: ${partner.title} - CONTEXTO: ${partner.context}`,
-                        intent: "reels",
-                        model: "list",
-                        trigger,
-                        voice: partner.voice,
-                      },
-
-                      {
-                        action: "/handle-openai",
-                        method: "post",
-                      },
-                    );
-                  }}
-                >
-                  Roteiro de Vídeo em Lista
-                </DropdownMenuItem>
+                  return (
+                    <DropdownMenuItem
+                      className="bg-item"
+                      onSelect={async () => {
+                        fetcher.submit(
+                          {
+                            title: action.title,
+                            description: action.description,
+                            context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+                            intent: "carousel",
+                            model: k,
+                            trigger,
+                            voice: partner.voice,
+                          },
+                          {
+                            action: "/handle-openai",
+                            method: "post",
+                          },
+                        );
+                      }}
+                    >
+                      <p>
+                        {model.title} <br />
+                        <span className="text-xs opacity-50">
+                          {model.effect}
+                        </span>
+                      </p>
+                    </DropdownMenuItem>
+                  );
+                })}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : null}
@@ -907,52 +839,151 @@ function RightSide({
                 </Button>
               </div>
             )}
+          {action.category === "stories" ? (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  size={"sm"}
+                  className={` ${
+                    isWorking &&
+                    "stories" === fetcher.formData?.get("intent") &&
+                    "animate-colors"
+                  }`}
+                  variant="ghost"
+                >
+                  <SparklesIcon className="size-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-0 md:w-90">
+                <Command>
+                  <CommandInput placeholder="Como são os Stories você quer gerar?" />
+                  <CommandList>
+                    <CommandEmpty>Nenhuma Stories foi encontrado</CommandEmpty>
 
-          <PopoverTFM
-            className={
-              isInstagramFeed(action.category) ? "md:max-h-[50vh]" : ""
-            }
-            title={
-              isInstagramFeed(action.category)
-                ? "Gerar Legenda"
-                : "Gerar Stories"
-            }
-            models={
-              isInstagramFeed(action.category)
-                ? [
-                    { title: "Curta", value: "short-caption" },
-                    { title: "Média", value: "medium-caption" },
-                    { title: "Longa", value: "long-caption" },
-                    { title: "Longa com dicas", value: "long-tip-caption" },
-                  ]
-                : [
-                    { title: "Texto", value: "text-stories" },
-                    { title: "Vídeo", value: "video-stories" },
-                    { title: "Curto", value: "short-stories" },
-                  ]
-            }
-            onGenerate={({ framework, model, trigger }) => {
-              const data = {
-                title: action.title,
-                description: action.description,
-                context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-                intent: isInstagramFeed(action.category)
-                  ? "caption"
-                  : "stories",
-                voice: partner.voice,
-                model,
-                trigger,
-                framework,
-              };
+                    <CommandGroup>
+                      {Object.keys(storytellingModels.stories).map((k) => {
+                        const model =
+                          storytellingModels.stories[
+                            k as keyof typeof storytellingModels.stories
+                          ];
 
-              fetcher.submit(data, {
-                action: "/handle-openai",
-                method: "post",
-              });
-            }}
-          />
+                        return (
+                          <CommandItem
+                            value={[
+                              model.title,
+                              model.effect,
+                              model.useWhen,
+                            ].join(" - ")}
+                            key={k}
+                            className="bg-item"
+                            onSelect={async () => {
+                              fetcher.submit(
+                                {
+                                  title: action.title,
+                                  description: action.description,
+                                  context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+                                  intent: "stories",
+                                  model: k,
+                                  voice: partner.voice,
+                                },
+                                {
+                                  action: "/handle-openai",
+                                  method: "post",
+                                },
+                              );
+                            }}
+                            title={model.useWhen}
+                          >
+                            <p className="py-2">
+                              <p className="mb-1 text-base leading-tight font-medium">
+                                {model.title}
+                              </p>
+                              <p className="text-xs leading-none opacity-50">
+                                {model.useWhen}
+                              </p>
+                            </p>
+                          </CommandItem>
+                        );
+                      })}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  size={"sm"}
+                  className={` ${
+                    isWorking &&
+                    "caption" === fetcher.formData?.get("intent") &&
+                    "animate-colors"
+                  }`}
+                  variant="ghost"
+                >
+                  <SparklesIcon className="size-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-0 md:w-90">
+                <Command>
+                  <CommandInput placeholder="Qual legenda você quer gerar?" />
+                  <CommandList>
+                    <CommandEmpty>
+                      {" "}
+                      Nenhuma legenda foi encontrada{" "}
+                    </CommandEmpty>
 
-          {/* <TriggersSelect trigger={trigger} setTrigger={setTrigger} /> */}
+                    <CommandGroup>
+                      {Object.keys(storytellingModels.legenda).map((k) => {
+                        const model =
+                          storytellingModels.legenda[
+                            k as keyof typeof storytellingModels.legenda
+                          ];
+
+                        return (
+                          <CommandItem
+                            value={[
+                              model.title,
+                              model.description,
+                              model.effect,
+                              model.useWhen,
+                            ].join(" - ")}
+                            key={k}
+                            className="bg-item"
+                            onSelect={async () => {
+                              fetcher.submit(
+                                {
+                                  title: action.title,
+                                  description: action.description,
+                                  context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+                                  intent: "caption",
+                                  model: k,
+                                  voice: partner.voice,
+                                },
+                                {
+                                  action: "/handle-openai",
+                                  method: "post",
+                                },
+                              );
+                            }}
+                            title={model.description}
+                          >
+                            <p className="py-2 leading-none">
+                              <p className="mb-1">{model.title}</p>
+                              <p className="text-xs opacity-50">
+                                {model.description}
+                              </p>
+                            </p>
+                          </CommandItem>
+                        );
+                      })}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          )}
         </div>
       </div>
 
