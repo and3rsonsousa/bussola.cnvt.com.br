@@ -10,7 +10,7 @@ import {
   UserIcon,
   Users2Icon,
 } from "lucide-react";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Link,
   useFetchers,
@@ -341,7 +341,7 @@ function PartnerCombobox({
           <CommandList>
             <CommandEmpty>Nenhum Parceiro encontrado</CommandEmpty>
             {partnersBySOW.map((sow, i) => (
-              <>
+              <Fragment key={i}>
                 <CommandGroup heading={sow.title} key={i}>
                   {sow.partners.map((partner) => (
                     <CommandItem
@@ -358,7 +358,7 @@ function PartnerCombobox({
                   ))}
                 </CommandGroup>
                 <CommandSeparator />
-              </>
+              </Fragment>
             ))}
           </CommandList>
         </Command>
