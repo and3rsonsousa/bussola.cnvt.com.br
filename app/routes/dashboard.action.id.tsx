@@ -97,7 +97,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     .from("actions")
     .select("*")
     .is("archived", false)
-    .eq("id", id)
+    .match({id})
     .returns<Action[]>()
     .single();
 
@@ -393,7 +393,7 @@ function Title({
           </DropdownMenuTrigger>
 
           <DropdownMenuContent>
-            {Object.keys(storytellingModels.titulos).map((k) => {
+            {Object.keys(storytellingModels.titulos).map((k, i) => {
               const model =
                 storytellingModels.titulos[
                   k as keyof typeof storytellingModels.titulos
@@ -401,6 +401,7 @@ function Title({
 
               return (
                 <DropdownMenuItem
+                key={i}
                   className="bg-item"
                   onSelect={async () => {
                     fetcher.submit(
