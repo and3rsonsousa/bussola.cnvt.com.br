@@ -8,6 +8,7 @@ import { type Database } from "database";
 export function createClient(request: Request) {
 	const headers = new Headers();
 
+
 	const supabase = createServerClient<Database>(
 		process.env.SUPABASE_URL!,
 		process.env.SUPABASE_KEY!,

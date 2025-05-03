@@ -64,6 +64,8 @@
     --border: 220 10% 25%;
     --input: 220 10% 10%;
     --ring: 80 90% 50%;
+
+    --error: theme(--color-rose-400);
   }
 
   .fuchsia {

@@ -1,3 +1,4 @@
+import type { Database } from "database";
 import {
   addDays,
   addMonths,
@@ -106,13 +107,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return redirect("/login");
   }
 
+  user.id
+
   const [{ data: person }, { data: partners }] = await Promise.all([
-    supabase.from("people").select("*").eq("user_id", user.id).single(),
-    supabase.from("partners").select("slug").eq("archived", false),
+    supabase.from("people").select("*").match({"user_id": user.id}).single(),
+    supabase.from("partners").select("slug").match({"archived": false}).returns<Partner[]>(),
   ]);
 
   invariant(person);
   invariant(partners);
+  
 
   let start = startOfWeek(startOfMonth(new Date()));
   let end = endOfDay(endOfWeek(endOfMonth(addMonths(new Date(), 1))));
