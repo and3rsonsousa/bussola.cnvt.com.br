@@ -1827,7 +1827,7 @@ export function getNewDateValues(
 
   // Se a visualização for pela data do Instagram e se a ação for de instagram
 
-  if (isInstagramFeed(action.category, true) && isInstagramDate) {
+  if (isInstagramFeed(action.category, true)) {
     // Se a data de fazer ação for depois da data de postagem
     // define uma nova data de postagem, sendo uma hora antes da data da ação
 
