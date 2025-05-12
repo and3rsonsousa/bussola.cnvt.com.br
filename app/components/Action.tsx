@@ -168,11 +168,10 @@ export function ActionLine({
             style={style}
           >
             <div
-              className={`flex cursor-pointer items-center justify-between gap-2 overflow-hidden transition-all ${
-                isBefore(action.date, new Date()) && state.slug !== "finished"
-                  ? "bg-error/5 hover:bg-error/20 text-error"
-                  : "hover:bg-muted/50"
-              } `}
+              className={`flex cursor-pointer items-center justify-between gap-2 overflow-hidden transition-all ${isBefore(action.date, new Date()) && state.slug !== "finished"
+                ? "bg-error/5 hover:bg-error/20 text-error"
+                : "hover:bg-muted/50"
+                } `}
               onMouseEnter={() => {
                 setHover(true);
               }}
@@ -209,14 +208,13 @@ export function ActionLine({
           >
             <div
               title={action.title}
-              className={`action ring-ring ring-offset-background relative cursor-pointer rounded ring-offset-2 outline-hidden focus-within:ring-3 ${
-                showDelay &&
+              className={`action ring-ring ring-offset-background relative cursor-pointer rounded ring-offset-2 outline-hidden focus-within:ring-3 ${showDelay &&
                 state.slug !== "finished" &&
                 (isBefore(action.instagram_date, new Date()) ||
                   isBefore(action.date, new Date()))
-                  ? "action-content-delayed rounded-md"
-                  : " "
-              }`}
+                ? "action-content-delayed rounded-md"
+                : " "
+                }`}
               onMouseEnter={() => {
                 setHover(true);
               }}
@@ -280,17 +278,14 @@ export function ActionLine({
             {...attributes}
             style={style}
             title={action.title}
-            className={`action group/action action-item items-center gap-2 hover:z-100 [&>*]:border-red-500 ${
-              isDragging ? "z-[100]" : "z-0"
-            } ${
-              short ? "action-item-short px-2 py-1" : long ? "px-4 py-3" : "p-3"
-            } font-base @container md:text-sm ${
-              showDelay &&
-              isBefore(action.date, new Date()) &&
-              state.slug !== "finished"
+            className={`action group/action action-item items-center gap-2 hover:z-100 [&>*]:border-red-500 ${isDragging ? "z-[100]" : "z-0"
+              } ${short ? "action-item-short px-2 py-1" : long ? "px-4 py-3" : "p-3"
+              } font-base @container md:text-sm ${showDelay &&
+                isBefore(action.date, new Date()) &&
+                state.slug !== "finished"
                 ? "action-delayed"
                 : ""
-            } ${isSprint(action.id, sprints) ? "action-sprint" : ""}`}
+              } ${isSprint(action.id, sprints) ? "action-sprint" : ""}`}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -319,9 +314,8 @@ export function ActionLine({
             {/* Title */}
 
             <div
-              className={`relative flex w-full shrink overflow-hidden ${
-                long ? "text-base" : ""
-              }`}
+              className={`relative flex w-full shrink overflow-hidden ${long ? "text-base" : ""
+                }`}
             >
               {edit ? (
                 <input
@@ -402,9 +396,8 @@ export function ActionLine({
                       (category) => category.slug === action.category,
                     )?.slug
                   }
-                  className={`hidden shrink-0 opacity-25 @[200px]:block ${
-                    long ? "size-6" : "size-4"
-                  }`}
+                  className={`hidden shrink-0 opacity-25 @[200px]:block ${long ? "size-6" : "size-4"
+                    }`}
                 />
               </div>
             )}
@@ -465,11 +458,10 @@ export function ActionLine({
 
             {long ? (
               <div
-                title={`Prioridade ${
-                  priorities.find(
-                    (priority) => priority.slug === action.priority,
-                  )?.title
-                }`}
+                title={`Prioridade ${priorities.find(
+                  (priority) => priority.slug === action.priority,
+                )?.title
+                  }`}
               >
                 <Icons
                   id={
@@ -485,9 +477,8 @@ export function ActionLine({
               action.priority === PRIORITIES.high && (
                 <Icons
                   id="high"
-                  className={`text-red-500 ${
-                    long ? "size-6" : "size-5"
-                  } shrink-0`}
+                  className={`text-red-500 ${long ? "size-6" : "size-5"
+                    } shrink-0`}
                 />
               )
             )}
@@ -625,9 +616,8 @@ export function ActionBlock({
         <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
           <div
             title={action.title}
-            className={`action group/action action-item action-item-block @container cursor-pointer flex-col justify-between gap-2 text-sm ${
-              isDragging ? "z-[100]" : "z-0"
-            } ${isSprint(action.id, sprints) && sprint ? "action-sprint" : ""}`}
+            className={`action group/action action-item action-item-block @container cursor-pointer flex-col justify-between gap-2 text-sm ${isDragging ? "z-[100]" : "z-0"
+              } ${isSprint(action.id, sprints) && sprint ? "action-sprint" : ""}`}
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
@@ -813,15 +803,14 @@ export function ListOfActions({
   return actions.length > 0 ? (
     <div>
       <div
-        className={`${
-          columns === 1
-            ? "flex flex-col"
-            : columns === 2
-              ? "grid sm:grid-cols-2"
-              : columns === 3
-                ? "grid sm:grid-cols-2 md:grid-cols-3"
-                : "grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6"
-        } ${scroll ? "scrollbars-v pt-1 pb-8" : ""} ${isHair ? "gap-y-[1px]" : "gap-y-1"} @container h-full gap-x-4`}
+        className={`${columns === 1
+          ? "flex flex-col"
+          : columns === 2
+            ? "grid sm:grid-cols-2"
+            : columns === 3
+              ? "grid sm:grid-cols-2 md:grid-cols-3"
+              : "grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6"
+          } ${scroll ? "scrollbars-v pt-1 pb-8" : ""} ${isHair ? "gap-y-[1px]" : "gap-y-1"} @container h-full gap-x-4`}
       >
         {actions
           ?.slice(0, fold)
@@ -893,13 +882,12 @@ export function BlockOfActions({
   return (
     <div className="@container -mx-1 h-full overflow-hidden">
       <div
-        className={`${
-          !max
-            ? "grid @[600px]:grid-cols-2 @[1000px]:grid-cols-3 @[1300px]:grid-cols-4"
-            : max === 2
-              ? "grid grid-cols-2"
-              : "flex flex-col"
-        } scrollbars-v gap-2 p-1 pb-8`}
+        className={`${!max
+          ? "grid @[600px]:grid-cols-2 @[1000px]:grid-cols-3 @[1300px]:grid-cols-4"
+          : max === 2
+            ? "grid grid-cols-2"
+            : "flex flex-col"
+          } scrollbars-v gap-2 p-1 pb-8`}
       >
         {actions?.map((action) => (
           <ActionBlock action={action} key={action.id} sprint={sprint} />
@@ -1129,23 +1117,20 @@ export function formatActionDatetime({
   date = typeof date === "string" ? parseISO(date) : date;
   const formatString = (
     dateFormat === 2
-      ? `d/M${
-          !isSameYear(date.getFullYear(), new Date().getUTCFullYear())
-            ? "/yy"
-            : ""
-        }`
+      ? `d/M${!isSameYear(date.getFullYear(), new Date().getUTCFullYear())
+        ? "/yy"
+        : ""
+      }`
       : dateFormat === 3
-        ? `d 'de' MMM${
-            !isSameYear(date.getFullYear(), new Date().getUTCFullYear())
-              ? " 'de' yy"
-              : ""
-          }`
+        ? `d 'de' MMM${!isSameYear(date.getFullYear(), new Date().getUTCFullYear())
+          ? " 'de' yy"
+          : ""
+        }`
         : dateFormat === 4
-          ? `E, d 'de' MMMM${
-              !isSameYear(date.getFullYear(), new Date().getUTCFullYear())
-                ? " 'de' yyy"
-                : ""
-            }`
+          ? `E, d 'de' MMMM${!isSameYear(date.getFullYear(), new Date().getUTCFullYear())
+            ? " 'de' yyy"
+            : ""
+          }`
           : ""
   ).concat(
     timeFormat
@@ -1463,9 +1448,8 @@ export function ContextMenuItems({
       <ContextMenuSub>
         <ContextMenuSubTrigger className="bg-item">
           <div
-            className={`flex items-center ${
-              action.partners.length === 1 ? "gap-2" : "-space-x-1"
-            }`}
+            className={`flex items-center ${action.partners.length === 1 ? "gap-2" : "-space-x-1"
+              }`}
           >
             {getPartners(action.partners, partners).map((partner) => (
               <Fragment key={partner.id}>
@@ -1637,9 +1621,8 @@ export function ContextMenuItems({
       <ContextMenuSub>
         <ContextMenuSubTrigger className="bg-item">
           <div
-            className={`flex items-center ${
-              action.responsibles.length === 1 ? "gap-2" : "-space-x-1"
-            }`}
+            className={`flex items-center ${action.responsibles.length === 1 ? "gap-2" : "-space-x-1"
+              }`}
           >
             {getResponsibles(people, action.responsibles).map((person) => (
               <Fragment key={person.id}>
@@ -1697,8 +1680,8 @@ export function ContextMenuItems({
                   } else {
                     const tempResponsibles = checked
                       ? action.responsibles.filter(
-                          (id) => id !== person.user_id,
-                        )
+                        (id) => id !== person.user_id,
+                      )
                       : [...action.responsibles, person.user_id];
                     handleActions({
                       ...action,
@@ -1825,22 +1808,27 @@ export function getNewDateValues(
       minutes,
     );
 
-  // Se a visualização for pela data do Instagram e se a ação for de instagram
+  // Se for uma ação do instagram
 
   if (isInstagramFeed(action.category, true)) {
     // Se a data de fazer ação for depois da data de postagem
     // define uma nova data de postagem, sendo uma hora antes da data da ação
+    if (isInstagramDate) {
 
-    if (isAfter(action.date, newDate)) {
       values = {
-        date: format(subHours(newDate, 1), "yyyy-MM-dd HH:mm:ss"),
+        date: isAfter(action.date, newDate) ? format(subHours(newDate, 1), "yyyy-MM-dd HH:mm:ss") : action.date,
         instagram_date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
-      };
+      }
+
     } else {
+
       values = {
-        instagram_date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
-      };
+        date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
+        instagram_date: isAfter(newDate, action.instagram_date) ? format(addHours(newDate, 1), "yyyy-MM-dd HH:mm:ss") : action.instagram_date,
+      }
+
     }
+
   } else {
     values = {
       date: format(newDate, "yyyy-MM-dd HH:mm:ss"),
