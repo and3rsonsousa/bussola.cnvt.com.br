@@ -152,7 +152,7 @@ export default function Header({
           </Button>
 
 {
-  person.admin &&  <Button
+  person.admin && partner &&  <Button
   variant={"ghost"}
   size={"icon"}
   asChild
