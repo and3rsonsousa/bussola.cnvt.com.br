@@ -7,6 +7,7 @@ import {
   LogOutIcon,
   PlusIcon,
   SearchIcon,
+  SettingsIcon,
   UserIcon,
   Users2Icon,
 } from "lucide-react";
@@ -149,6 +150,19 @@ export default function Header({
           >
             <SearchIcon className="size-6" />
           </Button>
+
+{
+  person.admin &&  <Button
+  variant={"ghost"}
+  size={"icon"}
+  asChild
+>
+   <Link to={`/dashboard/admin/partner/${partner.slug}`}>
+    <SettingsIcon className="size-4" />
+  </Link>
+  </Button>
+}
+
         </div>
 
         {/* Botão de criar ação */}
@@ -366,72 +380,3 @@ function PartnerCombobox({
     </Popover>
   );
 }
-
-// <DropdownMenu>
-//             <DropdownMenuTrigger asChild>
-//               <Button
-//                 variant={"ghost"}
-//                 className={
-//                   partner ? "px-4 py-7" : `text-ellipsis whitespace-nowrap`
-//                 }
-//               >
-//                 {partner ? (
-
-//                 ) : (
-//                   "Parceiros"
-//                 )}
-//               </Button>
-//             </DropdownMenuTrigger>
-//             <DropdownMenuContent className="bg-content mr-8">
-//               <DropdownMenuLabel className="bg-label">
-//                 Consultoria de Marketing
-//               </DropdownMenuLabel>
-//               {partners.map(
-//                 (partner) =>
-//                   partner.sow === SOW.marketing && (
-//                     <DropdownMenuItem
-//                       className="bg-item"
-//                       onSelect={() => navigate(`/dashboard/${partner.slug}`)}
-//                       key={partner.slug}
-//                       id={partner.slug}
-//                     >
-//                       {partner.title}
-//                     </DropdownMenuItem>
-//                   ),
-//               )}
-//               <DropdownMenuSeparator />
-//               <DropdownMenuLabel className="bg-label">
-//                 Social Media
-//               </DropdownMenuLabel>
-//               {partners.map(
-//                 (partner) =>
-//                   partner.sow === SOW.socialmedia && (
-//                     <DropdownMenuItem
-//                       className="bg-item"
-//                       onSelect={() => navigate(`/dashboard/${partner.slug}`)}
-//                       key={partner.slug}
-//                       id={partner.slug}
-//                     >
-//                       {partner.title}
-//                     </DropdownMenuItem>
-//                   ),
-//               )}
-//               <DropdownMenuSeparator />
-//               <DropdownMenuLabel className="bg-label">
-//                 Demanda
-//               </DropdownMenuLabel>
-//               {partners.map(
-//                 (partner) =>
-//                   partner.sow === SOW.demand && (
-//                     <DropdownMenuItem
-//                       className="bg-item"
-//                       onSelect={() => navigate(`/dashboard/${partner.slug}`)}
-//                       key={partner.slug}
-//                       id={partner.slug}
-//                     >
-//                       {partner.title}
-//                     </DropdownMenuItem>
-//                   ),
-//               )}
-//             </DropdownMenuContent>
-//           </DropdownMenu>

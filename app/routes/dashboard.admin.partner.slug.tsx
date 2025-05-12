@@ -6,10 +6,9 @@ import {
   useFetcher,
   useLoaderData,
   useMatches,
-  useNavigation,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
-  type MetaFunction,
+  type MetaFunction
 } from "react-router";
 // @ts-ignore
 import Color from "color";
@@ -20,16 +19,8 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 import { Slider } from "~/components/ui/slider";
 import { Textarea } from "~/components/ui/textarea";
-import { archetypes } from "~/lib/constants";
 import { Avatar } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
 
@@ -38,19 +29,20 @@ export const config = { runtime: "edge" };
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { supabase } = await createClient(request);
 
-  const slug = params["id"];
+  const slug = params["slug"];
 
   invariant(slug);
 
   const { data: partner } = await supabase
     .from("partners")
     .select("*")
-    .match({ slug })
+    .match({ slug }).returns<Partner[]>()
     .single();
 
   if (!partner) throw redirect("/dashboard/admin/partners");
+  
 
-  return { partner };
+  return { partner   };
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -68,14 +60,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { supabase } = createClient(request);
 
   const formData = await request.formData();
-
   const id = String(formData.get("id"));
-
-  const entries = Object.fromEntries(formData);
-
-  let voice = Object.keys(entries)
-    .map((entry) => (/voice\d*/.test(entry) ? Number(entries[entry]) : null))
-    .filter((n) => n !== null);
 
   const data = {
     title: String(formData.get("title")),
@@ -85,7 +70,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     context: String(formData.get("context")),
     sow: formData.get("sow") as "marketing" | "socialmedia" | "demand",
     users_ids: String(formData.getAll("users_ids")).split(","),
-    voice,
   };
 
   const { error } = await supabase.from("partners").update(data).eq("id", id);
@@ -103,7 +87,7 @@ export default function AdminPartners() {
   const matches = useMatches();
 
   const { partner } = useLoaderData<typeof loader>();
-  const { people, voices } = matches[1].data as DashboardRootType;
+  const { people } = matches[1].data as DashboardRootType;
 
   const [colors, setColors] = useState(partner.colors);
   const [vx, setVX] = useState(
@@ -114,23 +98,23 @@ export default function AdminPartners() {
 
   const fetcher = useFetcher();
 
-  useEffect(() => {
-    setText("Atualizando...");
-    fetcher.submit(
-      {
-        title: "Apresente a empresa ou profissional.",
-        context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
-        intent: "caption",
-        model: "medium",
-        trigger: "Novidade",
-        voice: vx,
-      },
-      {
-        action: "/handle-openai",
-        method: "post",
-      },
-    );
-  }, [vx]);
+  // useEffect(() => {
+  //   setText("Atualizando...");
+  //   fetcher.submit(
+  //     {
+  //       title: "Apresente a empresa ou profissional.",
+  //       context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+  //       intent: "caption",
+  //       model: "medium",
+  //       trigger: "Novidade",
+  //       voice: vx,
+  //     },
+  //     {
+  //       action: "/handle-openai",
+  //       method: "post",
+  //     },
+  //   );
+  // }, [vx]);
 
   useEffect(() => {
     if (fetcher.data) {
@@ -252,6 +236,7 @@ export default function AdminPartners() {
               ))}
             </div>
           </div>
+          {/* Cores */}
           <div className="gap-2 md:flex">
             <div className="mb-4 w-full">
               <Label className="mb-2 block">Cores</Label>
@@ -275,6 +260,7 @@ export default function AdminPartners() {
                     </Button>
                   </div>
                 ))}
+                <div className="grid place-content-center">
                 <Button
                   variant={"secondary"}
                   onClick={(event) => {
@@ -289,40 +275,11 @@ export default function AdminPartners() {
                 >
                   <PlusIcon className="size-4" />
                 </Button>
+                </div>
               </div>
             </div>
           </div>
-          <div id="voices">
-            <div className="flex items-center justify-between">
-              <div className="font-bold">Tom de voz</div>
-            </div>
-            <div>
-              {voices.map((voice, i) => (
-                <Voice
-                  onChange={(value) => {
-                    let _temp = [...vx];
-                    _temp[i] = value[0];
-                    setVX(_temp);
-                  }}
-                  key={voice.id}
-                  voice={voice}
-                  defaultValue={vx[i]}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="mb-8 border-t border-b py-8">
-            <h2 className="mb-4 text-3xl font-medium tracking-tighter">
-              Exemplo de texto
-            </h2>
-            <div
-              className="text-xl leading-relaxed"
-              dangerouslySetInnerHTML={{
-                __html: text === "" ? "Carregando..." : text,
-              }}
-            ></div>
-          </div>
-
+   
           <div className="pb-8 text-right">
             <Button type="submit" size={"lg"}>
               Atualizar
@@ -330,112 +287,6 @@ export default function AdminPartners() {
           </div>
         </Form>
       </div>
-    </div>
-  );
-}
-
-function Voice({
-  voice,
-  defaultValue,
-  onChange,
-}: {
-  voice: Voice;
-  defaultValue: number;
-  onChange: (value: number[]) => void;
-}) {
-  const examples = [voice.n3, voice.n2, voice.n1, voice.p1, voice.p2, voice.p3];
-
-  const [value, setValue] = useState([defaultValue]);
-  const [viewDescription, setViewDescription] = useState(false);
-  const [alert, setAlert] = useState(0);
-
-  useEffect(() => {
-    setValue([defaultValue]);
-  }, [defaultValue]);
-
-  useEffect(() => {
-    if (viewDescription) {
-      setTimeout(() => {
-        setViewDescription(false);
-        setAlert(0);
-      }, 15000);
-      setTimeout(() => {
-        setAlert(1);
-      }, 9000);
-      setTimeout(() => {
-        setAlert(2);
-      }, 12000);
-    }
-  }, [viewDescription]);
-
-  return (
-    <div className="py-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h4 className="text-xl font-semibold">{voice.name}</h4>
-          <button
-            className="opacity-50 hover:opacity-100"
-            onClick={(event) => {
-              event.preventDefault();
-              setViewDescription((v) => !v);
-            }}
-          >
-            <InfoIcon className="size-4" />
-          </button>
-          {viewDescription && (
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              className="-rotate-90"
-            >
-              <circle
-                className={`timer-circle transition-colors duration-500 ${
-                  alert === 1
-                    ? "stroke-amber-500"
-                    : alert === 2
-                      ? "stroke-rose-500"
-                      : "stroke-secondary"
-                }`}
-                cx="8"
-                cy="8"
-                r="7"
-                fill="none"
-                stroke-width="2"
-              />
-            </svg>
-          )}
-        </div>
-        <div className="text-sm opacity-50">{voice.priority}/15</div>
-      </div>
-
-      {viewDescription && (
-        <div className="bg-card my-4 rounded p-4">{voice.description}</div>
-      )}
-      <div className="flex justify-between py-2 text-center text-sm">
-        {[-3, -2, -1, 1, 2, 3].map((value) => (
-          <div key={value}>{value}</div>
-        ))}
-      </div>
-
-      <div>
-        <Slider
-          className="text-rose-500"
-          onValueChange={(value) => {
-            setValue(value);
-            onChange(value);
-          }}
-          value={value}
-          max={5}
-          min={0}
-          step={1}
-          name={`voice${voice.priority}`}
-        />
-      </div>
-      {/* <div>
-        {value} - {defaultValue}
-      </div> */}
-      <div className="mt-4 rounded py-4 text-2xl">{examples[value[0]]}</div>
     </div>
   );
 }
