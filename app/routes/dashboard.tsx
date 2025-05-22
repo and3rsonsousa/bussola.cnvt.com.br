@@ -41,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     supabase.from("states").select("*").order("order", { ascending: true }),
     supabase.from("priorities").select("*").order("order", { ascending: true }),
     supabase.from("areas").select("*").order("order", { ascending: true }),
-    supabase.from("sprints").select("*").eq("user_id", user.id),
+    supabase.from("sprints").select("*").match({ "user_id": user.id }),
     supabase.from("celebrations").select("*"),
   ]);
 

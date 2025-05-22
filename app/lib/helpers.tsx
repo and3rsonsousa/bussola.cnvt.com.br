@@ -194,19 +194,19 @@ export function Avatar({
 }) {
   const textSizes = isLowerCase
     ? {
-        xs: "",
-        sm: "scale-[0.8]",
-        md: "scale-[1.3]",
-        lg: "scale-[1.6]",
-        xl: "scale-[2]",
-      }
+      xs: "",
+      sm: "scale-[0.8]",
+      md: "scale-[1.3]",
+      lg: "scale-[1.6]",
+      xl: "scale-[2]",
+    }
     : {
-        xs: "",
-        sm: "scale-[0.6]",
-        md: "scale-[0.85]",
-        lg: "scale-[1.3]",
-        xl: "scale-[1.6]",
-      };
+      xs: "",
+      sm: "scale-[0.6]",
+      md: "scale-[0.85]",
+      lg: "scale-[1.3]",
+      xl: "scale-[1.6]",
+    };
 
   return (
     <AvatarShad
@@ -257,12 +257,12 @@ export function sortActions(
 ) {
   return actions
     ? actions
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        .sort((a, b) =>
-          order === "desc"
-            ? Number(b.state) - Number(a.state)
-            : Number(a.state) - Number(b.state),
-        )
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .sort((a, b) =>
+        order === "desc"
+          ? Number(b.state) - Number(a.state)
+          : Number(a.state) - Number(b.state),
+      )
     : null;
 }
 
@@ -275,21 +275,21 @@ export function getDelayedActions({
 }) {
   priority = priority
     ? ({
-        low: PRIORITIES.low,
-        mid: PRIORITIES.medium,
-        high: PRIORITIES.high,
-      }[priority] as PRIORITIES)
+      low: PRIORITIES.low,
+      mid: PRIORITIES.medium,
+      high: PRIORITIES.high,
+    }[priority] as PRIORITIES)
     : undefined;
 
   actions = actions
     ? actions.filter(
-        (action) =>
-          isBefore(parseISO(action.date), new Date()) &&
-          action.state !== "finished" &&
-          (priority && "priority" in action
-            ? action.priority === priority
-            : true),
-      )
+      (action) =>
+        isBefore(parseISO(action.date), new Date()) &&
+        action.state !== "finished" &&
+        (priority && "priority" in action
+          ? action.priority === priority
+          : true),
+    )
     : [];
 
   return actions;
@@ -302,19 +302,19 @@ export function getNotFinishedActions({
 }) {
   return actions
     ? actions.filter(
-        (action) =>
-          isAfter(parseISO(action.date), new Date()) &&
-          action.state !== "finished",
-      )
+      (action) =>
+        isAfter(parseISO(action.date), new Date()) &&
+        action.state !== "finished",
+    )
     : [];
 }
 
 export function getUrgentActions(actions: Action[] | null) {
   return actions
     ? actions.filter(
-        (action) =>
-          action.priority === PRIORITIES.high && action.state !== "finished",
-      )
+      (action) =>
+        action.priority === PRIORITIES.high && action.state !== "finished",
+    )
     : [];
 }
 
@@ -360,11 +360,11 @@ export function getActionsForThisDay({
 
   return actions
     ? actions.filter((action) =>
-        isSameDay(
-          parseISO(isInstagramDate ? action.instagram_date : action.date),
-          currentDate,
-        ),
-      )
+      isSameDay(
+        parseISO(isInstagramDate ? action.instagram_date : action.date),
+        currentDate,
+      ),
+    )
     : [];
 }
 
@@ -377,14 +377,14 @@ export function getInstagramFeed({
 }): Action[] {
   return actions
     ? (actions
-        .filter((action) => isInstagramFeed(action.category, stories))
-        .sort((a, b) =>
-          compareAsc(b.instagram_date, a.instagram_date),
-        ) as Action[])
+      .filter((action) => isInstagramFeed(action.category, stories))
+      .sort((a, b) =>
+        compareAsc(b.instagram_date, a.instagram_date),
+      ) as Action[])
     : // .sort((a, b) =>
-      // 	differenceInMilliseconds(b.instagram_date, a.instagram_date)
-      // ) as Action[])
-      [];
+    // 	differenceInMilliseconds(b.instagram_date, a.instagram_date)
+    // ) as Action[])
+    [];
 }
 
 const iconsList: { [key: string]: LucideIcon } = {
@@ -657,10 +657,10 @@ export const Content = ({
   date,
 }: {
   action:
-    | Action
-    | (Action & {
-        previews: { preview: string; type: string }[] | null;
-      });
+  | Action
+  | (Action & {
+    previews: { preview: string; type: string }[] | null;
+  });
   aspect: "feed" | "full";
   partner: Partner;
   className?: string;
@@ -673,9 +673,9 @@ export const Content = ({
       ? action.previews
       : action.files && action.files[0]
         ? action.files.map((f) => ({
-            preview: f,
-            type: getTypeOfTheContent(f),
-          }))
+          preview: f,
+          type: getTypeOfTheContent(f),
+        }))
         : undefined;
 
   let isPreview = !(action.files !== null && action.files[0] !== "");
@@ -688,8 +688,7 @@ export const Content = ({
         files.length > 1 && aspect != "feed" ? (
           <div
             className={clsx(
-              `flex snap-x snap-mandatory gap-[1px] overflow-hidden overflow-x-auto transition-opacity ${
-                isPreview && "opacity-50"
+              `flex snap-x snap-mandatory gap-[1px] overflow-hidden overflow-x-auto transition-opacity ${isPreview && "opacity-50"
               } `,
               className,
             )}
@@ -762,11 +761,10 @@ export const Post = ({
       }}
     >
       <div
-        className={`overflow-hidden p-2 text-center text-[10px] leading-none font-medium tracking-tight text-ellipsis ${
-          action.title.length > 50
+        className={`overflow-hidden p-2 text-center text-[10px] leading-none font-medium tracking-tight text-ellipsis ${action.title.length > 50
             ? "@[120px]:text-[12px] @[200px]:text-[20px] @[300px]:text-[24px]"
             : "@[120px]:text-[18px] @[200px]:text-[24px] @[300px]:text-[32px]"
-        } :tracking-tighter bg-gradient-to-br from-[--tw-gradient-from] to-[--tw-gradient-to] bg-clip-text text-transparent @[200px]:p-4 @[300px]:p-8`}
+          } :tracking-tighter bg-gradient-to-br from-[--tw-gradient-from] to-[--tw-gradient-to] bg-clip-text text-transparent @[200px]:p-4 @[300px]:p-8`}
         style={
           {
             "--tw-gradient-from": getTextColor(bgColor),
@@ -797,18 +795,17 @@ function ContentLowerBar({
 
   return (
     <div
-      className={`absolute bottom-0 left-0 flex w-full justify-between rounded-b-md p-2 pt-8 text-xs font-semibold drop-shadow-xs transition-opacity ${
-        action.files?.length ? "drop-shadow-sm" : ""
-      } `}
+      className={`absolute bottom-0 left-0 flex w-full justify-between rounded-b-md p-2 pt-8 text-xs font-semibold drop-shadow-xs transition-opacity ${action.files?.length ? "drop-shadow-sm" : ""
+        } `}
       style={
         action.files?.length
           ? ({
-              color: "white",
-              "--drop-shadow-xs": "0 1px 1px rgb(0 0 0 / 0.5)",
-            } as React.CSSProperties)
+            color: "white",
+            "--drop-shadow-xs": "0 1px 1px rgb(0 0 0 / 0.5)",
+          } as React.CSSProperties)
           : {
-              color: getTextColor(action.color),
-            }
+            color: getTextColor(action.color),
+          }
       }
     >
       <Icons id={action.category} className="size-4" />
@@ -897,9 +894,9 @@ export const ReportReview = ({ partner }: { partner: Partner }) => {
             <div className="pb-4 text-center text-sm">
               {range.from && range.to
                 ? `${format(range.from, "d/M/yy")} a ${format(
-                    range.to,
-                    "d/M/yy",
-                  )}`
+                  range.to,
+                  "d/M/yy",
+                )}`
                 : "Selecione um intervalo de datas"}
             </div>
             <div className="flex items-center justify-center">
@@ -983,14 +980,14 @@ export function LikeFooter({
 }
 
 export function getTextColor(bgColor: string, opacity = 0) {
-  const color: string =
+  const color =
     bgColor !== BASE_COLOR
       ? Color(bgColor).contrast(Color("white")) > 2
         ? Color("white").fade(opacity)
         : Color(bgColor).darken(0.5).desaturate(0.5).fade(opacity)
       : Color("white").fade(opacity);
 
-  return opacity ? color : color;
+  return (opacity ? color : color).hex();
 }
 
 function getBussolaSize(size: string) {

@@ -83,6 +83,7 @@ import {
 import { createClient } from "~/lib/supabase";
 import { cn } from "~/lib/utils";
 import { storytellingModels } from "./handle-openai";
+import { useDebounce } from "~/lib/use-debouce";
 
 export const config = { runtime: "edge" };
 const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY;
@@ -1014,6 +1015,7 @@ function LowerBar({
   const { toast } = useToast();
   const [runningTime, setRunningTime] = useState(0);
 
+
   const { categories, priorities, areas, partners } = matches[1]
     .data as DashboardRootType;
   const actionPartners = getPartners(action.partners, partners);
@@ -1311,6 +1313,7 @@ function LowerBar({
             instagram_date: parseISO(action.instagram_date),
           }}
           onChange={({ date, instagram_date, time }) => {
+
             if (date)
               setAction({
                 ...action,
@@ -1323,6 +1326,7 @@ function LowerBar({
                 instagram_date: format(instagram_date, "yyyy-MM-dd HH:mm:ss"),
                 date: isAfter(action.date, instagram_date) ? format(subHours(instagram_date, 1), "yyyy-MM-dd HH:mm:ss") : action.date
               });
+
             if (time) setAction({ ...action, time });
           }}
         />

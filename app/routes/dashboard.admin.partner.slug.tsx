@@ -40,9 +40,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     .single();
 
   if (!partner) throw redirect("/dashboard/admin/partners");
-  
 
-  return { partner   };
+
+  return { partner };
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -90,9 +90,6 @@ export default function AdminPartners() {
   const { people } = matches[1].data as DashboardRootType;
 
   const [colors, setColors] = useState(partner.colors);
-  const [vx, setVX] = useState(
-    partner.voice || [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-  );
 
   const [text, setText] = useState("");
 
@@ -261,25 +258,25 @@ export default function AdminPartners() {
                   </div>
                 ))}
                 <div className="grid place-content-center">
-                <Button
-                  variant={"secondary"}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setColors([
-                      ...colors,
-                      Color(colors[0])
-                        .rotate(Math.random() * 220 + 30)
-                        .hex(),
-                    ]);
-                  }}
-                >
-                  <PlusIcon className="size-4" />
-                </Button>
+                  <Button
+                    variant={"secondary"}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setColors([
+                        ...colors,
+                        Color(colors[0])
+                          .rotate(Math.random() * 220 + 30)
+                          .hex(),
+                      ]);
+                    }}
+                  >
+                    <PlusIcon className="size-4" />
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
-   
+
           <div className="pb-8 text-right">
             <Button type="submit" size={"lg"}>
               Atualizar
