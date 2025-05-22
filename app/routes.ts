@@ -32,4 +32,7 @@ export default [
   route("ui", "routes/ui.tsx"),
   route("set-theme", "routes/set-theme.tsx"),
   route("report/:partner", "routes/report.partner.tsx"),
+
+  route("upper", "routes/upper.tsx"),
+
 ] satisfies RouteConfig;
