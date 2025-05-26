@@ -968,7 +968,7 @@ const ActionsProgress = () => {
               <div className="w-full">
                 <ChartContainer
                   config={{}}
-                  className="aspect-square max-h-24 w-full lg:max-h-32"
+                  className="aspect-square h-20 w-full lg:h-32"
                 >
                   <PieChart>
                     <ChartTooltip

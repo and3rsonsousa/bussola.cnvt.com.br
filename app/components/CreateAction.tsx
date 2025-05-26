@@ -16,7 +16,7 @@ import {
   Icons,
   isInstagramFeed,
 } from "~/lib/helpers";
-import ButtonCNVT from "./Button";
+
 import { Button } from "./ui/button";
 import { Calendar } from "./ui/calendar";
 import {
@@ -171,9 +171,9 @@ export default function CreateAction({
             <PlusIcon className="z-10 size-6" />
           </Button>
         ) : (
-          <ButtonCNVT className="fixed right-2 bottom-3 rounded-full" rounded>
+          <Button className="fixed right-2 bottom-3 rounded-full">
             <PlusIcon className="z-10 w-8" />
-          </ButtonCNVT>
+          </Button>
         )}
       </PopoverTrigger>
       <PopoverContent className="bg-content mr-[5vw] w-[90dvw] max-w-[90vw] shadow-2xl md:max-w-[500px] md:px-6">
@@ -189,9 +189,8 @@ export default function CreateAction({
             placeholder="Qual o nome da sua ação?"
           />
           <div
-            className={`absolute text-xs ${
-              action.title.length > 60 ? "text-error" : "text-foreground/50"
-            } top-0 right-0`}
+            className={`absolute text-xs ${action.title.length > 60 ? "text-error" : "text-foreground/50"
+              } top-0 right-0`}
           >
             {action.title.length > 0 ? action.title.length : ""}
           </div>
@@ -622,17 +621,17 @@ export function DateTimeAndInstagramDate({
             title={
               action.date
                 ? format(
-                    action.date,
-                    "d/M"
-                      .concat(
-                        action.date.getFullYear() !== new Date().getFullYear()
-                          ? " 'de' y"
-                          : "",
-                      )
-                      .concat(" 'às' H'h'")
-                      .concat(action.date.getMinutes() !== 0 ? "m" : ""),
-                    { locale: ptBR },
-                  ).concat(" por " + formatActionTime(action.time))
+                  action.date,
+                  "d/M"
+                    .concat(
+                      action.date.getFullYear() !== new Date().getFullYear()
+                        ? " 'de' y"
+                        : "",
+                    )
+                    .concat(" 'às' H'h'")
+                    .concat(action.date.getMinutes() !== 0 ? "m" : ""),
+                  { locale: ptBR },
+                ).concat(" por " + formatActionTime(action.time))
                 : "Ação sem data"
             }
             variant="ghost"
@@ -643,17 +642,17 @@ export function DateTimeAndInstagramDate({
             <div className="overflow-hidden text-ellipsis whitespace-nowrap">
               {action.date
                 ? format(
-                    action.date,
-                    "d/M"
-                      .concat(
-                        action.date.getFullYear() !== new Date().getFullYear()
-                          ? " 'de' y"
-                          : "",
-                      )
-                      .concat(" 'às' H'h'")
-                      .concat(action.date.getMinutes() !== 0 ? "m" : ""),
-                    { locale: ptBR },
-                  ).concat(" por " + formatActionTime(action.time))
+                  action.date,
+                  "d/M"
+                    .concat(
+                      action.date.getFullYear() !== new Date().getFullYear()
+                        ? " 'de' y"
+                        : "",
+                    )
+                    .concat(" 'às' H'h'")
+                    .concat(action.date.getMinutes() !== 0 ? "m" : ""),
+                  { locale: ptBR },
+                ).concat(" por " + formatActionTime(action.time))
                 : "Ação sem data"}
             </div>
           </Button>
@@ -747,20 +746,20 @@ export function DateTimeAndInstagramDate({
               title={
                 action.instagram_date
                   ? format(
-                      action.instagram_date,
-                      "d/M"
-                        .concat(
-                          action.instagram_date.getFullYear() !==
-                            new Date().getFullYear()
-                            ? " 'de' y"
-                            : "",
-                        )
-                        .concat(" 'às' H'h'")
-                        .concat(
-                          action.instagram_date.getMinutes() !== 0 ? "m" : "",
-                        ),
-                      { locale: ptBR },
-                    )
+                    action.instagram_date,
+                    "d/M"
+                      .concat(
+                        action.instagram_date.getFullYear() !==
+                          new Date().getFullYear()
+                          ? " 'de' y"
+                          : "",
+                      )
+                      .concat(" 'às' H'h'")
+                      .concat(
+                        action.instagram_date.getMinutes() !== 0 ? "m" : "",
+                      ),
+                    { locale: ptBR },
+                  )
                   : "Ação não tem data do Instagram"
               }
               variant="ghost"
@@ -771,20 +770,20 @@ export function DateTimeAndInstagramDate({
               <div className="overflow-hidden text-ellipsis whitespace-nowrap">
                 {action.instagram_date
                   ? format(
-                      action.instagram_date,
-                      "d/M"
-                        .concat(
-                          action.instagram_date.getFullYear() !==
-                            new Date().getFullYear()
-                            ? " 'de' y"
-                            : "",
-                        )
-                        .concat(" 'às' H'h'")
-                        .concat(
-                          action.instagram_date.getMinutes() !== 0 ? "m" : "",
-                        ),
-                      { locale: ptBR },
-                    )
+                    action.instagram_date,
+                    "d/M"
+                      .concat(
+                        action.instagram_date.getFullYear() !==
+                          new Date().getFullYear()
+                          ? " 'de' y"
+                          : "",
+                      )
+                      .concat(" 'às' H'h'")
+                      .concat(
+                        action.instagram_date.getMinutes() !== 0 ? "m" : "",
+                      ),
+                    { locale: ptBR },
+                  )
                   : "Ação sem data de instagram"}
               </div>
             </Button>

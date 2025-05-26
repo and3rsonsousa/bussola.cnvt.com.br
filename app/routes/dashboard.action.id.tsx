@@ -36,7 +36,6 @@ import invariant from "tiny-invariant";
 import Tiptap from "~/components/Tiptap";
 
 import { PopoverTrigger } from "@radix-ui/react-popover";
-import ButtonCNVT from "~/components/Button";
 import {
   DateTimeAndInstagramDate,
   PartnersDropdown,
@@ -1353,7 +1352,7 @@ function LowerBar({
             <Trash2Icon className="size-4" />
           </Button>
           {/* <Button */}
-          <ButtonCNVT
+          <Button
             onClick={() => {
               handleActions({
                 ...action,
@@ -1371,7 +1370,7 @@ function LowerBar({
                 <span>Atualizar</span>
               </>
             )}
-          </ButtonCNVT>
+          </Button>
         </div>
       </div>
     </div>

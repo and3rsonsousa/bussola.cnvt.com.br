@@ -1,7 +1,8 @@
 import { format } from "date-fns";
 import { CopyIcon } from "lucide-react";
 import { useState } from "react"
-import Button from "~/components/Button";
+import { Button } from "~/components/ui/button";
+
 
 export default function Upper() {
     const [text, setText] = useState("");

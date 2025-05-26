@@ -1,8 +1,8 @@
 import { Link, type MetaFunction } from "react-router";
 import { FlickeringGrid } from "~/components/Backgrounds";
-import Button from "~/components/Button";
 import { Bussola } from "~/lib/helpers";
 import type { Route } from "./+types/home";
+import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
