@@ -64,7 +64,7 @@ export function LayoutBase({ children }: { children: React.ReactNode }) {
     <html lang="pt-br" className={clsx(theme, themeColor)}>
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
         <link rel="icon" href="/favicon.ico" />
         <Meta />
         <Links />

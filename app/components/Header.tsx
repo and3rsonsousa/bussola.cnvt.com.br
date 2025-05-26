@@ -115,7 +115,7 @@ export default function Header({
           </Link>
         )}
       </div>
-      <div className="flex items-center gap-1 md:gap-4">
+      <div className="flex items-center gap-4 md:gap-4">
         {/* Revisão e Instagram */}
         <div className="flex items-center gap-1">
           {partner ? (
@@ -151,17 +151,17 @@ export default function Header({
             <SearchIcon className="size-6" />
           </Button>
 
-{
-  person.admin && partner &&  <Button
-  variant={"ghost"}
-  size={"icon"}
-  asChild
->
-   <Link to={`/dashboard/admin/partner/${partner.slug}`}>
-    <SettingsIcon className="size-4" />
-  </Link>
-  </Button>
-}
+          {
+            person.admin && partner && <Button
+              variant={"ghost"}
+              size={"icon"}
+              asChild
+            >
+              <Link to={`/dashboard/admin/partner/${partner.slug}`}>
+                <SettingsIcon className="size-4" />
+              </Link>
+            </Button>
+          }
 
         </div>
 
@@ -188,10 +188,10 @@ export default function Header({
                 />
                 {(navigation.state !== "idle" ||
                   fetchers.filter((f) => f.formData).length > 0) && (
-                  <div className="absolute top-0 right-0">
-                    <Loader size="lgs" />
-                  </div>
-                )}
+                    <div className="absolute top-0 right-0">
+                      <Loader size="lgs" />
+                    </div>
+                  )}
               </Button>
             </DropdownMenuTrigger>
 
@@ -221,8 +221,7 @@ export default function Header({
                 id="archived"
                 onSelect={() =>
                   navigate(
-                    `/dashboard/${
-                      partner ? partner.slug.concat("/") : ""
+                    `/dashboard/${partner ? partner.slug.concat("/") : ""
                     }archived`,
                   )
                 }
