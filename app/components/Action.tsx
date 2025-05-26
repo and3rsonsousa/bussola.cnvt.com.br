@@ -801,7 +801,7 @@ export function ListOfActions({
   const foldCount = columns * 4;
   const [fold, setFold] = useState(isFoldable ? foldCount : undefined);
   return actions.length > 0 ? (
-    <div>
+    <div className="group">
       <div
         className={`${columns === 1
           ? "flex flex-col"
@@ -829,23 +829,23 @@ export function ListOfActions({
       </div>
 
       {actions && isFoldable && actions.length > foldCount ? (
-        <div className="p-4 text-center">
+        <div className="p-4 text-center opacity-0 group-hover:opacity-100">
           <Toggle
             size={"sm"}
             onPressedChange={(isPressed) => {
               setFold(isPressed ? undefined : foldCount);
             }}
-            className="inline-flex gap-2 text-xs tracking-wider uppercase"
+            className="inline-flex gap-2 text-xs font-semibold "
           >
             {fold ? (
               <>
                 <span>Exibir todos</span>
-                <ExpandIcon className="size-4" />
+                <ExpandIcon className="size-3" />
               </>
             ) : (
               <>
                 <span>Exibir menos</span>
-                <ShrinkIcon className="size-4" />
+                <ShrinkIcon className="size-3" />
               </>
             )}
           </Toggle>
