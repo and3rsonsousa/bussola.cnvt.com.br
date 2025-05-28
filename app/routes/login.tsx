@@ -45,7 +45,7 @@ export const meta: MetaFunction = () => {
 export default function Login() {
   const actionData = useActionData<typeof action>();
   return (
-    <div className="flex h-[100dvh] items-center justify-center bg-black text-white md:justify-end">
+    <div className="flex h-[100dvh] items-center justify-center">
       <div className="w-full p-8 md:w-96">
         <div className="mb-8 flex">
           <Bussola />
@@ -63,7 +63,7 @@ export default function Login() {
 
             <Input
               name="email"
-              className="focus-visible:border-primary h-auto border-2 border-white bg-black px-6 py-3 text-xl font-medium tracking-tight text-white focus-visible:ring-offset-0"
+              className="h-auto px-6 py-3 text-xl font-medium tracking-tight"
             />
           </Label>
           <Label className="mb-4 block w-full">
@@ -72,16 +72,16 @@ export default function Login() {
             <Input
               type="password"
               name="password"
-              className="focus-visible:border-primary h-auto border-2 border-white bg-black px-6 py-3 text-xl font-medium tracking-tight text-white focus-visible:ring-offset-0"
+              className="h-auto px-6 py-3 text-xl font-medium tracking-tight"
             />
           </Label>
 
           <div className="flex justify-end">
             <Button
               type="submit"
-              className="h-auto px-6 py-4 text-xl font-medium tracking-tight"
+              className="h-auto px-6 py-4 text-lg font-medium tracking-tight"
             >
-              Fazer Login <LogInIcon className="ml-2 h-4 w-4" />{" "}
+              Fazer Login <LogInIcon className="ml-2 size-3" />
             </Button>
           </div>
         </form>
