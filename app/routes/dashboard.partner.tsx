@@ -113,15 +113,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     .from("people")
     .select("*")
     .match({ user_id: user.id })
-    .returns<Person[]>()
+    .returns<Person[]>();
 
-  invariant(data)
-
+  invariant(data);
 
   let person = data[0];
 
-
-  const [{ data: actions }, { data: actionsChart }, { data: partner }] =
+  const [{ data: actions }, { data: actionsChart }, { data: partners }] =
     await Promise.all([
       supabase
         .from("actions")
@@ -135,17 +133,17 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
         .select("category, date, state")
         .is("archived", false)
-        .match({ "partner": params["partner"]! })
+        .match({ partner: params["partner"]! })
         .contains("responsibles", person?.admin ? [] : [user.id]),
       supabase
         .from("partners")
         .select()
-        .match({ "slug": params["partner"]! })
-        .single(),
+        .match({ slug: params["partner"]! })
+        .returns<Partner[]>(),
     ]);
-  invariant(partner);
+  invariant(partners);
 
-  return { actions, actionsChart, partner, person, date };
+  return { actions, actionsChart, partner: partners[0], person, date };
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -228,8 +226,8 @@ export default function Partner() {
           ) &&
           (categoryFilter.length > 0
             ? categoryFilter.find(
-              (category) => category.slug === action.category,
-            )
+                (category) => category.slug === action.category,
+              )
             : true) &&
           (stateFilter ? action.state === stateFilter?.slug : true) &&
           action.responsibles.find((responsible) =>
@@ -551,7 +549,7 @@ export default function Partner() {
                           },
                           className:
                             partner.users_ids.length !==
-                              responsiblesFilter.length
+                            responsiblesFilter.length
                               ? "ring-secondary"
                               : "ring-card",
                         }),
@@ -590,8 +588,8 @@ export default function Partner() {
                           } else {
                             const tempResponsibles = checked
                               ? responsiblesFilter.filter(
-                                (id) => id !== person.user_id,
-                              )
+                                  (id) => id !== person.user_id,
+                                )
                               : [...responsiblesFilter, person.user_id];
                             setResponsiblesFilter(tempResponsibles);
                           }
@@ -706,7 +704,7 @@ export default function Partner() {
                   checked={
                     categoryFilter
                       ? categoryFilter.filter((cf) => isInstagramFeed(cf.id))
-                        .length === 3
+                          .length === 3
                       : false
                   }
                   onCheckedChange={(checked) => {
@@ -737,8 +735,8 @@ export default function Partner() {
                     checked={
                       categoryFilter
                         ? categoryFilter?.findIndex(
-                          (c) => category.slug === c.slug,
-                        ) >= 0
+                            (c) => category.slug === c.slug,
+                          ) >= 0
                         : false
                     }
                     onCheckedChange={(checked) => {
@@ -890,20 +888,23 @@ export const CalendarDay = ({
       <div
         ref={setNodeRef}
         id={`day_${format(parseISO(day.date), "yyyy-MM-dd")}`}
-        className={`group/day hover:bg-accent/50 relative flex h-full flex-col rounded border-2 border-transparent px-2 pb-4 transition ${Math.floor(Number(index) / 7) % 2 === 0 ? "item-even" : "item-odd"
-          } ${isOver ? "dragover" : ""}`}
+        className={`group/day hover:bg-accent/50 relative flex h-full flex-col rounded border-2 border-transparent px-2 pb-4 transition ${
+          Math.floor(Number(index) / 7) % 2 === 0 ? "item-even" : "item-odd"
+        } ${isOver ? "dragover" : ""}`}
         data-date={format(parseISO(day.date), "yyyy-MM-dd")}
       >
         {/* Date */}
         <div className="mb-2 flex items-center justify-between">
           <div
-            className={`grid size-8 place-content-center rounded-full text-xl ${isToday(parseISO(day.date))
-              ? "bg-primary text-primary-foreground font-medium"
-              : `${!isSameMonth(parseISO(day.date), currentDate)
-                ? "text-muted"
-                : ""
-              } -ml-2 font-light`
-              }`}
+            className={`grid size-8 place-content-center rounded-full text-xl ${
+              isToday(parseISO(day.date))
+                ? "bg-primary text-primary-foreground font-medium"
+                : `${
+                    !isSameMonth(parseISO(day.date), currentDate)
+                      ? "text-muted"
+                      : ""
+                  } -ml-2 font-light`
+            }`}
           >
             {parseISO(day.date).getDate()}
           </div>
@@ -919,33 +920,33 @@ export const CalendarDay = ({
                 {day.actions?.filter((action) =>
                   isInstagramFeed(action.category),
                 ).length !== 0 && (
-                    <>
-                      <div className="mb-2 flex items-center gap-1 text-[12px] font-medium">
-                        <Grid3x3Icon className="size-4" />
-                        <div>Feed</div>
-                      </div>
-                      <div className="mb-4 flex flex-col gap-3">
-                        {day.actions
-                          ?.sort((a, b) =>
-                            isAfter(a.instagram_date, b.instagram_date) ? 1 : -1,
-                          )
-                          ?.filter((action) => isInstagramFeed(action.category))
-                          .map((action) => (
-                            <ActionLine
-                              showContent={showContent}
-                              short={short}
-                              showResponsibles={showResponsibles}
-                              showDelay
-                              action={action}
-                              key={action.id}
-                              date={{
-                                timeFormat: 1,
-                              }}
-                            />
-                          ))}
-                      </div>
-                    </>
-                  )}
+                  <>
+                    <div className="mb-2 flex items-center gap-1 text-[12px] font-medium">
+                      <Grid3x3Icon className="size-4" />
+                      <div>Feed</div>
+                    </div>
+                    <div className="mb-4 flex flex-col gap-3">
+                      {day.actions
+                        ?.sort((a, b) =>
+                          isAfter(a.instagram_date, b.instagram_date) ? 1 : -1,
+                        )
+                        ?.filter((action) => isInstagramFeed(action.category))
+                        .map((action) => (
+                          <ActionLine
+                            showContent={showContent}
+                            short={short}
+                            showResponsibles={showResponsibles}
+                            showDelay
+                            action={action}
+                            key={action.id}
+                            date={{
+                              timeFormat: 1,
+                            }}
+                          />
+                        ))}
+                    </div>
+                  </>
+                )}
                 <div className="flex flex-col gap-3">
                   {categories
                     .filter((category) => !isInstagramFeed(category.slug))
