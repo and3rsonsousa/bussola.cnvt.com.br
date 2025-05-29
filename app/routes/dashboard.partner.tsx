@@ -826,7 +826,7 @@ export default function Partner() {
       {/* Instagram Grid */}
       {showFeed && (
         <div
-          className="relative flex w-full max-w-[600px] min-w-96 flex-col"
+          className="relative flex w-full max-w-[480px] min-w-96 flex-col"
           id="instagram-grid"
         >
           {/* Instagram Grid Header */}
