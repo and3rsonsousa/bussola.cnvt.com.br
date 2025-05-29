@@ -261,7 +261,7 @@ body {
 }
 
 .action-item {
-  @apply ring-ring ring-offset-background bg-card hover:bg-popover inset-shadow-highlight relative z-0 flex w-full cursor-pointer rounded-md border border-transparent shadow-sm inset-shadow-xs outline-hidden select-none focus-within:ring-2 hover:z-10 hover:shadow-xl focus:ring-2 focus:ring-offset-2;
+  @apply ring-ring ring-offset-background bg-card hover:bg-popover inset-shadow-highlight relative z-0 flex w-full cursor-pointer rounded-md border border-transparent shadow-sm inset-shadow-xs outline-hidden transition-all select-none focus-within:ring-2 hover:z-10 hover:shadow-xl focus:ring-2 focus:ring-offset-2;
 }
 
 .action-item-short {
@@ -288,7 +288,7 @@ body {
   @apply border-rose-900 bg-rose-950 text-rose-100;
 }
 
-.action-content-delayed>.late-border {
+.action-content-delayed > .late-border {
   @apply block;
 }
 
@@ -296,7 +296,7 @@ body {
   @apply flex h-full min-h-[30vh] flex-col overflow-y-auto;
 }
 
-.editor-tiptap>div:nth-child(2) {
+.editor-tiptap > div:nth-child(2) {
   @apply flex flex-1 shrink-0 flex-col;
 }
 
@@ -304,7 +304,7 @@ body {
   @apply flex-1 shrink-0 text-xl outline-hidden;
 }
 
-.tiptap>* {
+.tiptap > * {
   @apply mb-2;
 }
 
