@@ -6,7 +6,7 @@ export default [
     index("./routes/dashboard.home.tsx"),
     route(":partner", "routes/dashboard.partner.tsx"),
 
-    // route("late", "routes/dashboard.partner.late.tsx"),
+    route("late", "routes/dashboard.partner.late.tsx"),
     route(":partner/late", "routes/dashboard.partner.late.tsx"),
     route(":partner/archived", "routes/dashboard.partner.archived.tsx"),
     route("action/:id", "routes/dashboard.action.id.tsx"),
@@ -34,5 +34,4 @@ export default [
   route("report/:partner", "routes/report.partner.tsx"),
 
   route("upper", "routes/upper.tsx"),
-
 ] satisfies RouteConfig;

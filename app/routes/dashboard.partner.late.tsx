@@ -25,14 +25,21 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     return redirect("/login");
   }
 
-  const [{ data: person }, { data: partners }] = await Promise.all([
-    supabase.from("people").select("*").eq("user_id", user.id).single(),
+  const [{ data: people }, { data: partners }] = await Promise.all([
+    supabase
+      .from("people")
+      .select("*")
+      .match({ user_id: user.id })
+      .returns<Person[]>(),
     supabase
       .from("partners")
       .select("slug")
       .match({ slug: partner_slug })
-      .eq("archived", false),
+      .match({ archived: false })
+      .returns<Partner[]>(),
   ]);
+
+  const person = people?.[0];
 
   invariant(person);
   invariant(partners);
