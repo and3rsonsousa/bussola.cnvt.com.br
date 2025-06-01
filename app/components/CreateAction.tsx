@@ -103,25 +103,25 @@ export default function CreateAction({
     }
   }, [action.partners]);
 
-  // useEffect(() => {
-  //   if (
-  //     areas.find(
-  //       (area) =>
-  //         categories.find((category) => category.slug === action.category)
-  //           ?.area === "creative",
-  //     )
-  //   ) {
-  //     setAction({
-  //       ...action,
-  //       responsibles: ["b4f1f8f7-e8bb-4726-8693-76e217472674"],
-  //     });
-  //   } else {
-  //     setAction({
-  //       ...action,
-  //       responsibles: [user.id],
-  //     });
-  //   }
-  // }, [action.category]);
+  useEffect(() => {
+    if (
+      areas.find(
+        (area) =>
+          categories.find((category) => category.slug === action.category)
+            ?.area === "creative",
+      )
+    ) {
+      setAction({
+        ...action,
+        responsibles: ["b4f1f8f7-e8bb-4726-8693-76e217472674"],
+      });
+    } else {
+      setAction({
+        ...action,
+        responsibles: [user.id],
+      });
+    }
+  }, [action.category]);
 
   useEffect(() => {
     setPartner(() =>
