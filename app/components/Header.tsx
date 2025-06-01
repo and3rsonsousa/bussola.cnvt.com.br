@@ -92,8 +92,6 @@ export default function Header({
 
   const lateActions = getDelayedActions({ actions: actionsChart });
 
-  console.log({ actionsChart });
-
   return (
     <header
       className={`bg-card flex items-center justify-between gap-4 border-b px-6 py-2 shadow-xs`}

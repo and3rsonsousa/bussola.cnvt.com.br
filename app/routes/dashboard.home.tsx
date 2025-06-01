@@ -913,14 +913,14 @@ const ActionsProgress = () => {
   const matches = useMatches();
 
   const { states } = matches[1].data as DashboardRootType;
-  const { actions } = matches[2].data as DashboardIndexType;
+  const { actions, actionsChart } = matches[2].data as DashboardIndexType;
 
   const todayActions = getTodayActions(actions);
   const tomorrowActions = getTomorrowActions(actions);
   const thisWeekActions = getThisWeekActions(actions);
   const thisMonthActions = getMonthsActions(actions);
   const nextMonthActions = getMonthsActions(actions, addMonths(new Date(), 1));
-  const lateActions = getDelayedActions({ actions });
+  const lateActions = getDelayedActions({ actions: actionsChart });
 
   return (
     <div className="px-2 py-8 md:px-8 lg:py-12">

@@ -143,8 +143,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     ]);
   invariant(partners);
 
-  console.log({ actionsChart, partner: params["partner"] });
-
   return { actions, actionsChart, partner: partners[0], person, date };
 };
 
