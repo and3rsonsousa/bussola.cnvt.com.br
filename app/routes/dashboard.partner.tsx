@@ -130,11 +130,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .returns<Action[]>(),
       supabase
         .from("actions")
-
-        .select("category, date, state")
+        .select("category, state, date")
         .is("archived", false)
-        .match({ partner: params["partner"]! })
-        .contains("responsibles", person?.admin ? [] : [user.id]),
+        .contains("responsibles", person?.admin ? [] : [user.id])
+        .containedBy("partners", [params["partner"]!])
+        .returns<{ category: string; state: string; date: string }[]>(),
       supabase
         .from("partners")
         .select()
@@ -142,6 +142,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .returns<Partner[]>(),
     ]);
   invariant(partners);
+
+  console.log({ actionsChart, partner: params["partner"] });
 
   return { actions, actionsChart, partner: partners[0], person, date };
 };

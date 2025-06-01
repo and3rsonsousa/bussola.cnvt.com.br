@@ -68,7 +68,7 @@ export default function Header({
   const showFeed = !!searchParams.get("show_feed");
   const params = new URLSearchParams(searchParams);
 
-  const { partners, person } = matches[1].data as DashboardRootType;
+  const { person } = matches[1].data as DashboardRootType;
   let { actions, actionsChart, partner } = (
     matches[3] ? matches[3].data : {}
   ) as {
@@ -90,7 +90,9 @@ export default function Header({
       ? (matches[2].data as { partner: Partner }).partner
       : partner;
 
-  const lateActions = getDelayedActions({ actions });
+  const lateActions = getDelayedActions({ actions: actionsChart });
+
+  console.log({ actionsChart });
 
   return (
     <header
@@ -151,18 +153,13 @@ export default function Header({
             <SearchIcon className="size-6" />
           </Button>
 
-          {
-            person.admin && partner && <Button
-              variant={"ghost"}
-              size={"icon"}
-              asChild
-            >
+          {person.admin && partner && (
+            <Button variant={"ghost"} size={"icon"} asChild>
               <Link to={`/dashboard/admin/partner/${partner.slug}`}>
                 <SettingsIcon className="size-4" />
               </Link>
             </Button>
-          }
-
+          )}
         </div>
 
         {/* Botão de criar ação */}
@@ -188,10 +185,10 @@ export default function Header({
                 />
                 {(navigation.state !== "idle" ||
                   fetchers.filter((f) => f.formData).length > 0) && (
-                    <div className="absolute top-0 right-0">
-                      <Loader size="lgs" />
-                    </div>
-                  )}
+                  <div className="absolute top-0 right-0">
+                    <Loader size="lgs" />
+                  </div>
+                )}
               </Button>
             </DropdownMenuTrigger>
 
@@ -221,7 +218,8 @@ export default function Header({
                 id="archived"
                 onSelect={() =>
                   navigate(
-                    `/dashboard/${partner ? partner.slug.concat("/") : ""
+                    `/dashboard/${
+                      partner ? partner.slug.concat("/") : ""
                     }archived`,
                   )
                 }

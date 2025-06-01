@@ -4,6 +4,7 @@ import {
   redirect,
   useOutletContext,
 } from "react-router";
+import invariant from "tiny-invariant";
 import Layout from "~/components/Layout";
 import { createClient } from "~/lib/supabase";
 
@@ -35,14 +36,39 @@ export async function loader({ request }: LoaderFunctionArgs) {
       .select("*")
       .is("archived", false)
       .contains("users_ids", [user.id])
-      .order("title", { ascending: true }),
-    supabase.from("people").select("*").order("name", { ascending: true }),
-    supabase.from("categories").select("*").order("order", { ascending: true }),
-    supabase.from("states").select("*").order("order", { ascending: true }),
-    supabase.from("priorities").select("*").order("order", { ascending: true }),
-    supabase.from("areas").select("*").order("order", { ascending: true }),
-    supabase.from("sprints").select("*").match({ "user_id": user.id }),
-    supabase.from("celebrations").select("*"),
+      .order("title", { ascending: true })
+      .returns<Partner[]>(),
+    supabase
+      .from("people")
+      .select("*")
+      .order("name", { ascending: true })
+      .returns<Person[]>(),
+    supabase
+      .from("categories")
+      .select("*")
+      .order("order", { ascending: true })
+      .returns<Category[]>(),
+    supabase
+      .from("states")
+      .select("*")
+      .order("order", { ascending: true })
+      .returns<State[]>(),
+    supabase
+      .from("priorities")
+      .select("*")
+      .order("order", { ascending: true })
+      .returns<Priority[]>(),
+    supabase
+      .from("areas")
+      .select("*")
+      .order("order", { ascending: true })
+      .returns<Area[]>(),
+    supabase
+      .from("sprints")
+      .select("*")
+      .match({ user_id: user.id })
+      .returns<Sprint[]>(),
+    supabase.from("celebrations").select("*").returns<Celebration[]>(),
   ]);
 
   const person = people?.find((person) => person.user_id === user.id) as Person;

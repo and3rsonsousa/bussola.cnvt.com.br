@@ -1,4 +1,12 @@
-import { addHours, format, formatDistanceToNow, isAfter, isSameMonth, parseISO, subHours } from "date-fns";
+import {
+  addHours,
+  format,
+  formatDistanceToNow,
+  isAfter,
+  isSameMonth,
+  parseISO,
+  subHours,
+} from "date-fns";
 import {
   type ActionFunctionArgs,
   Form,
@@ -116,10 +124,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       files.map(async (file, i) => {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
-        const fileUrl = `${partner}/${new Date().getFullYear()}/${new Date().getMonth() + 1
-          }/${format(new Date(), "yyyy-MM-dd_hh-mm-ss")}_${i}${filenames[
-            i
-          ].substring(filenames[i].lastIndexOf("."))}`;
+        const fileUrl = `${partner}/${new Date().getFullYear()}/${
+          new Date().getMonth() + 1
+        }/${format(new Date(), "yyyy-MM-dd_hh-mm-ss")}_${i}${filenames[
+          i
+        ].substring(filenames[i].lastIndexOf("."))}`;
         const url = `https://br.storage.bunnycdn.com/agencia-cnvt/${fileUrl}`;
         const downloadUrl = `https://agenciacnvt.b-cdn.net/${fileUrl}`;
 
@@ -207,16 +216,16 @@ export default function ActionPage() {
           description:
             index < 0
               ? description.concat(
-                getBiaMessage((fetcher.data as { message: string }).message),
-              )
-              : description
-                .substring(0, action.description?.indexOf("<hr>"))
-                .concat(
-                  getBiaMessage(
-                    (fetcher.data as { message: string }).message,
-                  ),
+                  getBiaMessage((fetcher.data as { message: string }).message),
                 )
-                .concat(description.substring(index)),
+              : description
+                  .substring(0, action.description?.indexOf("<hr>"))
+                  .concat(
+                    getBiaMessage(
+                      (fetcher.data as { message: string }).message,
+                    ),
+                  )
+                  .concat(description.substring(index)),
         }));
       } else if (
         fetcher.formData &&
@@ -335,7 +344,7 @@ function Header({ action, partner }: { action: Action; partner: Partner }) {
           parseISO(action?.updated_at as string),
           "yyyy-MM-dd HH:mm:ss",
         ) ===
-          format(parseISO(action?.created_at as string), "yyyy-MM-dd HH:mm:ss")
+        format(parseISO(action?.created_at as string), "yyyy-MM-dd HH:mm:ss")
           ? "Criado "
           : "Atualizado "}
         {formatDistanceToNow(parseISO(action?.updated_at as string), {
@@ -364,8 +373,9 @@ function Title({
     <div className="flex items-start gap-4 pt-2">
       <textarea
         value={action.title}
-        className={`field-sizing-content w-full resize-none overflow-hidden border-none bg-transparent p-0 py-2 text-3xl leading-[85%] font-bold tracking-tighter outline-hidden ${action.title.length > 30 ? "md:text-5xl" : "md:text-6xl"
-          }`}
+        className={`field-sizing-content w-full resize-none overflow-hidden border-none bg-transparent p-0 py-2 text-3xl leading-[85%] font-bold tracking-tighter outline-hidden ${
+          action.title.length > 30 ? "md:text-5xl" : "md:text-6xl"
+        }`}
         rows={1}
         onChange={(event) =>
           setAction({
@@ -379,10 +389,11 @@ function Title({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              className={`h-7 w-7 p-1 ${isWorking &&
+              className={`h-7 w-7 p-1 ${
+                isWorking &&
                 fetcher.formData?.get("intent") === "carousel" &&
                 "animate-colors"
-                }`}
+              }`}
               variant="ghost"
             >
               <SparklesIcon />
@@ -393,7 +404,7 @@ function Title({
             {Object.keys(storytellingModels.titulos).map((k, i) => {
               const model =
                 storytellingModels.titulos[
-                k as keyof typeof storytellingModels.titulos
+                  k as keyof typeof storytellingModels.titulos
                 ];
 
               return (
@@ -408,7 +419,6 @@ function Title({
                         context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
                         intent: "title",
                         model: k,
-
                       },
                       {
                         action: "/handle-openai",
@@ -498,7 +508,7 @@ function Description({
                     className={cn(
                       "absolute right-1 bottom-1 rounded-full",
                       fetcher.formData?.get("intent") === "prompt" &&
-                      "animate-colors",
+                        "animate-colors",
                     )}
                     size={"icon"}
                     variant={"ghost"}
@@ -516,17 +526,17 @@ function Description({
           {isInstagramFeed(action.category, true) && (
             <Button
               size={"sm"}
-              className={` ${isWorking &&
+              className={` ${
+                isWorking &&
                 fetcher.formData?.get("intent") === "ideas" &&
                 "animate-colors"
-                }`}
+              }`}
               variant="ghost"
               onMouseDown={async () => {
                 fetcher.submit(
                   {
                     description: action.description,
                     intent: "ideas",
-
                   },
                   {
                     action: "/handle-openai",
@@ -544,10 +554,11 @@ function Description({
               <DropdownMenuTrigger asChild>
                 <Button
                   size={"sm"}
-                  className={` ${isWorking &&
+                  className={` ${
+                    isWorking &&
                     fetcher.formData?.get("intent") === "carousel" &&
                     "animate-colors"
-                    }`}
+                  }`}
                   variant="ghost"
                 >
                   <SparklesIcon />
@@ -558,7 +569,7 @@ function Description({
                 {Object.keys(storytellingModels.carrossel).map((k) => {
                   const model =
                     storytellingModels.carrossel[
-                    k as keyof typeof storytellingModels.carrossel
+                      k as keyof typeof storytellingModels.carrossel
                     ];
 
                   return (
@@ -573,7 +584,6 @@ function Description({
                             intent: "carousel",
                             model: k,
                             trigger,
-
                           },
                           {
                             action: "/handle-openai",
@@ -598,10 +608,11 @@ function Description({
               <DropdownMenuTrigger asChild>
                 <Button
                   size={"sm"}
-                  className={` ${isWorking &&
+                  className={` ${
+                    isWorking &&
                     "reels" === fetcher.formData?.get("intent") &&
                     "animate-colors"
-                    }`}
+                  }`}
                   variant="ghost"
                 >
                   <SparklesIcon className="size-4" />
@@ -612,7 +623,7 @@ function Description({
                 {Object.keys(storytellingModels.reel).map((k) => {
                   const model =
                     storytellingModels.reel[
-                    k as keyof typeof storytellingModels.reel
+                      k as keyof typeof storytellingModels.reel
                     ];
 
                   return (
@@ -627,7 +638,6 @@ function Description({
                             intent: "carousel",
                             model: k,
                             trigger,
-
                           },
                           {
                             action: "/handle-openai",
@@ -753,7 +763,8 @@ function RightSide({
                             });
                             setFiles(null);
                           }}
-                          className="bg-foreground/25 hover:bg-foreground/50 text-background grid h-6 w-6 cursor-pointer place-content-center rounded-sm p-1"
+                          className="grid h-6 w-6 cursor-pointer place-content-center rounded-sm p-1 text-white text-shadow-black hover:bg-black/10"
+                          // className="bg-foreground/25 hover:bg-foreground/50 text-background grid h-6 w-6 cursor-pointer place-content-center rounded-sm p-1"
                         >
                           <Trash className="size-4" />
                         </button>
@@ -762,7 +773,7 @@ function RightSide({
                           onClick={(event) => {
                             event.stopPropagation();
                           }}
-                          className="bg-foreground/25 hover:bg-foreground/50 text-background grid h-6 w-6 cursor-pointer place-content-center rounded-sm p-1"
+                          className="grid h-6 w-6 cursor-pointer place-content-center rounded-sm p-1 text-white text-shadow-black hover:bg-black/10"
                         >
                           <SaveIcon className="size-4" />
                         </button>
@@ -839,10 +850,11 @@ function RightSide({
               <PopoverTrigger asChild>
                 <Button
                   size={"sm"}
-                  className={` ${isWorking &&
+                  className={` ${
+                    isWorking &&
                     "stories" === fetcher.formData?.get("intent") &&
                     "animate-colors"
-                    }`}
+                  }`}
                   variant="ghost"
                 >
                   <SparklesIcon className="size-4" />
@@ -858,7 +870,7 @@ function RightSide({
                       {Object.keys(storytellingModels.stories).map((k) => {
                         const model =
                           storytellingModels.stories[
-                          k as keyof typeof storytellingModels.stories
+                            k as keyof typeof storytellingModels.stories
                           ];
 
                         return (
@@ -878,7 +890,6 @@ function RightSide({
                                   context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
                                   intent: "stories",
                                   model: k,
-
                                 },
                                 {
                                   action: "/handle-openai",
@@ -909,10 +920,11 @@ function RightSide({
               <PopoverTrigger asChild>
                 <Button
                   size={"sm"}
-                  className={` ${isWorking &&
+                  className={` ${
+                    isWorking &&
                     "caption" === fetcher.formData?.get("intent") &&
                     "animate-colors"
-                    }`}
+                  }`}
                   variant="ghost"
                 >
                   <SparklesIcon className="size-4" />
@@ -931,7 +943,7 @@ function RightSide({
                       {Object.keys(storytellingModels.legenda).map((k) => {
                         const model =
                           storytellingModels.legenda[
-                          k as keyof typeof storytellingModels.legenda
+                            k as keyof typeof storytellingModels.legenda
                           ];
 
                         return (
@@ -952,7 +964,6 @@ function RightSide({
                                   context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
                                   intent: "caption",
                                   model: k,
-
                                 },
                                 {
                                   action: "/handle-openai",
@@ -990,8 +1001,9 @@ function RightSide({
             caption: event.target.value,
           })
         }
-        className={`field-sizing-content min-h-screen w-full text-base font-normal outline-hidden transition lg:min-h-auto lg:text-sm ${isInstagramFeed(action.category) ? "border-0 focus-within:ring-0" : ""
-          }`}
+        className={`field-sizing-content min-h-screen w-full text-base font-normal outline-hidden transition lg:min-h-auto lg:text-sm ${
+          isInstagramFeed(action.category) ? "border-0 focus-within:ring-0" : ""
+        }`}
         value={action.caption ? action.caption : undefined}
       ></textarea>
     </div>
@@ -1013,7 +1025,6 @@ function LowerBar({
   const submit = useSubmit();
   const { toast } = useToast();
   const [runningTime, setRunningTime] = useState(0);
-
 
   const { categories, priorities, areas, partners } = matches[1]
     .data as DashboardRootType;
@@ -1312,18 +1323,21 @@ function LowerBar({
             instagram_date: parseISO(action.instagram_date),
           }}
           onChange={({ date, instagram_date, time }) => {
-
             if (date)
               setAction({
                 ...action,
                 date: format(date, "yyyy-MM-dd HH:mm:ss"),
-                instagram_date: isAfter(date, action.instagram_date) ? format(addHours(date, 1), "yyyy-MM-dd HH:mm:ss") : action.instagram_date
+                instagram_date: isAfter(date, action.instagram_date)
+                  ? format(addHours(date, 1), "yyyy-MM-dd HH:mm:ss")
+                  : action.instagram_date,
               });
             if (instagram_date)
               setAction({
                 ...action,
                 instagram_date: format(instagram_date, "yyyy-MM-dd HH:mm:ss"),
-                date: isAfter(action.date, instagram_date) ? format(subHours(instagram_date, 1), "yyyy-MM-dd HH:mm:ss") : action.date
+                date: isAfter(action.date, instagram_date)
+                  ? format(subHours(instagram_date, 1), "yyyy-MM-dd HH:mm:ss")
+                  : action.date,
               });
 
             if (time) setAction({ ...action, time });

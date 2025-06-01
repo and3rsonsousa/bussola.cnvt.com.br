@@ -107,11 +107,19 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return redirect("/login");
   }
 
-  user.id
+  user.id;
 
-  const [{ data: people, error: personError }, { data: partners, error: partnersError }] = await Promise.all([
-    supabase.from("people").select("*").match({ "user_id": user.id }).returns<Person[]>(),
-    supabase.from("partners").select("slug").match({ "archived": false }).returns<Partner[]>(),
+  const [{ data: people }, { data: partners }] = await Promise.all([
+    supabase
+      .from("people")
+      .select("*")
+      .match({ user_id: user.id })
+      .returns<Person[]>(),
+    supabase
+      .from("partners")
+      .select("slug")
+      .match({ archived: false })
+      .returns<Partner[]>(),
   ]);
 
   invariant(people);
@@ -119,11 +127,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const person = people[0];
 
-
   let start = startOfWeek(startOfMonth(new Date()));
   let end = endOfDay(endOfWeek(endOfMonth(addMonths(new Date(), 1))));
-
-  if (person.admin) { }
 
   const [{ data: actions }, { data: actionsChart }] = await Promise.all([
     supabase
@@ -141,7 +146,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .is("archived", false)
       .contains("responsibles", person?.admin ? [] : [user.id])
       .containedBy("partners", partners.map((p) => p.slug)!)
-      .returns<{ state: string; date: string }[]>(),
+      .returns<{ category: string; state: string; date: string }[]>(),
   ]);
 
   return { actions, actionsChart };
@@ -279,11 +284,11 @@ function TodayViews({ actions }: { actions: Action[] }) {
                     ? "hoje"
                     : isThisWeek(currentDay)
                       ? formatRelative(currentDay, new Date(), {
-                        locale: ptBR,
-                      }).split("às")[0]
+                          locale: ptBR,
+                        }).split("às")[0]
                       : format(currentDay, "EEEEEE, d 'de' MMMM", {
-                        locale: ptBR,
-                      })}
+                          locale: ptBR,
+                        })}
                 </h2>
                 <Badge value={currentActions?.length} isDynamic />
               </div>
@@ -440,13 +445,13 @@ function CalendarMonth({ actions }: { actions: Action[] | null }) {
   const days =
     view === "month"
       ? eachDayOfInterval({
-        start: startOfWeek(startOfMonth(currentDate)),
-        end: endOfWeek(endOfMonth(currentDate)),
-      })
+          start: startOfWeek(startOfMonth(currentDate)),
+          end: endOfWeek(endOfMonth(currentDate)),
+        })
       : eachDayOfInterval({
-        start: startOfWeek(currentDate),
-        end: endOfWeek(currentDate),
-      });
+          start: startOfWeek(currentDate),
+          end: endOfWeek(currentDate),
+        });
 
   const calendar = days.map((day) => {
     return {
@@ -639,8 +644,9 @@ export function HoursView({ actions }: { actions: Action[] }) {
             return (
               <div key={j} className="flex min-h-10 gap-2 border-t py-2">
                 <div
-                  className={`text-xs font-bold ${hourActions.length === 0 ? "opacity-15" : ""
-                    }`}
+                  className={`text-xs font-bold ${
+                    hourActions.length === 0 ? "opacity-15" : ""
+                  }`}
                 >
                   {hour}h
                 </div>
@@ -702,8 +708,9 @@ function DelayedActions({ actions }: { actions: Action[] }) {
                     className="pr-12"
                   />
                   <SearchIcon
-                    className={`size-4 ${showSearch ? "absolute top-3 right-4" : ""
-                      }`}
+                    className={`size-4 ${
+                      showSearch ? "absolute top-3 right-4" : ""
+                    }`}
                   />
                 </div>
               )}
@@ -1067,12 +1074,13 @@ function Sprint() {
             </Toggle>
             {actions.length > 0 && (
               <div
-                className={`flex items-center gap-1 rounded p-1 px-4 text-sm font-semibold whitespace-nowrap text-white ${actions.reduce((a, b) => a + b.time, 0) > 70
-                  ? "bg-rose-500"
-                  : actions.reduce((a, b) => a + b.time, 0) > 30
-                    ? "bg-amber-500"
-                    : "bg-lime-500"
-                  }`}
+                className={`flex items-center gap-1 rounded p-1 px-4 text-sm font-semibold whitespace-nowrap text-white ${
+                  actions.reduce((a, b) => a + b.time, 0) > 70
+                    ? "bg-rose-500"
+                    : actions.reduce((a, b) => a + b.time, 0) > 30
+                      ? "bg-amber-500"
+                      : "bg-lime-500"
+                }`}
               >
                 <TimerIcon className="size-4 opacity-75" />
                 <span>{actions.reduce((a, b) => a + b.time, 0)} minutos</span>
