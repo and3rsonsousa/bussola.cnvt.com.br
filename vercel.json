@@ -3,9 +3,10 @@
   "headers": [
     {
       "source": "/object-sans/(.*)",
+
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Content-Type", "value": "font/woff2" }
+        { "key": "Content-Type", "value": "font/woff" }
       ]
     }
   ],
