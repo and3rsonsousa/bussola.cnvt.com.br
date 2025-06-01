@@ -1,10 +1,10 @@
+import { SiInstagram } from "@icons-pack/react-simple-icons";
 import { PopoverTrigger } from "@radix-ui/react-popover";
-import { useLocation, useMatches, useSubmit } from "react-router";
-import { addHours, format, formatDuration, isToday, parseISO } from "date-fns";
+import { format, formatDuration, isToday, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CheckCircle2Icon, PlusCircleIcon, PlusIcon } from "lucide-react";
-import { SiInstagram } from "@icons-pack/react-simple-icons";
-import { act, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useMatches, useSubmit } from "react-router";
 import invariant from "tiny-invariant";
 import { BASE_COLOR, INTENTS, TIMES } from "~/lib/constants";
 import {
@@ -48,7 +48,7 @@ export default function CreateAction({
   mode: "fixed" | "day" | "button" | "plus";
   shortcut?: boolean;
 }) {
-  const { categories, partners, user, areas } = useMatches()[1]
+  const { categories, partners, user, areas, people, config } = useMatches()[1]
     .data as DashboardRootType;
   const matches = useMatches();
   const location = useLocation();
@@ -77,7 +77,8 @@ export default function CreateAction({
     date: newDate,
     instagram_date: newDate,
     description: "",
-    responsibles: [user.id],
+    responsibles: [config?.creative || user.id], // Default responsible is the creative person or the user
+    // [user.id]
     partners: partner ? [partner.slug] : [],
     state: "idea",
     title: "",
@@ -102,25 +103,25 @@ export default function CreateAction({
     }
   }, [action.partners]);
 
-  useEffect(() => {
-    if (
-      areas.find(
-        (area) =>
-          categories.find((category) => category.slug === action.category)
-            ?.area === "creative",
-      )
-    ) {
-      setAction({
-        ...action,
-        responsibles: ["b4f1f8f7-e8bb-4726-8693-76e217472674"],
-      });
-    } else {
-      setAction({
-        ...action,
-        responsibles: [user.id],
-      });
-    }
-  }, [action.category]);
+  // useEffect(() => {
+  //   if (
+  //     areas.find(
+  //       (area) =>
+  //         categories.find((category) => category.slug === action.category)
+  //           ?.area === "creative",
+  //     )
+  //   ) {
+  //     setAction({
+  //       ...action,
+  //       responsibles: ["b4f1f8f7-e8bb-4726-8693-76e217472674"],
+  //     });
+  //   } else {
+  //     setAction({
+  //       ...action,
+  //       responsibles: [user.id],
+  //     });
+  //   }
+  // }, [action.category]);
 
   useEffect(() => {
     setPartner(() =>
@@ -189,8 +190,9 @@ export default function CreateAction({
             placeholder="Qual o nome da sua ação?"
           />
           <div
-            className={`absolute text-xs ${action.title.length > 60 ? "text-error" : "text-foreground/50"
-              } top-0 right-0`}
+            className={`absolute text-xs ${
+              action.title.length > 60 ? "text-error" : "text-foreground/50"
+            } top-0 right-0`}
           >
             {action.title.length > 0 ? action.title.length : ""}
           </div>
@@ -621,17 +623,17 @@ export function DateTimeAndInstagramDate({
             title={
               action.date
                 ? format(
-                  action.date,
-                  "d/M"
-                    .concat(
-                      action.date.getFullYear() !== new Date().getFullYear()
-                        ? " 'de' y"
-                        : "",
-                    )
-                    .concat(" 'às' H'h'")
-                    .concat(action.date.getMinutes() !== 0 ? "m" : ""),
-                  { locale: ptBR },
-                ).concat(" por " + formatActionTime(action.time))
+                    action.date,
+                    "d/M"
+                      .concat(
+                        action.date.getFullYear() !== new Date().getFullYear()
+                          ? " 'de' y"
+                          : "",
+                      )
+                      .concat(" 'às' H'h'")
+                      .concat(action.date.getMinutes() !== 0 ? "m" : ""),
+                    { locale: ptBR },
+                  ).concat(" por " + formatActionTime(action.time))
                 : "Ação sem data"
             }
             variant="ghost"
@@ -642,17 +644,17 @@ export function DateTimeAndInstagramDate({
             <div className="overflow-hidden text-ellipsis whitespace-nowrap">
               {action.date
                 ? format(
-                  action.date,
-                  "d/M"
-                    .concat(
-                      action.date.getFullYear() !== new Date().getFullYear()
-                        ? " 'de' y"
-                        : "",
-                    )
-                    .concat(" 'às' H'h'")
-                    .concat(action.date.getMinutes() !== 0 ? "m" : ""),
-                  { locale: ptBR },
-                ).concat(" por " + formatActionTime(action.time))
+                    action.date,
+                    "d/M"
+                      .concat(
+                        action.date.getFullYear() !== new Date().getFullYear()
+                          ? " 'de' y"
+                          : "",
+                      )
+                      .concat(" 'às' H'h'")
+                      .concat(action.date.getMinutes() !== 0 ? "m" : ""),
+                    { locale: ptBR },
+                  ).concat(" por " + formatActionTime(action.time))
                 : "Ação sem data"}
             </div>
           </Button>
@@ -746,20 +748,20 @@ export function DateTimeAndInstagramDate({
               title={
                 action.instagram_date
                   ? format(
-                    action.instagram_date,
-                    "d/M"
-                      .concat(
-                        action.instagram_date.getFullYear() !==
-                          new Date().getFullYear()
-                          ? " 'de' y"
-                          : "",
-                      )
-                      .concat(" 'às' H'h'")
-                      .concat(
-                        action.instagram_date.getMinutes() !== 0 ? "m" : "",
-                      ),
-                    { locale: ptBR },
-                  )
+                      action.instagram_date,
+                      "d/M"
+                        .concat(
+                          action.instagram_date.getFullYear() !==
+                            new Date().getFullYear()
+                            ? " 'de' y"
+                            : "",
+                        )
+                        .concat(" 'às' H'h'")
+                        .concat(
+                          action.instagram_date.getMinutes() !== 0 ? "m" : "",
+                        ),
+                      { locale: ptBR },
+                    )
                   : "Ação não tem data do Instagram"
               }
               variant="ghost"
@@ -770,20 +772,20 @@ export function DateTimeAndInstagramDate({
               <div className="overflow-hidden text-ellipsis whitespace-nowrap">
                 {action.instagram_date
                   ? format(
-                    action.instagram_date,
-                    "d/M"
-                      .concat(
-                        action.instagram_date.getFullYear() !==
-                          new Date().getFullYear()
-                          ? " 'de' y"
-                          : "",
-                      )
-                      .concat(" 'às' H'h'")
-                      .concat(
-                        action.instagram_date.getMinutes() !== 0 ? "m" : "",
-                      ),
-                    { locale: ptBR },
-                  )
+                      action.instagram_date,
+                      "d/M"
+                        .concat(
+                          action.instagram_date.getFullYear() !==
+                            new Date().getFullYear()
+                            ? " 'de' y"
+                            : "",
+                        )
+                        .concat(" 'às' H'h'")
+                        .concat(
+                          action.instagram_date.getMinutes() !== 0 ? "m" : "",
+                        ),
+                      { locale: ptBR },
+                    )
                   : "Ação sem data de instagram"}
               </div>
             </Button>

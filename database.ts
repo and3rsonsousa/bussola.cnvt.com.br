@@ -155,25 +155,25 @@ export type Database = {
       }
       config: {
         Row: {
-          account: string | null
-          adm: string | null
           created_at: string
-          creative: string | null
+          creative: string
           id: number
+          theme: string
+          user_id: string
         }
         Insert: {
-          account?: string | null
-          adm?: string | null
           created_at?: string
-          creative?: string | null
+          creative: string
           id?: number
+          theme?: string
+          user_id: string
         }
         Update: {
-          account?: string | null
-          adm?: string | null
           created_at?: string
-          creative?: string | null
+          creative?: string
           id?: number
+          theme?: string
+          user_id?: string
         }
         Relationships: []
       }

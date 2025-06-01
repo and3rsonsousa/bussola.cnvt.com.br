@@ -4,7 +4,6 @@ import {
   redirect,
   useOutletContext,
 } from "react-router";
-import invariant from "tiny-invariant";
 import Layout from "~/components/Layout";
 import { createClient } from "~/lib/supabase";
 
@@ -30,6 +29,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     { data: areas },
     { data: sprints },
     { data: celebrations },
+    { data: configs },
   ] = await Promise.all([
     supabase
       .from("partners")
@@ -69,7 +69,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
       .match({ user_id: user.id })
       .returns<Sprint[]>(),
     supabase.from("celebrations").select("*").returns<Celebration[]>(),
+    supabase
+      .from("config")
+      .select("*")
+      .match({ user_id: user.id })
+      .returns<Config[]>(),
   ]);
+
+  const config = configs?.[0] || {
+    id: 1,
+    created_at: new Date().toISOString(),
+    creative: user.id,
+    theme: "light",
+    user_id: user.id,
+  };
 
   const person = people?.find((person) => person.user_id === user.id) as Person;
   const url = new URL(request.url);
@@ -86,6 +99,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     areas,
     sprints,
     celebrations,
+    config,
   } as DashboardRootType;
 }
 

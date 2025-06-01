@@ -16,6 +16,7 @@ declare global {
   type Area = Database["public"]["Tables"]["areas"]["Row"];
   type Sprint = Database["public"]["Tables"]["sprints"]["Row"];
   type Celebration = Database["public"]["Tables"]["celebrations"]["Row"];
+  type Config = Database["public"]["Tables"]["config"]["Row"];
 
   type ActionFull = Action & {
     state: State;
@@ -36,6 +37,7 @@ declare global {
     areas: Area[];
     sprints: Sprint[];
     celebrations: Celebration[];
+    config: Config;
   };
 
   type ActionChart = { category: string; date: string; state: string };

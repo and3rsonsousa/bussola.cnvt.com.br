@@ -140,7 +140,6 @@ function PartnerLink({
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
-            console.log("Archive");
             submit(
               {
                 intent: INTENTS.updatePartner,
