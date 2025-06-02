@@ -50,6 +50,7 @@ declare global {
 
   type DashboardPartnerType = {
     actions: Action[];
+    actionsChart: ActionChart[];
     partner: Partner;
     person: Person;
   };

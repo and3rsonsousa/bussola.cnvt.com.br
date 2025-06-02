@@ -253,11 +253,13 @@ export default function Partner() {
     const calendarFull =
       document.querySelector<HTMLDivElement>(`#calendar-full`)!;
 
-    calendarFull.scrollTo({
-      left: day.offsetLeft - 48,
-      behavior: "smooth",
-    });
-    calendar.scrollTo({ top: day.offsetTop - 160, behavior: "smooth" });
+    if (day) {
+      calendarFull.scrollTo({
+        left: day.offsetLeft - 48,
+        behavior: "smooth",
+      });
+      calendar.scrollTo({ top: day.offsetTop - 160, behavior: "smooth" });
+    }
 
     function keyDown(event: KeyboardEvent) {
       if (event.shiftKey && event.altKey) {

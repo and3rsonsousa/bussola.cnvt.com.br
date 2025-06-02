@@ -142,7 +142,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .returns<Action[]>(),
     supabase
       .from("actions")
-      .select("category, state, date")
+      .select("category, state, date, partners")
       .is("archived", false)
       .contains("responsibles", person?.admin ? [] : [user.id])
       .containedBy("partners", partners.map((p) => p.slug)!)
@@ -799,7 +799,10 @@ function DelayedActions({ actions }: { actions: Action[] }) {
 function Partners({ actions }: { actions?: Action[] }) {
   const matches = useMatches();
   const { partners } = matches[1].data as DashboardRootType;
-  const lateActions = getDelayedActions({ actions }) as (ActionChart & {
+  const { actionsChart } = matches[2].data as DashboardPartnerType;
+  const lateActions = getDelayedActions({
+    actions: actionsChart,
+  }) as (ActionChart & {
     partners: string[];
   })[];
 

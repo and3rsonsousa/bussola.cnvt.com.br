@@ -52,6 +52,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .is("archived", false)
         .contains("responsibles", person?.admin ? [] : [user.id])
         .containedBy("partners", partners.map((p) => p.slug)!)
+        //@ts-ignore
         .neq("state", "finished")
         .lte("date", format(new Date(), "yyyy-MM-dd HH:mm:ss"))
         .returns<Action[]>(),
@@ -60,11 +61,17 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .from("actions")
         .select("state, date")
         .is("archived", false)
+        .containedBy("partners", [partner_slug])
         .contains("responsibles", person?.admin ? [] : [user.id])
+        //@ts-ignore
         .neq("state", "finished")
         .lte("date", format(new Date(), "yyyy-MM-dd HH:mm:ss"))
-        .returns<{ state: string; date: string }[]>(),
-      supabase.from("partners").select().eq("slug", partner_slug!).single(),
+        .returns<ActionChart[]>(),
+      supabase
+        .from("partners")
+        .select()
+        .match({ slug: partner_slug! })
+        .single(),
     ]);
 
   return { actions, actionsChart, partner };
