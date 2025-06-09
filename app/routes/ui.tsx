@@ -1,4 +1,5 @@
 import { redirect, useLoaderData, type LoaderFunctionArgs } from "react-router";
+import invariant from "tiny-invariant";
 import Loader from "~/components/Loader";
 import { ThemeToggle } from "~/components/ThemeToggle";
 import { Button } from "~/components/ui/button";
@@ -40,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     supabase.from("priorities").select("*").order("order", { ascending: true }),
   ]);
 
-  const person = people?.find((person) => person.user_id === user.id) as Person;
+  // const person = people?.find((person) => person.user_id === user.id) as Person;
 
   return {
     partners,
@@ -49,13 +50,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     user,
     states,
     priorities,
-    person,
-  } as DashboardRootType;
+  };
 }
 
 export default function UI() {
-  const { categories, states } = useLoaderData<typeof loader>();
-  // const faker = new Faker({ locale: pt_BR });
+  const { categories, states } = useLoaderData<{
+    categories: Category[];
+    states: State[];
+  }>();
 
   return (
     <div className="flex flex-col gap-8 p-8">
@@ -75,17 +77,7 @@ export default function UI() {
           ))}
         </div>
       </div>
-      {/* <div className="flex gap-4 text-white">
-        {states.map((item, i) => (
-          <div
-            className={`flex items-center rounded-sm border border-white/20 p-4 text-sm leading-none tracking-tight`}
-            key={i}
-            style={{ backgroundColor: item.color }}
-          >
-            {faker.lorem.sentence(Math.max(3, Math.ceil(Math.random() * 5)))}
-          </div>
-        ))}
-      </div> */}
+
       <div className="grid gap-8 lg:grid-cols-2">
         <div>
           <h1 className="mb-4 text-3xl font-bold">Loaders</h1>
