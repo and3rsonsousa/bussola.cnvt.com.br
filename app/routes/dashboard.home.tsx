@@ -146,8 +146,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .is("archived", false)
       .contains("responsibles", person?.admin ? [] : [user.id])
       .containedBy("partners", partners.map((p) => p.slug)!)
-      .returns<{ category: string; state: string; date: string }[]>(),
+      .returns<
+        { category: string; state: string; date: string; partners: Partner[] }[]
+      >(),
   ]);
+
+  console.log(
+    actionsChart?.filter((action) =>
+      action.partners.find((p) => p.slug === "ochicosousa"),
+    ),
+  );
 
   return { actions, actionsChart };
 };
@@ -558,8 +566,8 @@ function NextActions({ actions }: { actions: Action[] }) {
           </div>
           <ListOfActions
             actions={actions}
-            columns={person.role > 1 ? 1 : 3}
-            isFoldable={person.role === 1}
+            columns={person.admin ? 1 : 3}
+            isFoldable={person.admin}
             orderBy="time"
             date={{ dateFormat: 2 }}
           />

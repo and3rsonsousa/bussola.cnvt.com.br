@@ -90,7 +90,7 @@ import {
 import { createClient } from "~/lib/supabase";
 import { cn } from "~/lib/utils";
 import { storytellingModels } from "./handle-openai";
-import { useDebounce } from "~/lib/use-debouce";
+import OpenAI from "openai";
 
 export const config = { runtime: "edge" };
 const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY;
@@ -457,6 +457,8 @@ function Description({
   const promptRef = useRef<HTMLTextAreaElement>(null);
 
   async function askBia(prompt?: string) {
+    console.log({ prompt });
+
     if (prompt) {
       fetcher.submit(
         {
@@ -583,7 +585,6 @@ function Description({
                             context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
                             intent: "carousel",
                             model: k,
-                            trigger,
                           },
                           {
                             action: "/handle-openai",

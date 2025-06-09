@@ -40,7 +40,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     const { data, error } = await supabase
       .from("actions")
-      .insert(actionToInsert)
+      .insert(actionToInsert as any)
       .select()
       .single();
     if (error) console.log({ error });
@@ -77,8 +77,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       .from("actions")
       .update({
         ...values,
-      })
-      .eq("id", id);
+      } as any)
+      .match({ id });
 
     if (error) console.log({ from: "UPDATE ACTION", error });
 
@@ -87,7 +87,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const { data: oldAction } = await supabase
       .from("actions")
       .select("*")
-      .eq("id", id)
+      .match({ id })
       .single();
     if (oldAction) {
       const newId = values["newId"].toString();
@@ -96,7 +96,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const { data: newAction, error } = await supabase
         .from("actions")
         .insert({
-          ...oldAction,
+          ...(oldAction as any),
           id: newId,
           created_at,
           updated_at,
@@ -109,19 +109,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   } else if (intent === INTENTS.deleteAction) {
     const data = await supabase
       .from("actions")
-      .update({ archived: true })
-      .eq("id", id);
+      .update({ archived: true } as any)
+      .match({ id: id });
 
     return { data };
   } else if (intent === INTENTS.recoverAction) {
     const data = await supabase
       .from("actions")
-      .update({ archived: false })
-      .eq("id", id);
+      .update({ archived: false } as any)
+      .match({ id: id });
 
     return { data };
   } else if (intent === INTENTS.destroyAction) {
-    const data = await supabase.from("actions").delete().eq("id", id);
+    const data = await supabase.from("actions").delete().match({ id });
 
     return { data };
   } else if (intent === INTENTS.updatePerson) {
@@ -130,8 +130,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       .from("people")
       .update({
         ...values,
-      })
-      .eq("id", id);
+      } as any)
+      .match({ id });
 
     if (error) console.log({ error });
 
@@ -148,8 +148,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       .from("partners")
       .update({
         ...values,
-      })
-      .eq("id", id);
+      } as any)
+      .match({ id });
 
     if (error) console.log({ error });
 
@@ -164,7 +164,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     const { data, error } = await supabase
       .from("sprints")
-      .insert({ ...sprint })
+      .insert({ ...sprint } as any)
       .select()
       .single();
 

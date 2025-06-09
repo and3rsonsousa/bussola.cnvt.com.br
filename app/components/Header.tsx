@@ -108,7 +108,7 @@ export default function Header({
         {/* Atrasados */}
         {lateActions.length > 0 && (
           <Link
-            to={`/dashboard/${partner ? partner.slug.concat("/") : ""}late/`}
+            to={`/dashboard/late${partner ? `?partner_slug=${partner?.slug}` : ""}`}
             className="-ml-4 grid -translate-y-2 place-content-center rounded bg-rose-600 px-1.5 py-0.5 text-xs font-semibold text-white"
           >
             {lateActions.length}

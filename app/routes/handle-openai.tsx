@@ -329,7 +329,6 @@ Tema a ser desenvolvido: ${title} - ${description}
       },
     ],
     model: "gpt-4o-mini",
-    // model: "o4-mini",
   });
 
   return { message: chatCompletion.choices[0].message.content };

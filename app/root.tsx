@@ -47,6 +47,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       SUPABASE_KEY: process.env.SUPABASE_KEY!,
       CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME!,
       CLOUDINARY_UPLOAD_PRESET: process.env.CLOUDINARY_UPLOAD_PRESET!,
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
     },
   };
 }
@@ -64,7 +65,10 @@ export function LayoutBase({ children }: { children: React.ReactNode }) {
     <html lang="pt-br" className={clsx(theme, themeColor)}>
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+        ></meta>
         <link rel="icon" href="/favicon.ico" />
         <Meta />
         <Links />

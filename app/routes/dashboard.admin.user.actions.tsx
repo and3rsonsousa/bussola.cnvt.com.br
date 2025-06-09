@@ -2,13 +2,13 @@ import { CheckCircleIcon } from "lucide-react";
 import { useState } from "react";
 import {
   Link,
-  type MetaFunction,
   redirect,
   useLoaderData,
   type LoaderFunctionArgs,
+  type MetaFunction,
 } from "react-router";
 import invariant from "tiny-invariant";
-import { ActionLine, ListOfActions } from "~/components/Action";
+import { ListOfActions } from "~/components/Action";
 import { Heading } from "~/components/Headings";
 import { Button } from "~/components/ui/button";
 import { Avatar } from "~/lib/helpers";
@@ -20,10 +20,20 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const id = params["id"];
 
   invariant(id);
-  const [{ data: person }, { data: partners }] = await Promise.all([
-    supabase.from("people").select("*").eq("user_id", id).single(),
-    supabase.from("partners").select("slug").eq("archived", false),
+  const [{ data: people }, { data: partners }] = await Promise.all([
+    supabase
+      .from("people")
+      .select("*")
+      .match({ user_id: id })
+      .returns<Person[]>(),
+    supabase
+      .from("partners")
+      .select("slug")
+      .match({ archived: false })
+      .returns<{ slug: string }[]>(),
   ]);
+
+  const person = people?.[0];
 
   invariant(person);
   invariant(partners);

@@ -8,18 +8,17 @@ import {
   useMatches,
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
-  type MetaFunction
+  type MetaFunction,
 } from "react-router";
 // @ts-ignore
 import Color from "color";
-import { InfoIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { PlusIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import invariant from "tiny-invariant";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
-import { Slider } from "~/components/ui/slider";
 import { Textarea } from "~/components/ui/textarea";
 import { Avatar } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
@@ -36,11 +35,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { data: partner } = await supabase
     .from("partners")
     .select("*")
-    .match({ slug }).returns<Partner[]>()
+    .match({ slug })
+    .returns<Partner[]>()
     .single();
 
   if (!partner) throw redirect("/dashboard/admin/partners");
-
 
   return { partner };
 };
@@ -70,9 +69,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     context: String(formData.get("context")),
     sow: formData.get("sow") as "marketing" | "socialmedia" | "demand",
     users_ids: String(formData.getAll("users_ids")).split(","),
-  };
+  } as any;
 
-  const { error } = await supabase.from("partners").update(data).eq("id", id);
+  const { error } = await supabase
+    .from("partners")
+    .update(data)
+    .match({ id: id });
 
   if (error) {
     console.log(error);

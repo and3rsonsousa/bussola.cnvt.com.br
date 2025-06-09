@@ -1,6 +1,7 @@
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 import type { Database } from "database";
 import type { DateRange } from "react-day-picker";
+import type { Theme, ThemeColor } from "~/lib/theme-provider";
 
 declare global {
   type OutletContextType = {
@@ -18,11 +19,25 @@ declare global {
   type Celebration = Database["public"]["Tables"]["celebrations"]["Row"];
   type Config = Database["public"]["Tables"]["config"]["Row"];
 
+  type Sow = Database["public"]["Enums"]["sow"];
+
   type ActionFull = Action & {
     state: State;
     category: Category;
     priority: Priority;
     partner: Partner;
+  };
+
+  type RootType = {
+    theme: Theme | null;
+    themeColor: ThemeColor | null;
+    env: {
+      SUPABASE_URL: string;
+      SUPABASE_KEY: string;
+      CLOUDINARY_CLOUD_NAME: string;
+      CLOUDINARY_UPLOAD_PRESET: string;
+      OPENAI_API_KEY: string;
+    };
   };
 
   type DashboardRootType = {

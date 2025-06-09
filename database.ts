@@ -258,10 +258,10 @@ export type Database = {
           image: string | null
           initials: string
           name: string
-          role: number
           short: string
           surname: string
           user_id: string
+          visible: boolean
         }
         Insert: {
           admin?: boolean
@@ -272,10 +272,10 @@ export type Database = {
           image?: string | null
           initials: string
           name: string
-          role?: number
           short: string
           surname: string
           user_id: string
+          visible?: boolean
         }
         Update: {
           admin?: boolean
@@ -286,10 +286,10 @@ export type Database = {
           image?: string | null
           initials?: string
           name?: string
-          role?: number
           short?: string
           surname?: string
           user_id?: string
+          visible?: boolean
         }
         Relationships: []
       }

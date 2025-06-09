@@ -31,12 +31,20 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       .select("*")
       .match({ user_id: user.id })
       .returns<Person[]>(),
-    supabase
-      .from("partners")
-      .select("slug")
-      .match({ slug: partner_slug })
-      .match({ archived: false })
-      .returns<Partner[]>(),
+
+    partner_slug
+      ? supabase
+          .from("partners")
+          .select("slug")
+          .match({ slug: partner_slug })
+          .match({ archived: false })
+          .returns<Partner[]>()
+      : supabase
+          .from("partners")
+          .select("slug")
+
+          .match({ archived: false })
+          .returns<Partner[]>(),
   ]);
 
   const person = people?.[0];

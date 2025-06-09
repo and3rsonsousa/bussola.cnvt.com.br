@@ -41,6 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     supabase
       .from("people")
       .select("*")
+      .match({ visible: true })
       .order("name", { ascending: true })
       .returns<Person[]>(),
     supabase

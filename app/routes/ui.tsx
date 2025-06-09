@@ -30,7 +30,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       .select("*")
       .contains("users_ids", [user.id])
       .order("title", { ascending: true }),
-    supabase.from("people").select("*").order("name", { ascending: true }),
+    supabase
+      .from("people")
+      .select("*")
+      .match({ visible: true })
+      .order("name", { ascending: true }),
     supabase.from("categories").select("*").order("order", { ascending: true }),
     supabase.from("states").select("*").order("order", { ascending: true }),
     supabase.from("priorities").select("*").order("order", { ascending: true }),
