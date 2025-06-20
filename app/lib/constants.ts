@@ -28,6 +28,7 @@ export const PRIORITIES = {
 export const INTENTS = {
   createAction: "actions-create",
   updateAction: "action-update",
+  updateActions: "actions-update",
   deleteAction: "action-delete",
   recoverAction: "action-recover",
   destroyAction: "action-destroy",

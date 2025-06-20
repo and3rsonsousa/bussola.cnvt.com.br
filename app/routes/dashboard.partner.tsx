@@ -59,6 +59,9 @@ import {
   DropdownMenuItem,
   DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
@@ -457,21 +460,115 @@ export default function Partner() {
             </Button>
           </div>
           <div className="flex items-center gap-1 lg:gap-2">
+            {selectedActions.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    className={`outline-none`}
+                    variant={"ghost"}
+                    size={"sm"}
+                  >
+                    <span>
+                      {selectedActions.length} ações{" "}
+                      <span className="hidden md:inline">selecionadas</span>
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-content">
+                  {/* Mudar State */}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger className="bg-item">
+                      Mudar Status
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className="bg-content">
+                      {states.map((state) => (
+                        <DropdownMenuItem
+                          key={state.slug}
+                          className="bg-item"
+                          onSelect={() => {
+                            submit(
+                              {
+                                intent: INTENTS.updateActions,
+                                state: state.slug,
+                                ids: selectedActions.join(","),
+                              },
+                              {
+                                action: "/handle-actions",
+                                method: "POST",
+                                navigate: false,
+                                fetcherKey: `action:update:state`,
+                              },
+                            );
+                          }}
+                        >
+                          <div
+                            className={`h-2 w-2 rounded-full`}
+                            style={{ backgroundColor: state.color }}
+                          ></div>
+                          <div>{state.title}</div>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                  {/* Mudar Categoria */}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger className="bg-item">
+                      Mudar Categoria
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className="bg-content">
+                      {categories.map((category) => (
+                        <DropdownMenuItem
+                          key={category.slug}
+                          className="bg-item"
+                          onSelect={() => {
+                            submit(
+                              {
+                                intent: INTENTS.updateActions,
+                                category: category.slug,
+                                ids: selectedActions.join(","),
+                              },
+                              {
+                                action: "/handle-actions",
+                                method: "POST",
+                                navigate: false,
+                                fetcherKey: `action:update:category`,
+                              },
+                            );
+                          }}
+                        >
+                          <Icons className="size-3" id={category.slug} />
+                          <div>{category.title}</div>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="bg-item"
+                    onSelect={() => {
+                      setSelectedActions([]);
+                    }}
+                  >
+                    Limpar Seleção
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
             <Button
               size={"sm"}
               variant={selectMultiple ? "secondary" : "ghost"}
               onClick={() => {
                 if (selectMultiple) {
                   params.delete("select_multiple");
+                  setSelectedActions([]);
                 } else {
                   params.set("select_multiple", "true");
                 }
                 setSearchParams(params);
               }}
-              title={"Selecionar multiplas ações"}
+              title={"Selecionar múltiplas ações"}
             >
               <CircleCheckIcon className="size-4" />{" "}
-              {selectMultiple ? selectedActions.length : null}
             </Button>
             <Button
               size={"sm"}

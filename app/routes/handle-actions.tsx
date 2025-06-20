@@ -8,7 +8,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { supabase } = createClient(request);
 
   const formData = await request.formData();
-  let { intent, id, ...values } = Object.fromEntries(formData.entries());
+  let { intent, id, ids, ...values } = Object.fromEntries(formData.entries());
 
   if (id) id = id.toString();
 
@@ -46,6 +46,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (error) console.log({ error });
 
     return { data, error };
+  } else if (intent === INTENTS.updateActions) {
+    if (ids) {
+      const { data, error } = await supabase
+        .from("actions")
+        .update({ ...values } as any)
+        // @ts-ignore
+        .in("id", ids.toString().split(","));
+    }
   } else if (intent === INTENTS.updateAction) {
     if (!id) throw new Error("No id was provided");
 
