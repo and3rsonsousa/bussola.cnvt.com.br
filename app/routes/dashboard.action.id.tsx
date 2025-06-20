@@ -457,8 +457,6 @@ function Description({
   const promptRef = useRef<HTMLTextAreaElement>(null);
 
   async function askBia(prompt?: string) {
-    console.log({ prompt });
-
     if (prompt) {
       fetcher.submit(
         {
@@ -639,6 +637,59 @@ function Description({
                             intent: "carousel",
                             model: k,
                             trigger,
+                          },
+                          {
+                            action: "/handle-openai",
+                            method: "post",
+                          },
+                        );
+                      }}
+                    >
+                      <p>
+                        {model.title} <br />
+                        <span className="text-xs opacity-50">
+                          {model.effect}
+                        </span>
+                      </p>
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : action.category === "post" ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size={"sm"}
+                  className={` ${
+                    isWorking &&
+                    fetcher.formData?.get("intent") === "carousel" &&
+                    "animate-colors"
+                  }`}
+                  variant="ghost"
+                >
+                  <SparklesIcon /> Modelos
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent className="bg-content">
+                {Object.keys(storytellingModels.carrossel).map((k) => {
+                  const model =
+                    storytellingModels.carrossel[
+                      k as keyof typeof storytellingModels.carrossel
+                    ];
+
+                  return (
+                    <DropdownMenuItem
+                      className="bg-item"
+                      onSelect={async () => {
+                        fetcher.submit(
+                          {
+                            title: action.title,
+                            description: action.description,
+                            context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
+                            intent: "carousel",
+                            model: k,
                           },
                           {
                             action: "/handle-openai",

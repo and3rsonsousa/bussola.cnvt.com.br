@@ -20,10 +20,13 @@ import {
 import { ptBR } from "date-fns/locale";
 import {
   AlignJustifyIcon,
+  CheckCheck,
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronsDownUpIcon,
   ChevronsUpDownIcon,
+  CircleCheckIcon,
+  CircleIcon,
   Grid3x3Icon,
   ImageIcon,
   UserIcon,
@@ -186,6 +189,9 @@ export default function Partner() {
   const showFeed = !!searchParams.get("show_feed");
   const short = !!searchParams.get("short");
   const showResponsibles = !!searchParams.get("show_responsibles");
+  const selectMultiple = !!searchParams.get("select_multiple");
+
+  const [selectedActions, setSelectedActions] = useState<string[]>([]);
 
   const currentDate = date;
   const pendingActions = usePendingData().actions;
@@ -325,6 +331,10 @@ export default function Partner() {
     setCategoryFilter(_categories);
   }, [searchParams]);
 
+  useEffect(() => {
+    console.log(selectedActions);
+  }, [selectedActions]);
+
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     const date = over?.id as string;
     const actionDate = isInstagramDate
@@ -372,6 +382,7 @@ export default function Partner() {
         {/* Calendário Header */}
 
         <div className="bg-card flex items-center justify-between border-b px-4 py-2 md:px-8">
+          {/* Mês */}
           <div className="flex items-center gap-1">
             <div className="mr-1">
               <DropdownMenu>
@@ -448,6 +459,22 @@ export default function Partner() {
           <div className="flex items-center gap-1 lg:gap-2">
             <Button
               size={"sm"}
+              variant={selectMultiple ? "secondary" : "ghost"}
+              onClick={() => {
+                if (selectMultiple) {
+                  params.delete("select_multiple");
+                } else {
+                  params.set("select_multiple", "true");
+                }
+                setSearchParams(params);
+              }}
+              title={"Selecionar multiplas ações"}
+            >
+              <CircleCheckIcon className="size-4" />{" "}
+              {selectMultiple ? selectedActions.length : null}
+            </Button>
+            <Button
+              size={"sm"}
               variant={isInstagramDate ? "secondary" : "ghost"}
               onClick={() => {
                 if (isInstagramDate) {
@@ -461,7 +488,7 @@ export default function Partner() {
               }}
               title={"Organizar ações pelas datas do Instagram"}
             >
-              <SiInstagram className="size4" />
+              <SiInstagram className="size-4" />
             </Button>
             <Button
               size={"sm"}
@@ -817,6 +844,7 @@ export default function Partner() {
                     showContent={showContent}
                     key={i}
                     index={i}
+                    setSelectedActions={setSelectedActions}
                   />
                 ))}
               </div>
@@ -869,6 +897,7 @@ export const CalendarDay = ({
   showResponsibles,
   showContent,
   index,
+  setSelectedActions,
 }: {
   day: { date: string; actions?: Action[]; celebrations?: Celebration[] };
   currentDate: Date | string;
@@ -877,6 +906,7 @@ export const CalendarDay = ({
   showResponsibles?: boolean;
   showContent?: boolean;
   index?: string | number;
+  setSelectedActions: React.Dispatch<React.SetStateAction<string[]>>;
 }) => {
   const matches = useMatches();
   const { categories } = matches[1].data as DashboardRootType;
@@ -938,6 +968,7 @@ export const CalendarDay = ({
                             showContent={showContent}
                             short={short}
                             showResponsibles={showResponsibles}
+                            setSelectedActions={setSelectedActions}
                             showDelay
                             action={action}
                             key={action.id}
@@ -966,6 +997,7 @@ export const CalendarDay = ({
                         short={short}
                         showContent
                         key={category.id}
+                        setSelectedActions={setSelectedActions}
                       />
                     ))}
                 </div>
@@ -988,6 +1020,7 @@ export const CalendarDay = ({
                         actions={actions}
                         short={short}
                         key={category.id}
+                        setSelectedActions={setSelectedActions}
                       />
                     ),
                 )
@@ -1015,12 +1048,14 @@ function CategoryActions({
   showContent,
   short,
   showResponsibles,
+  setSelectedActions,
 }: {
   category: Category;
   actions?: Action[];
   showContent?: boolean;
   short?: boolean;
   showResponsibles?: boolean;
+  setSelectedActions: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   actions = actions?.sort((a, b) =>
     isAfter(a.instagram_date, b.instagram_date) ? 1 : -1,
@@ -1050,6 +1085,7 @@ function CategoryActions({
             date={{
               timeFormat: 1,
             }}
+            setSelectedActions={setSelectedActions}
           />
         ))}
       </div>

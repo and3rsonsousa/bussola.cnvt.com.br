@@ -35,7 +35,7 @@ import {
   TimerIcon,
   TrashIcon,
 } from "lucide-react";
-import { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import {
   ContextMenu,
@@ -71,6 +71,7 @@ import {
 import { Button } from "./ui/button";
 import { Toggle } from "./ui/toggle";
 import { toast } from "./ui/use-toast";
+import { Checkbox } from "./ui/checkbox";
 
 export function ActionLine({
   action,
@@ -83,6 +84,7 @@ export function ActionLine({
   showContent,
   showPartner,
   isHair,
+  setSelectedActions,
 }: {
   action: Action;
   date?: dateTimeFormat;
@@ -94,12 +96,14 @@ export function ActionLine({
   showContent?: boolean;
   showPartner?: boolean;
   isHair?: boolean;
+  setSelectedActions?: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   const navigate = useNavigate();
   const submit = useSubmit();
   const matches = useMatches();
   const [searchParams] = useSearchParams();
   const isInstagramDate = searchParams.get("instagram_date");
+  const selectMultiple = searchParams.get("select_multiple") === "true";
 
   const [edit, setEdit] = useState(false);
   const [isHover, setHover] = useState(false);
@@ -181,6 +185,7 @@ export function ActionLine({
               }}
             >
               {isHover && !edit ? <ShortcutActions action={action} /> : null}
+
               <div className="flex items-center gap-2 overflow-hidden">
                 <div
                   className="h-6 w-1 shrink-0"
@@ -294,7 +299,8 @@ export function ActionLine({
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              if (!edit) {
+
+              if (!edit && !selectMultiple) {
                 navigate(`/dashboard/action/${action.id}${getQueryString()}`);
               }
             }}
@@ -310,11 +316,36 @@ export function ActionLine({
             {/* Atalhos */}
             {isHover && !edit ? <ShortcutActions action={action} /> : null}
 
+            {selectMultiple && (
+              <Checkbox
+                className="bg-accent border-0"
+                onCheckedChange={(state) => {
+                  if (setSelectedActions) {
+                    setSelectedActions((actions) => {
+                      if (state) {
+                        console.log(state);
+                        return [...actions, action.id];
+                      } else {
+                        return actions.filter((id) => id !== action.id);
+                      }
+                    });
+                  }
+                }}
+              />
+            )}
+
             {/* State */}
-            <div
-              className="size-2 shrink-0 rounded-full"
-              style={{ backgroundColor: state.color }}
-            ></div>
+            {short ? (
+              <div
+                className="-my-2 -ml-2 h-6 w-1 shrink-0 rounded-l-full"
+                style={{ backgroundColor: state.color }}
+              ></div>
+            ) : (
+              <div
+                className="size-2 shrink-0 rounded-full"
+                style={{ backgroundColor: state.color }}
+              ></div>
+            )}
 
             {/* Title */}
 

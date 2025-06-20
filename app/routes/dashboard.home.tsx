@@ -147,15 +147,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .contains("responsibles", person?.admin ? [] : [user.id])
       .containedBy("partners", partners.map((p) => p.slug)!)
       .returns<
-        { category: string; state: string; date: string; partners: Partner[] }[]
+        { category: string; state: string; date: string; partners: string[] }[]
       >(),
   ]);
 
-  console.log(
-    actionsChart?.filter((action) =>
-      action.partners.find((p) => p.slug === "ochicosousa"),
-    ),
-  );
+  // console.log(
+  //   actionsChart?.filter((action) =>
+  //     action.partners.find((p) => p === "clinicadengo"),
+  //   ),
+  // );
 
   return { actions, actionsChart };
 };
