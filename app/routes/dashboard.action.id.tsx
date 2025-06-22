@@ -91,6 +91,7 @@ import { createClient } from "~/lib/supabase";
 import { cn } from "~/lib/utils";
 import { storytellingModels } from "./handle-openai";
 import OpenAI from "openai";
+import { Slider } from "~/components/ui/slider";
 
 export const config = { runtime: "edge" };
 const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY;
@@ -746,6 +747,8 @@ function RightSide({
     files: string[];
   } | null>(null);
 
+  const [length, setLength] = useState([150]);
+
   const fetcher = useFetcher({ key: "action-page" });
   const { getInputProps, getRootProps, isDragActive } = useDropzone({
     onDrop: (acceptedFiles) => {
@@ -845,7 +848,23 @@ function RightSide({
           {action.category === "stories" ? "Sequência de Stories" : "Legenda"}
         </div>
         <div className="flex items-center gap-2 overflow-x-hidden p-1">
-          {isInstagramFeed(action.category) &&
+          {
+            <Slider
+              defaultValue={[150]}
+              max={600}
+              min={30}
+              step={30}
+              className="w-20"
+              value={length}
+              onValueChange={(value) => {
+                setLength(value);
+              }}
+            />
+          }
+
+          <span className="block w-8 text-center text-xs">{length}</span>
+
+          {/* {isInstagramFeed(action.category) &&
             action.caption &&
             action.caption.length > 0 && (
               <div className="flex items-center gap-1">
@@ -896,7 +915,7 @@ function RightSide({
                   <ChevronsUpDownIcon className="size-4" />
                 </Button>
               </div>
-            )}
+            )} */}
           {action.category === "stories" ? (
             <Popover>
               <PopoverTrigger asChild>
@@ -1016,6 +1035,7 @@ function RightSide({
                                   context: `EMPRESA: ${partner.title} - DESCRIÇÃO: ${partner.context}`,
                                   intent: "caption",
                                   model: k,
+                                  length: length[0].toString(),
                                 },
                                 {
                                   action: "/handle-openai",

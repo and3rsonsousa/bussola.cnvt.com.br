@@ -151,12 +151,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       >(),
   ]);
 
-  // console.log(
-  //   actionsChart?.filter((action) =>
-  //     action.partners.find((p) => p === "clinicadengo"),
-  //   ),
-  // );
-
   return { actions, actionsChart };
 };
 

@@ -14,9 +14,9 @@
     --muted: 200 10% 80%;
     --muted-foreground: 200 10% 60%;
 
-    --primary: 0 0% 0%;
-    --primary-hover: 0 0% 20%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 220 80% 50%;
+    --primary-hover: 220 80% 40%;
+    --primary-foreground: 220 90% 90%;
 
     /* --primary: 75 100% 55%;
     --primary-hover: 75 100% 65%;
@@ -217,6 +217,7 @@ body {
 }
 
 .bg-content {
+  
   @apply bg-popover ring-border/50 rounded-xl border-0 shadow-2xl ring;
 }
 

@@ -5,7 +5,7 @@ export const config = { runtime: "edge" };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  let { title, description, prompt, intent, model, context } =
+  let { title, description, prompt, intent, model, context, length } =
     Object.fromEntries(formData.entries()) as Record<string, string>;
 
   if (!intent) {
@@ -228,15 +228,16 @@ O objetivo principal é gerar ${storytellingModels.legenda[model as keyof typeof
 Importante:
 - Utilize linguagem acessível e humana, adaptada para Instagram.
 - Não use expressões genéricos.
-- Limite cada bloco a no máximo 40 palavras.
+- O texto deve ter ${length} caracteres. Nunca mais do que isso.
+- Cada parágrafo deve ter no máximo 40 palavras.
 - Finalize com um CTA alinhado à intenção do modelo.
 - Não use tags, aspas, bullet points, markdown ou comentários adicionais.
 - O resultado deve conter somente o texto solicitado.
 - Inclua pelo menos um emoji por parágrafo
-- Coloque no final 3 hashtags estratégicas
 
 Tema a ser desenvolvido: ${title} - ${description}
 `;
+
         break;
       }
       case "stories": {
@@ -328,7 +329,7 @@ Tema a ser desenvolvido: ${title} - ${description}
         content,
       },
     ],
-    model: "gpt-4o-mini",
+    model: "gpt-4o",
   });
 
   return { message: chatCompletion.choices[0].message.content };
