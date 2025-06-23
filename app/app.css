@@ -14,16 +14,12 @@
     --muted: 200 10% 80%;
     --muted-foreground: 200 10% 60%;
 
-    --primary: 220 80% 50%;
+    --primary: 220 100% 50%;
     --primary-hover: 220 80% 40%;
     --primary-foreground: 220 90% 90%;
 
-    /* --primary: 75 100% 55%;
-    --primary-hover: 75 100% 65%;
-    --primary-foreground: 200 10% 10%; */
-
-    --secondary: 200 10% 10%;
-    --secondary-foreground: 200 10% 90%;
+    --secondary: 220 80% 90%;
+    --secondary-foreground: 220 100% 50%;
 
     --accent: 200 5% 90%;
     --accent-foreground: 200 10% 10%;
@@ -34,7 +30,7 @@
     --highlight: 0 0% 100%;
     --border: 200 10% 86%;
     --input: 200 10% 98%;
-    --ring: 200 20% 5%;
+    --ring: 220 100% 50%;
     --radius: 12px;
 
     --success: theme(--color-lime-700);
