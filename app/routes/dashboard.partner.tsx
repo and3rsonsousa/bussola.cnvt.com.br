@@ -139,7 +139,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .select("category, state, date")
         .is("archived", false)
         .contains("responsibles", person?.admin ? [] : [user.id])
-        .containedBy("partners", [params["partner"]!])
+        .contains("partners", [params["partner"]!])
         .returns<{ category: string; state: string; date: string }[]>(),
       supabase
         .from("partners")

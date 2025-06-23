@@ -1449,11 +1449,11 @@ function LowerBar({
             disabled={isWorking}
           >
             {isWorking ? (
-              <div className="border-foreground size-4 animate-spin rounded-full border-2 border-b-transparent"></div>
+              <div className="border-primary-foreground size-4 animate-spin rounded-full border-2 border-b-transparent"></div>
             ) : (
               <>
                 <SaveIcon className="size-4" />
-                <span>Atualizar</span>
+                <span className="hidden lg:inline">Atualizar</span>
               </>
             )}
           </Button>

@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import {
   ArchiveIcon,
   ChevronsUpDownIcon,
@@ -29,6 +31,7 @@ import {
 } from "~/lib/helpers";
 import CreateAction from "./CreateAction";
 import Loader from "./Loader";
+import { CircularProgress } from "./Progress";
 import { ThemeColorToggle, ThemeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
 import {
@@ -48,9 +51,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { CircularProgress } from "./Progress";
-import { ptBR } from "date-fns/locale";
-import { format } from "date-fns";
 
 import { getMonthsActions } from "~/lib/helpers";
 
@@ -91,6 +91,8 @@ export default function Header({
       : partner;
 
   const lateActions = getDelayedActions({ actions: actionsChart });
+
+  console.log({ lateActions });
 
   return (
     <header
