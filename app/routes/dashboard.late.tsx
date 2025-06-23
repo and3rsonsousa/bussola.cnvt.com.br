@@ -17,8 +17,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   const partner_slug = new URL(request.url).searchParams.get("partner_slug");
 
-  console.log({ partner_slug, url: request.url });
-
   const {
     data: { user },
   } = await supabase.auth.getUser();

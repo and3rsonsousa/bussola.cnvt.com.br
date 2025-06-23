@@ -323,7 +323,6 @@ export function ActionLine({
                   if (setSelectedActions) {
                     setSelectedActions((actions) => {
                       if (state) {
-                        console.log(state);
                         return [...actions, action.id];
                       } else {
                         return actions.filter((id) => id !== action.id);
