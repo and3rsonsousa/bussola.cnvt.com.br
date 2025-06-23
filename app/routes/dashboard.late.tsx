@@ -15,7 +15,9 @@ export const config = { runtime: "edge" };
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { supabase } = createClient(request);
 
-  const partner_slug = params["partner"];
+  const partner_slug = new URL(request.url).searchParams.get("partner_slug");
+
+  console.log({ partner_slug, url: request.url });
 
   const {
     data: { user },
