@@ -1017,7 +1017,7 @@ export const CalendarDay = ({
       <div
         ref={setNodeRef}
         id={`day_${format(parseISO(day.date), "yyyy-MM-dd")}`}
-        className={`group/day hover:bg-accent/50 relative flex h-full flex-col rounded border-2 border-transparent px-2 pb-4 transition ${
+        className={`group/day relative flex h-full flex-col rounded border-2 border-transparent px-2 pb-4 transition ${
           Math.floor(Number(index) / 7) % 2 === 0 ? "item-even" : "item-odd"
         } ${isOver ? "dragover" : ""}`}
         data-date={format(parseISO(day.date), "yyyy-MM-dd")}

@@ -10,6 +10,7 @@ import { useMatches, useSubmit } from "react-router";
 import { INTENTS } from "~/lib/constants";
 import { BlockOfActions, ListOfActions } from "./Action";
 import { useId } from "react";
+import Color from "color";
 
 export default function Kanban({
   actions,
@@ -90,20 +91,17 @@ function KanbanColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`relative z-0 flex max-h-[60vh] shrink-0 rounded-2xl p-2 ${
+      className={`relative z-0 flex max-h-[60vh] shrink-0 p-3 ${
         actions.length > 0 ? "min-w-72 grow" : "w-auto 2xl:min-w-72 2xl:grow"
-      } flex-col overflow-hidden ${isOver ? "dragover" : ""}`}
+      } flex-col overflow-hidden border-t-4 ${isOver ? "dragover" : ""}`}
+      style={{ borderColor: state.color }}
       key={state.slug}
     >
-      <div className="via-background to-background absolute bottom-0 z-20 h-8 w-full bg-linear-to-b from-transparent"></div>
+      <div className="via-background to-background absolute bottom-0 left-0 z-10 h-8 w-full bg-gradient-to-b from-transparent"></div>
       <div className="mb-2 flex items-center">
         <div
-          className={`tracking-tigh flex items-center gap-2 rounded-full font-bold`}
+          className={`tracking-tigh flex items-center gap-2 rounded-full text-xl font-medium`}
         >
-          <div
-            className="size-2 rounded-full"
-            style={{ backgroundColor: state.color }}
-          ></div>
           {state.title}
         </div>
       </div>

@@ -69,9 +69,9 @@ import {
   LikeFooter,
 } from "~/lib/helpers";
 import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
 import { Toggle } from "./ui/toggle";
 import { toast } from "./ui/use-toast";
-import { Checkbox } from "./ui/checkbox";
 
 export function ActionLine({
   action,
@@ -674,7 +674,7 @@ export function ActionBlock({
           >
             {isHover && !edit ? <ShortcutActions action={action} /> : null}
             {/* Title */}
-            <div className="leading-tighter relative overflow-hidden text-2xl font-semibold tracking-tighter">
+            <div className="leading-tighter relative overflow-hidden text-xl font-medium tracking-tighter">
               {edit ? (
                 <input
                   ref={inputRef}
@@ -799,7 +799,7 @@ export function ActionBlock({
     </ContextMenu>
   );
 }
-
+ 
 export function ListOfActions({
   actions,
   showCategory,

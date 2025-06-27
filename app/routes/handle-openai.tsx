@@ -329,7 +329,7 @@ Tema a ser desenvolvido: ${title} - ${description}
         content,
       },
     ],
-    model: "gpt-4.1",
+    model: "gpt-4o",
   });
 
   return { message: chatCompletion.choices[0].message.content };

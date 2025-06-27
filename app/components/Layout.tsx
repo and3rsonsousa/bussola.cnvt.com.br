@@ -38,7 +38,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div
       id="layout"
-      className={`bg-background relative mx-auto flex h-[100dvh] flex-col`}
+      className={`bg-background relative mx-auto flex h-[100dvh] flex-col swiss`}
     >
       <Header setOpen={setOpen} />
 

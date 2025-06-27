@@ -159,21 +159,21 @@ export default function CreateAction({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         {mode === "day" ? (
-          <Button size={"sm"} variant={"secondary"} className="h-6 w-6 p-0">
+          <Button size={"sm"} variant={"secondary"} className="size-6 p-0">
             <PlusIcon className="size-3" />
           </Button>
         ) : mode === "button" ? (
-          <Button>
+          <Button className="p-0">
             Criar uma nova ação
             <PlusIcon className="ml-2 w-8" />
           </Button>
         ) : mode === "plus" ? (
           <Button variant="default" size="icon" className="rounded-full p-2">
-            <PlusIcon className="z-10 size-6" />
+            <PlusIcon className="z-10 size-10" />
           </Button>
         ) : (
           <Button className="fixed right-2 bottom-3 rounded-full">
-            <PlusIcon className="z-10 w-8" />
+            <PlusIcon className="z-10 size-12" />
           </Button>
         )}
       </PopoverTrigger>
