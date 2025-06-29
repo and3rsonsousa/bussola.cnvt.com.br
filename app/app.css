@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+/* 
 @font-face {
     font-family: "PP Object Sans";
     src:
@@ -38,7 +38,7 @@
     font-weight: bold;
     font-style: normal;
     font-display: swap;
-  }
+  } */
 
 @layer base {
   :root {
@@ -185,9 +185,9 @@
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
-  --font-sans:
+  /* --font-sans:
     "PP Object Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; */
 
   @keyframes accordion-down {
     from {
