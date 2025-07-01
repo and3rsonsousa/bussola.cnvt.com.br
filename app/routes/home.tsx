@@ -3,6 +3,7 @@ import { FlickeringGrid } from "~/components/Backgrounds";
 import { Bussola } from "~/lib/helpers";
 import type { Route } from "./+types/home";
 import { Button } from "~/components/ui/button";
+import { ArrowRightIcon } from "lucide-react";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -20,40 +21,51 @@ export function loader({ context }: Route.LoaderArgs) {
 
 export default function Home() {
   return (
-    <div className="relative grid h-dvh w-full place-content-center overflow-hidden bg-black">
-      <FlickeringGrid
-        className="absolute top-1/2 left-1/2 z-0 size-full -translate-x-1/2 -translate-y-1/2 scale-110"
-        squareSize={2}
-        gridGap={24}
-        color="#fff"
-        maxOpacity={1}
-        flickerChance={0.1}
-      />
-
-      <div className="relative z-10 flex flex-col items-center border border-white p-8 text-center text-white lg:p-16 lg:px-24">
-        {Array(4)
-          .fill(0)
-          .map((i, j) => (
-            <div
-              key={j}
-              className={`absolute size-4 border-2 border-white bg-black ${j < 2 ? "-top-2" : "-bottom-2"} ${j % 2 ? "-right-2" : "-left-2"}`}
-            ></div>
-          ))}
-        <Bussola size="md" className="text-white" />
-        <div className="mt-8 text-xl font-bold">
-          Sistema de Gestão de <br /> Processos da Agência CNVT®
-        </div>
-        <div className="mt-8 text-center">
-          <Button
-            asChild
-            className="ring-primary ring-offset-black focus:ring-2"
-          >
-            <Link to={"/dashboard"} prefetch="intent">
-              Entrar
-            </Link>
-          </Button>
-        </div>
+    <div className="relative container mx-auto flex h-dvh flex-col justify-between p-8">
+      <div className="text-xl font-medium tracking-tighter">
+        Escolha qual app quer acessar
       </div>
+      <div className="*:hover:bg-foreground *:hover:text-background flex flex-col divide-y text-[12vw] font-light tracking-tighter *:flex *:items-center *:py-6 *:pr-16 *:hover:justify-between md:text-[10vh]">
+        <a className="group" href="/dashboard">
+          <span className="ml-8 hidden items-center gap-4 group-hover:flex">
+            <ArrowRightIcon className="size-16" />
+            <span className="text-xl font-medium tracking-normal">
+              App de gestão da <br /> Agência CNVT®
+            </span>
+          </span>
+          BÚSSOLA
+        </a>
+        <a
+          className="group"
+          href="https://cnvt.link"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span className="ml-8 hidden items-center gap-4 group-hover:flex">
+            <ArrowRightIcon className="size-16" />
+            <span className="text-xl font-medium tracking-normal">
+              Sistema de Links exclusivo <br /> de quem é parceiro da <br />
+              Agência CNVT®
+            </span>
+          </span>
+          CNVT.LINK
+        </a>
+        <a
+          className="group"
+          href="https://cnvt.com.br"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span className="ml-8 hidden items-center gap-4 group-hover:flex">
+            <ArrowRightIcon className="size-16" />
+            <span className="text-xl font-medium tracking-normal">
+              Site oficial da <br /> Agência CNVT®
+            </span>
+          </span>
+          CNVT
+        </a>
+      </div>
+      <div className="text-right font-medium">CNVT®</div>
     </div>
   );
 }

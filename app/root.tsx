@@ -57,12 +57,12 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function LayoutBase({ children }: { children: React.ReactNode }) {
-  let [theme, , themeColor] = useTheme();
+  let [theme,] = useTheme();
 
   const data = useLoaderData<typeof loader>();
 
   return (
-    <html lang="pt-br" className={clsx(theme, themeColor)}>
+    <html lang="pt-br" className={clsx(theme)}>
       <head>
         <meta charSet="utf-8" />
         <meta
