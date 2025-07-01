@@ -9,21 +9,20 @@ import {
   type LoaderFunctionArgs,
 } from "react-router";
 
-import {
-  NonFlashOfWrongThemeEls,
-  Theme,
-  ThemeColor,
-  ThemeProvider,
-  useTheme,
-} from "~/lib/theme-provider";
+import { Theme, ThemeColor } from "~/lib/theme-provider";
 
 //@ts-ignore
-import type { Route } from "./+types/root";
-import { getThemeSession } from "./lib/theme.server";
 import { useState } from "react";
-import clsx from "clsx";
+import type { Route } from "./+types/root";
 
 import stylesheet from "./app.css?url";
+import { themeSessionResolver } from "./lib/session.server";
+import {
+  PreventFlashOnWrongTheme,
+  ThemeProvider,
+  useTheme,
+} from "remix-themes";
+import clsx from "clsx";
 
 export type LoaderData = {
   theme: Theme | null;
@@ -37,11 +36,11 @@ export type LoaderData = {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const themeSession = await getThemeSession(request);
+  const { getTheme } = await themeSessionResolver(request);
 
   return {
-    theme: themeSession.getTheme(),
-    themeColor: themeSession.getThemeColor(),
+    theme: getTheme(),
+
     env: {
       SUPABASE_URL: process.env.SUPABASE_URL!,
       SUPABASE_KEY: process.env.SUPABASE_KEY!,
@@ -56,10 +55,9 @@ export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
-export function LayoutBase({ children }: { children: React.ReactNode }) {
-  let [theme,] = useTheme();
-
+export function App({ children }: { children: React.ReactNode }) {
   const data = useLoaderData<typeof loader>();
+  const [theme] = useTheme();
 
   return (
     <html lang="pt-br" className={clsx(theme)}>
@@ -69,10 +67,11 @@ export function LayoutBase({ children }: { children: React.ReactNode }) {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         ></meta>
+        <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
         <link rel="icon" href="/favicon.ico" />
+
         <Meta />
         <Links />
-        <NonFlashOfWrongThemeEls ssrTheme={Boolean(data.theme)} />
       </head>
       <body className="selection:bg-foreground selection:text-background">
         {children}
@@ -86,21 +85,18 @@ export function LayoutBase({ children }: { children: React.ReactNode }) {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const data = useLoaderData<typeof loader>();
-
   return (
-    <ThemeProvider
-      specifyedTheme={data.theme}
-      specifyedThemeColor={data.themeColor}
-    >
-      <LayoutBase>{children}</LayoutBase>
+    <ThemeProvider specifiedTheme={data.theme} themeAction="/set-theme">
+      <App>{children}</App>
     </ThemeProvider>
   );
 }
 
-export default function App() {
+export default function AppWithProviders() {
   const [showFeed, setShowFeed] = useState(false);
   const [isTransitioning, setTransitioning] = useState(false);
   const [stateFilter, setStateFilter] = useState<State>();
+  const data = useLoaderData<typeof loader>();
 
   return (
     <Outlet

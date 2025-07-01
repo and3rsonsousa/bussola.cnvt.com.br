@@ -14,12 +14,7 @@ enum ThemeColor {
   CARMINE = "carmine",
 }
 
-type ThemeContextType = [
-  Theme | null,
-  Dispatch<SetStateAction<Theme | null>>,
-  ThemeColor | null,
-  Dispatch<SetStateAction<ThemeColor | null>>,
-];
+type ThemeContextType = [Theme | null, Dispatch<SetStateAction<Theme | null>>];
 
 const prefersDarkMQ = "(prefers-color-scheme: dark)";
 
@@ -49,11 +44,9 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 function ThemeProvider({
   children,
   specifyedTheme,
-  specifyedThemeColor,
 }: {
   children: ReactNode;
   specifyedTheme: Theme | null;
-  specifyedThemeColor: ThemeColor | null;
 }) {
   const [theme, setTheme] = useState<Theme | null>(() => {
     if (specifyedTheme) {
@@ -71,15 +64,7 @@ function ThemeProvider({
     return getPreferredTheme();
   });
 
-  const [themeColor, setThemeColor] = useState<ThemeColor | null>(() => {
-    if (specifyedThemeColor) {
-      if (themeColors.includes(specifyedThemeColor)) {
-        return specifyedThemeColor;
-      } else {
-        return null;
-      }
-    }
-
+  const [themeColor] = useState<ThemeColor | null>(() => {
     if (typeof window !== "object") {
       return null;
     }
@@ -112,7 +97,7 @@ function ThemeProvider({
   }, [theme, themeColor]);
 
   return (
-    <ThemeContext.Provider value={[theme, setTheme, themeColor, setThemeColor]}>
+    <ThemeContext.Provider value={[theme, setTheme]}>
       {children}
     </ThemeContext.Provider>
   );
@@ -120,6 +105,7 @@ function ThemeProvider({
 
 function useTheme() {
   const context = useContext(ThemeContext);
+
   if (context === undefined) {
     throw new Error("useTheme must be used within a ThemeProvider");
   }

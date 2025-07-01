@@ -846,7 +846,7 @@ function Partners({ actions }: { actions?: Action[] }) {
                   </Link>
                 </div>
                 <div className="overflow-hidden pt-1">
-                  <div className="mb-1 w-full overflow-hidden leading-none font-semibold tracking-tight text-ellipsis whitespace-nowrap md:text-xl">
+                  <div className="mb-1 w-full overflow-hidden leading-none font-medium tracking-tight text-ellipsis whitespace-nowrap md:text-xl">
                     <Link
                       tabIndex={0}
                       to={`/dashboard/${partner.slug}`}

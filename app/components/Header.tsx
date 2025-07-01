@@ -7,9 +7,11 @@ import {
   HandshakeIcon,
   HelpCircle,
   LogOutIcon,
+  MoonIcon,
   PlusIcon,
   SearchIcon,
   SettingsIcon,
+  SunIcon,
   UserIcon,
   Users2Icon,
 } from "lucide-react";
@@ -32,7 +34,7 @@ import {
 import CreateAction from "./CreateAction";
 import Loader from "./Loader";
 import { CircularProgress } from "./Progress";
-import { ThemeColorToggle, ThemeToggle } from "./ThemeToggle";
+
 import { Button } from "./ui/button";
 import {
   Command,
@@ -53,6 +55,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 import { getMonthsActions } from "~/lib/helpers";
+import { Theme, useTheme } from "remix-themes";
 
 export default function Header({
   setOpen,
@@ -64,6 +67,7 @@ export default function Header({
   const navigate = useNavigate();
   const fetchers = useFetchers();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [theme, setTheme] = useTheme();
 
   const showFeed = !!searchParams.get("show_feed");
   const params = new URLSearchParams(searchParams);
@@ -191,15 +195,24 @@ export default function Header({
             </DropdownMenuTrigger>
 
             <DropdownMenuContent className="bg-content">
-              <ThemeToggle
-                element="dropdownmenuitem"
-                className="bg-item"
-                hasText
-              />
+              {theme === Theme.LIGHT ? (
+                <DropdownMenuItem
+                  onSelect={() => setTheme(Theme.DARK)}
+                  className="bg-item"
+                >
+                  <SunIcon className="size-4 opacity-50" />
+                  <div>Dark Mode</div>
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  onSelect={() => setTheme(Theme.LIGHT)}
+                  className="bg-item"
+                >
+                  <MoonIcon className="size-4 opacity-50" />
 
-              {/* Cores Colors */}
-
-              <ThemeColorToggle />
+                  <div>Light Mode</div>
+                </DropdownMenuItem>
+              )}
 
               <DropdownMenuSeparator />
 

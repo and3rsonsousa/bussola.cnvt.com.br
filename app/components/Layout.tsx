@@ -1,10 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import {
-  useLocation,
-  useMatches,
-  useNavigate,
-  useOutletContext,
-} from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import Header from "./Header";
 import Loader from "./Loader";
 import Search from "./Search";
@@ -38,7 +33,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div
       id="layout"
-      className={`bg-background relative mx-auto flex h-[100dvh] flex-col swiss`}
+      className={`bg-background swiss relative mx-auto flex h-[100dvh] flex-col`}
     >
       <Header setOpen={setOpen} />
 
