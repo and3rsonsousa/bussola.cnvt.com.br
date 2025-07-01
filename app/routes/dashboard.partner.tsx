@@ -334,10 +334,6 @@ export default function Partner() {
     setCategoryFilter(_categories);
   }, [searchParams]);
 
-  // useEffect(() => {
-  //   console.log(selectedActions);
-  // }, [selectedActions]);
-
   const handleDragEnd = ({ active, over }: DragEndEvent) => {
     const date = over?.id as string;
     const actionDate = isInstagramDate
