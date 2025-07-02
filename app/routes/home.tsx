@@ -21,6 +21,28 @@ export function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function Home() {
+  useGSAP(() => {
+    gsap.from(".header", {
+      y: -100,
+      opacity: 0,
+    });
+    gsap.from(".home-link", {
+      y: 100,
+      opacity: 0,
+      stagger: 0.1,
+      delay: 0.2,
+    });
+    gsap.from(".footer", {
+      opacity: 0,
+      delay: 0.5,
+    });
+    gsap.from(".line", {
+      scaleX: 0,
+      delay: 0.4,
+      stagger: 0.2,
+    });
+  }, []);
+
   function mouseOver(element: HTMLElement, reversed = false) {
     if (reversed) {
       gsap.to(element.querySelector(".home-link__info"), {
@@ -43,11 +65,12 @@ export default function Home() {
 
   return (
     <div className="relative container mx-auto flex h-dvh flex-col justify-between overflow-hidden p-8">
-      <div className="text-xl font-medium tracking-tighter">
+      <div className="header relative pb-8 text-xl font-medium tracking-tighter">
         Escolha qual app quer acessar
+        <div className="line bg-border absolute bottom-0 h-[1px] w-full origin-left"></div>
       </div>
       {/* <div className="*:hover:bg-foreground *:hover:text-background flex flex-col divide-y text-[12vw] font-light tracking-tighter *:flex *:items-center *:py-6 *:pr-16 *:hover:justify-between md:text-[10vh]"> */}
-      <div className="flex flex-col divide-y text-[12vw] font-light tracking-tighter *:flex *:items-center *:py-6 md:text-[10vh]">
+      <div className="flex flex-col text-[12vw] font-light tracking-tighter *:flex *:items-center *:py-6 md:text-[10vh]">
         {[
           {
             title: "BÚSSOLA",
@@ -68,7 +91,7 @@ export default function Home() {
         ].map((item, i) => (
           <Link
             key={i}
-            className="home-link hover:bg-foreground hover:text-background relative flex h-[20vh] items-center justify-between transition md:h-[20vh]"
+            className="home-link hover:bg-foreground hover:text-background relative flex h-[20vh] items-center justify-between transition-colors md:h-[20vh]"
             to={item.href}
             onMouseEnter={(e) => mouseOver(e.currentTarget)}
             onMouseLeave={(e) => mouseOver(e.currentTarget, true)}
@@ -82,6 +105,7 @@ export default function Home() {
               </span>
             </span>
             <span className="home-link__name absolute pr-16">{item.title}</span>
+            <div className="line bg-border absolute bottom-0 h-[1px] w-full"></div>
           </Link>
         ))}
         {/* <a className="home-link" href="/dashboard">
@@ -123,7 +147,10 @@ export default function Home() {
           CNVT
         </a> */}
       </div>
-      <div className="text-right font-medium">CNVT®</div>
+      <div className="footer relative pt-8 text-right font-medium">
+        <div className="line bg-border absolute top-0 h-[1px] w-full origin-right"></div>
+        CNVT®
+      </div>
     </div>
   );
 }
