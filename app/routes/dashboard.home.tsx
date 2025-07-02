@@ -928,19 +928,15 @@ const ActionsProgress = () => {
   const lateActions = getDelayedActions({ actions: actionsChart });
 
   return (
-    <div className="px-2 py-8 md:px-8 lg:py-12">
-      <div className="text-center">
-        <Heading>
-          {/* <span className="animate-spin font-serif text-7xl">✳</span> */}
-          <span className="hidden uppercase md:inline-block">
-            Acompanhamento do progresso
-          </span>
-          <span className="md:hidden">Progresso</span>
-          {/* <span className="font-serif text-7xl">✳</span> */}
-        </Heading>
-      </div>
+    <div className="bg-card grid px-2 py-8 md:grid-cols-2 md:px-8 lg:grid-cols-3 lg:py-12">
+      <Heading className="text-left">
+        <div className="text-sm tracking-wider uppercase opacity-50">
+          Acompanhamento do
+        </div>
+        <div className="">Progresso</div>
+      </Heading>
 
-      <div className="grid w-full grid-cols-3 justify-center gap-4 rounded select-none lg:grid-cols-6">
+      <div className="grid w-full grid-cols-3 justify-center gap-4 rounded select-none lg:col-span-2 lg:grid-cols-6">
         {[
           {
             title: "Atrasados",
