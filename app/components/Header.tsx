@@ -54,8 +54,8 @@ import {
 } from "./ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
-import { getMonthsActions } from "~/lib/helpers";
 import { Theme, useTheme } from "remix-themes";
+import { getMonthsActions } from "~/lib/helpers";
 
 export default function Header({
   setOpen,
@@ -98,7 +98,7 @@ export default function Header({
 
   return (
     <header
-      className={`bg-card flex items-center justify-between gap-4 border-b px-6 py-2 shadow-xs`}
+      className={`flex items-center justify-between gap-4 border-b px-6 py-2`}
     >
       {/* Logo */}
       <div className="flex items-center gap-1">

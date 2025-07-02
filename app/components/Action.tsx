@@ -84,6 +84,7 @@ export function ActionLine({
   showContent,
   showPartner,
   isHair,
+  selectMultiple,
   setSelectedActions,
 }: {
   action: Action;
@@ -96,6 +97,7 @@ export function ActionLine({
   showContent?: boolean;
   showPartner?: boolean;
   isHair?: boolean;
+  selectMultiple?: boolean;
   setSelectedActions?: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   const navigate = useNavigate();
@@ -103,7 +105,7 @@ export function ActionLine({
   const matches = useMatches();
   const [searchParams] = useSearchParams();
   const isInstagramDate = searchParams.get("instagram_date");
-  const selectMultiple = searchParams.get("select_multiple") === "true";
+  // const selectMultiple = searchParams.get("select_multiple") === "true";
 
   const [edit, setEdit] = useState(false);
   const [isHover, setHover] = useState(false);
@@ -799,7 +801,7 @@ export function ActionBlock({
     </ContextMenu>
   );
 }
- 
+
 export function ListOfActions({
   actions,
   showCategory,

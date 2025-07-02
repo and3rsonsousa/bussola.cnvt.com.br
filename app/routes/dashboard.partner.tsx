@@ -19,14 +19,11 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
-  AlignJustifyIcon,
-  CheckCheck,
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronsDownUpIcon,
   ChevronsUpDownIcon,
   CircleCheckIcon,
-  CircleIcon,
   Grid3x3Icon,
   ImageIcon,
   UserIcon,
@@ -192,7 +189,9 @@ export default function Partner() {
   const showFeed = !!searchParams.get("show_feed");
   const short = !!searchParams.get("short");
   const showResponsibles = !!searchParams.get("show_responsibles");
-  const selectMultiple = !!searchParams.get("select_multiple");
+  const [selectMultiple, setSelectMultiple] = useState(
+    !!searchParams.get("select_multiple"),
+  );
 
   const [selectedActions, setSelectedActions] = useState<string[]>([]);
 
@@ -555,9 +554,11 @@ export default function Partner() {
               variant={selectMultiple ? "secondary" : "ghost"}
               onClick={() => {
                 if (selectMultiple) {
-                  params.delete("select_multiple");
                   setSelectedActions([]);
+                  setSelectMultiple(false);
+                  params.delete("select_multiple");
                 } else {
+                  setSelectMultiple(true);
                   params.set("select_multiple", "true");
                 }
                 setSearchParams(params);
@@ -938,6 +939,7 @@ export default function Partner() {
                     key={i}
                     index={i}
                     setSelectedActions={setSelectedActions}
+                    selectMultiple={selectMultiple}
                   />
                 ))}
               </div>
@@ -991,6 +993,7 @@ export const CalendarDay = ({
   showContent,
   index,
   setSelectedActions,
+  selectMultiple,
 }: {
   day: { date: string; actions?: Action[]; celebrations?: Celebration[] };
   currentDate: Date | string;
@@ -1000,6 +1003,7 @@ export const CalendarDay = ({
   showContent?: boolean;
   index?: string | number;
   setSelectedActions: React.Dispatch<React.SetStateAction<string[]>>;
+  selectMultiple?: boolean;
 }) => {
   const matches = useMatches();
   const { categories } = matches[1].data as DashboardRootType;
@@ -1058,6 +1062,7 @@ export const CalendarDay = ({
                         ?.filter((action) => isInstagramFeed(action.category))
                         .map((action) => (
                           <ActionLine
+                            selectMultiple={selectMultiple}
                             showContent={showContent}
                             short={short}
                             showResponsibles={showResponsibles}
@@ -1084,6 +1089,7 @@ export const CalendarDay = ({
                     }))
                     .map(({ category, actions }) => (
                       <CategoryActions
+                        selectMultiple={selectMultiple}
                         showResponsibles={showResponsibles}
                         category={category}
                         actions={actions}
@@ -1108,6 +1114,7 @@ export const CalendarDay = ({
                     actions &&
                     actions.length > 0 && (
                       <CategoryActions
+                        selectMultiple={selectMultiple}
                         showResponsibles={showResponsibles}
                         category={category}
                         actions={actions}
@@ -1142,12 +1149,14 @@ function CategoryActions({
   short,
   showResponsibles,
   setSelectedActions,
+  selectMultiple = false,
 }: {
   category: Category;
   actions?: Action[];
   showContent?: boolean;
   short?: boolean;
   showResponsibles?: boolean;
+  selectMultiple?: boolean;
   setSelectedActions: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   actions = actions?.sort((a, b) =>
@@ -1169,6 +1178,7 @@ function CategoryActions({
       <div className={`flex flex-col gap-1`}>
         {actions?.map((action) => (
           <ActionLine
+            selectMultiple={selectMultiple}
             showContent={showContent}
             short={short}
             showResponsibles={showResponsibles}
