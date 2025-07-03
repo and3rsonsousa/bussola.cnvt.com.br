@@ -1,4 +1,3 @@
-import type { Database } from "database";
 import {
   addDays,
   addMonths,
@@ -928,7 +927,7 @@ const ActionsProgress = () => {
   const lateActions = getDelayedActions({ actions: actionsChart });
 
   return (
-    <div className="bg-card grid px-2 py-8 md:grid-cols-2 md:px-8 lg:grid-cols-3 lg:py-12">
+    <div className="grid px-2 py-8 md:grid-cols-2 md:px-8 lg:grid-cols-3 lg:py-12">
       <Heading className="text-left">
         <div className="text-sm tracking-wider uppercase opacity-50">
           Acompanhamento do
