@@ -1,3 +1,5 @@
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import {
   addDays,
   addMonths,
@@ -85,9 +87,10 @@ import {
   usePendingData,
 } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
+import LoaderTransition from "~/components/LoaderTransition";
 
 export const config = { runtime: "edge" };
-// const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY;
+gsap.registerPlugin(useGSAP);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { supabase } = createClient(request);
@@ -204,50 +207,60 @@ export default function DashboardIndex() {
     actions: actions as Action[],
   }) as Action[];
 
-  const weekActions = eachDayOfInterval({
-    start: startOfWeek(new Date()),
-    end: endOfWeek(new Date()),
-  }).map((day) => ({
-    date: day,
-    actions: actions?.filter((action) =>
-      isSameDay(action.date, day),
-    ) as Action[],
-  }));
+  // const weekActions = eachDayOfInterval({
+  //   start: startOfWeek(new Date()),
+  //   end: endOfWeek(new Date()),
+  // }).map((day) => ({
+  //   date: day,
+  //   actions: actions?.filter((action) =>
+  //     isSameDay(action.date, day),
+  //   ) as Action[],
+  // }));
   const nextActions = actions?.filter((action) => action.state != "finished");
 
   useEffect(() => {
     setTransitioning(false);
   }, []);
 
+  useGSAP(() => {
+    gsap.to(".overlay", {
+      duration: 0.5,
+      height: 0,
+    });
+  }, []);
+
   return (
-    <div className="overflow-y-auto">
-      {/* Progresso  */}
+    <>
+      <div className="overflow-y-auto">
+        {/* Progresso  */}
 
-      {person.admin && <ActionsProgress />}
+        {person.admin && <ActionsProgress />}
 
-      {/* Sprint */}
-      <Sprint />
+        {/* Sprint */}
+        <Sprint />
 
-      {/* Parceiros */}
-      <Partners actions={actions as Action[]} />
+        {/* Parceiros */}
+        <Partners actions={actions as Action[]} />
 
-      {/* Ações em Atraso */}
+        {/* Ações em Atraso */}
 
-      <DelayedActions actions={lateActions} />
+        <DelayedActions actions={lateActions} />
 
-      {/* Hoje */}
-      <TodayViews actions={actions as Action[]} />
+        {/* Hoje */}
+        <TodayViews actions={actions as Action[]} />
 
-      {/* Mês */}
+        {/* Mês */}
 
-      <CalendarMonth actions={actions} />
+        <CalendarMonth actions={actions} />
 
-      {/* Próximas Ações */}
-      <NextActions actions={nextActions as Action[]} />
+        {/* Próximas Ações */}
+        <NextActions actions={nextActions as Action[]} />
 
-      {/* Ações da Semana */}
-      {/* <WeekView weekActions={weekActions} /> */}
-    </div>
+        {/* Ações da Semana */}
+        {/* <WeekView weekActions={weekActions} /> */}
+      </div>
+      <LoaderTransition className="top-0 bottom-auto h-full" />
+    </>
   );
 }
 

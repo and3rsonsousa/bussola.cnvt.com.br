@@ -1,8 +1,9 @@
 import { useGSAP } from "@gsap/react";
 import { ArrowRightIcon } from "lucide-react";
-import { Link, type MetaFunction } from "react-router";
+import { Link, NavLink, useNavigate, type MetaFunction } from "react-router";
 import type { Route } from "./+types/home";
 import { gsap } from "gsap";
+import LoaderTransition from "~/components/LoaderTransition";
 
 gsap.registerPlugin(useGSAP);
 
@@ -21,6 +22,8 @@ export function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function Home() {
+  let navigate = useNavigate();
+
   useGSAP(() => {
     gsap.from(".header", {
       y: -100,
@@ -69,7 +72,7 @@ export default function Home() {
         Escolha qual app quer acessar
         <div className="line bg-border absolute bottom-0 h-[1px] w-full origin-left"></div>
       </div>
-      {/* <div className="*:hover:bg-foreground *:hover:text-background flex flex-col divide-y text-[12vw] font-light tracking-tighter *:flex *:items-center *:py-6 *:pr-16 *:hover:justify-between md:text-[10vh]"> */}
+
       <div className="flex flex-col text-[12vw] font-light tracking-tighter *:flex *:items-center *:py-6 md:text-[10vh]">
         {[
           {
@@ -89,16 +92,27 @@ export default function Home() {
             href: "https://cnvt.com.br",
           },
         ].map((item, i) => (
-          <Link
+          <a
             key={i}
             className="home-link hover:bg-foreground hover:text-background relative flex h-[20vh] items-center justify-between transition-colors md:h-[20vh]"
-            to={item.href}
+            href={item.href}
             onMouseEnter={(e) => mouseOver(e.currentTarget)}
             onMouseLeave={(e) => mouseOver(e.currentTarget, true)}
+            onClick={(e) => {
+              e.preventDefault();
+              gsap.to(".overlay", {
+                duration: 1,
+                height: `100%`,
+                ease: "expo.inOut",
+                onComplete: () => {
+                  navigate(item.href);
+                },
+              });
+            }}
           >
             <span className="home-link__info flex -translate-x-[100px] items-center gap-4 opacity-0">
               <ArrowRightIcon className="size-16" />
-              <span className="hidden w-1/2 text-xl font-medium tracking-normal md:block">
+              <span className="hidden w-1/2 text-xl font-medium tracking-normal lg:block">
                 {item.title}
                 <br />
                 {item.description}
@@ -106,51 +120,14 @@ export default function Home() {
             </span>
             <span className="home-link__name absolute pr-16">{item.title}</span>
             <div className="line bg-border absolute bottom-0 h-[1px] w-full"></div>
-          </Link>
+          </a>
         ))}
-        {/* <a className="home-link" href="/dashboard">
-          <span className="ml-8 flex items-center gap-4">
-            <ArrowRightIcon className="size-16" />
-            <span className="text-xl font-medium tracking-normal">
-              App de gestão da <br /> Agência CNVT®
-            </span>
-          </span>
-          BÚSSOLA
-        </a>
-        <a
-          className="group"
-          href="https://cnvt.link"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span className="ml-8 hidden items-center gap-4 group-hover:flex">
-            <ArrowRightIcon className="size-16" />
-            <span className="text-xl font-medium tracking-normal">
-              Sistema de Links exclusivo <br /> de quem é parceiro da <br />
-              Agência CNVT®
-            </span>
-          </span>
-          CNVT.LINK
-        </a>
-        <a
-          className="group"
-          href="https://cnvt.com.br"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span className="ml-8 hidden items-center gap-4 group-hover:flex">
-            <ArrowRightIcon className="size-16" />
-            <span className="text-xl font-medium tracking-normal">
-              Site oficial da <br /> Agência CNVT®
-            </span>
-          </span>
-          CNVT
-        </a> */}
       </div>
       <div className="footer relative pt-8 text-right font-medium">
         <div className="line bg-border absolute top-0 h-[1px] w-full origin-right"></div>
         CNVT®
       </div>
+      <LoaderTransition className="h-0" />
     </div>
   );
 }
