@@ -940,8 +940,8 @@ const ActionsProgress = () => {
   const lateActions = getDelayedActions({ actions: actionsChart });
 
   return (
-    <div className="grid px-2 md:grid-cols-2 md:px-8 lg:grid-cols-3">
-      <Heading className="flex h-full flex-col justify-center border-b px-4 py-8 text-left md:border-none lg:py-12">
+    <div className="md:flex">
+      <Heading className="flex h-full flex-col justify-center border-b px-8 py-8 text-left md:border-none lg:py-12">
         <div className="text-sm tracking-wider uppercase">
           Acompanhamento do
         </div>
@@ -983,7 +983,7 @@ const ActionsProgress = () => {
         ].map(({ actions, title }, i) => (
           <div
             key={i}
-            className={`overflow-hidden px-4 py-8 md:border-l lg:py-12 ${i < 3 ? "border-b" : ""}`}
+            className={`overflow-hidden px-8 py-8 md:border-l lg:py-12 ${i < 3 ? "border-b" : ""}`}
           >
             <h3 className="text-xl font-medium capitalize">{title}</h3>
             <div className="my-2 text-7xl font-light">{actions.length}</div>
@@ -998,11 +998,12 @@ const ActionsProgress = () => {
                     fill: state.color,
                   };
                 })
-                .map((i) => (
+                .map((progress) => (
                   <div
+                    key={progress.state}
                     style={{
-                      width: `${(i.actions / actions.length) * 100}%`,
-                      backgroundColor: i.fill,
+                      width: `${(progress.actions / actions.length) * 100}%`,
+                      backgroundColor: progress.fill,
                     }}
                   ></div>
                 ))}
