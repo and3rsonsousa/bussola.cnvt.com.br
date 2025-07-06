@@ -138,16 +138,18 @@ export default function CreateAction({
   }, [open]);
 
   useEffect(() => {
-    const keyDownSubmit = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
-        event.preventDefault();
-        createAction();
-      }
-    };
+    if (open) {
+      const keyDownSubmit = (event: KeyboardEvent) => {
+        if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+          event.preventDefault();
+          createAction();
+        }
+      };
 
-    document.addEventListener("keydown", keyDownSubmit);
-    return () => document.removeEventListener("keydown", keyDownSubmit);
-  }, [createAction]);
+      document.addEventListener("keydown", keyDownSubmit);
+      return () => document.removeEventListener("keydown", keyDownSubmit);
+    }
+  }, [createAction, open]);
 
   useEffect(() => {
     if (shortcut) {
@@ -218,16 +220,6 @@ export default function CreateAction({
       setAction(cleanAction);
       setOpen(false);
     }
-
-    //     Teste da linguinha e da orelhinha
-
-    // Psicologia infantil
-
-    // Fisioterapia do Desenvolvimento Infantil
-
-    // Fisioterapia Respiratória Infantil
-
-    // Consultoria do Sono
   }
 
   return (

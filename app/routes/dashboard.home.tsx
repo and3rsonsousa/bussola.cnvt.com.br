@@ -940,15 +940,19 @@ const ActionsProgress = () => {
   const lateActions = getDelayedActions({ actions: actionsChart });
 
   return (
-    <div className="grid px-2 py-8 md:grid-cols-2 md:px-8 lg:grid-cols-3 lg:py-12">
-      <Heading className="text-left">
-        <div className="text-sm tracking-wider uppercase opacity-50">
+    <div className="grid px-2 md:grid-cols-2 md:px-8 lg:grid-cols-3">
+      <Heading className="flex h-full flex-col justify-center border-b px-4 py-8 text-left md:border-none lg:py-12">
+        <div className="text-sm tracking-wider uppercase">
           Acompanhamento do
         </div>
-        <div className="">Progresso</div>
+        <div className="flex flex-row sm:text-7xl md:flex-col md:text-8xl lg:flex-row">
+          <div>Pro</div>
+          <div>gres</div>
+          <div>so</div>
+        </div>
       </Heading>
 
-      <div className="grid w-full grid-cols-3 justify-center gap-4 rounded select-none lg:col-span-2 lg:grid-cols-6">
+      <div className="grid w-full grid-cols-3 justify-center rounded select-none md:grid-cols-3 lg:col-span-2 lg:grid-cols-6">
         {[
           {
             title: "Atrasados",
@@ -977,41 +981,31 @@ const ActionsProgress = () => {
             actions: nextMonthActions,
           },
         ].map(({ actions, title }, i) => (
-          <div key={i} className={`w-full text-center`}>
-            <h3 className="mb-1 text-xl leading-none font-semibold capitalize">
-              {title}
-            </h3>
-            <div className="text-xs font-medium tracking-wide uppercase opacity-75">
-              {actions.length} ações
-            </div>
-            <div className="flex gap-4">
-              <div className="w-full">
-                <ChartContainer
-                  config={{}}
-                  className="aspect-square h-20 w-full lg:h-32"
-                >
-                  <PieChart>
-                    <ChartTooltip
-                      cursor={false}
-                      content={<ChartTooltipContent />}
-                    />
-                    <Pie
-                      dataKey={"actions"}
-                      nameKey={"state"}
-                      innerRadius={"60%"}
-                      data={states.map((state) => {
-                        return {
-                          state: state.title,
-                          actions: actions.filter(
-                            (action) => action.state === state.slug,
-                          ).length,
-                          fill: state.color,
-                        };
-                      })}
-                    />
-                  </PieChart>
-                </ChartContainer>
-              </div>
+          <div
+            key={i}
+            className={`overflow-hidden px-4 py-8 md:border-l lg:py-12 ${i < 3 ? "border-b" : ""}`}
+          >
+            <h3 className="text-xl font-medium capitalize">{title}</h3>
+            <div className="my-2 text-7xl font-light">{actions.length}</div>
+            <div className="bg-foreground flex h-1 w-full">
+              {states
+                .map((state) => {
+                  return {
+                    state: state.title,
+                    actions: actions.filter(
+                      (action) => action.state === state.slug,
+                    ).length,
+                    fill: state.color,
+                  };
+                })
+                .map((i) => (
+                  <div
+                    style={{
+                      width: `${(i.actions / actions.length) * 100}%`,
+                      backgroundColor: i.fill,
+                    }}
+                  ></div>
+                ))}
             </div>
           </div>
         ))}
