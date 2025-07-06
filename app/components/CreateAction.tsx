@@ -138,6 +138,18 @@ export default function CreateAction({
   }, [open]);
 
   useEffect(() => {
+    const keyDownSubmit = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+        event.preventDefault();
+        createAction();
+      }
+    };
+
+    document.addEventListener("keydown", keyDownSubmit);
+    return () => document.removeEventListener("keydown", keyDownSubmit);
+  }, [createAction]);
+
+  useEffect(() => {
     if (shortcut) {
       const keyDown = (event: KeyboardEvent) => {
         if (
@@ -154,6 +166,69 @@ export default function CreateAction({
       return () => document.removeEventListener("keydown", keyDown);
     }
   }, []);
+
+  function createAction() {
+    if (action.title.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "O título não pode ser em vazio.",
+        description: "Defina um título para a sua ação antes de criar.",
+      });
+      return false;
+    }
+    if (!action.date) {
+      toast({
+        variant: "destructive",
+        title: "Escolha a data da ação",
+        description: "Defina a data que a sua ação deve acontecer.",
+      });
+      return false;
+    }
+    if (action.partners.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "Ação sem nenhum Parceiro.",
+        description: "Selecione pelo menos um Parceiro para essa ação.",
+      });
+    } else {
+      submit(
+        {
+          id: window.crypto.randomUUID(),
+          intent: INTENTS.createAction,
+          ...action,
+          date: format(action.date, "y-MM-dd HH:mm:ss", {
+            locale: ptBR,
+          }),
+          instagram_date: format(action.instagram_date, "y-MM-dd HH:mm:ss", {
+            locale: ptBR,
+          }),
+          created_at: format(new Date(), "y-MM-dd HH:mm:ss", {
+            locale: ptBR,
+          }),
+          updated_at: format(new Date(), "y-MM-dd HH:mm:ss", {
+            locale: ptBR,
+          }),
+        },
+        {
+          action: "/handle-actions",
+          navigate: false,
+          method: "POST",
+        },
+      );
+      setAction(cleanAction);
+      setOpen(false);
+    }
+
+    //     Teste da linguinha e da orelhinha
+
+    // Psicologia infantil
+
+    // Fisioterapia do Desenvolvimento Infantil
+
+    // Fisioterapia Respiratória Infantil
+
+    // Consultoria do Sono
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -333,62 +408,7 @@ export default function CreateAction({
 
             <Button
               onClick={() => {
-                if (action.title.length === 0) {
-                  toast({
-                    variant: "destructive",
-                    title: "O título não pode ser em vazio.",
-                    description:
-                      "Defina um título para a sua ação antes de criar.",
-                  });
-                  return false;
-                }
-                if (!action.date) {
-                  toast({
-                    variant: "destructive",
-                    title: "Escolha a data da ação",
-                    description: "Defina a data que a sua ação deve acontecer.",
-                  });
-                  return false;
-                }
-                if (action.partners.length === 0) {
-                  toast({
-                    variant: "destructive",
-                    title: "Ação sem nenhum Parceiro.",
-                    description:
-                      "Selecione pelo menos um Parceiro para essa ação.",
-                  });
-                } else {
-                  submit(
-                    {
-                      id: window.crypto.randomUUID(),
-                      intent: INTENTS.createAction,
-                      ...action,
-                      date: format(action.date, "y-MM-dd HH:mm:ss", {
-                        locale: ptBR,
-                      }),
-                      instagram_date: format(
-                        action.instagram_date,
-                        "y-MM-dd HH:mm:ss",
-                        {
-                          locale: ptBR,
-                        },
-                      ),
-                      created_at: format(new Date(), "y-MM-dd HH:mm:ss", {
-                        locale: ptBR,
-                      }),
-                      updated_at: format(new Date(), "y-MM-dd HH:mm:ss", {
-                        locale: ptBR,
-                      }),
-                    },
-                    {
-                      action: "/handle-actions",
-                      navigate: false,
-                      method: "POST",
-                    },
-                  );
-                  setAction(cleanAction);
-                  setOpen(false);
-                }
+                createAction();
               }}
             >
               Criar
@@ -818,10 +838,7 @@ export function DateTimeAndInstagramDate({
                   onChange={(event) => {
                     const instagram_date = action.instagram_date;
                     instagram_date.setHours(Number(event.target.value));
-                    // setAction({
-                    //   ...action,
-                    //   instagram_date,
-                    // });
+
                     onChange({ instagram_date });
                   }}
                 />
