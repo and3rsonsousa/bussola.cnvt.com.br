@@ -15,12 +15,12 @@
     --muted: 200 10% 80%;
     --muted-foreground: 200 10% 60%;
 
-    --primary: 220 100% 50%;
-    --primary-hover: 220 80% 40%;
-    --primary-foreground: 0 100% 100%;
+    --primary: 220 10% 10%;
+    --primary-hover: 220 10% 20%;
+    --primary-foreground: 220 10% 90%;
 
-    --secondary: 220 80% 90%;
-    --secondary-foreground: 220 100% 50%;
+    --secondary: 220 15% 80%;
+    --secondary-foreground: 220 10% 10%;
 
     --accent: 200 5% 90%;
     --accent-foreground: 200 10% 10%;
@@ -31,7 +31,7 @@
     --highlight: 0 0% 100%;
     --border: 200 10% 86%;
     --input: 200 10% 98%;
-    --ring: 220 100% 50%;
+    --ring: 220 10% 10%;
     --radius: 12px;
 
     --success: theme(--color-lime-700);
@@ -52,6 +52,10 @@
     --muted: 210 12% 25%;
     --muted-foreground: 210 12% 40%;
 
+    --primary: 220 10% 95%;
+    --primary-hover: 220 10% 80%;
+    --primary-foreground: 220 10% 10%;
+
     --secondary: 210 8% 35%;
     --secondary-foreground: 210 15% 98%;
 
@@ -64,7 +68,7 @@
     --highlight: 210 15% 30%;
     --border: 220 10% 25%;
     --input: 220 10% 10%;
-    --ring: 220 100% 50%;
+    --ring: 220 10% 90%;
 
     --error: theme(--color-rose-400);
   }
@@ -224,11 +228,11 @@ body {
 
 .action-item {
   
-  @apply ring-ring ring-offset-background bg-card hover:bg-popover inset-shadow-highlight relative z-0 flex w-full cursor-pointer rounded-md border border-transparent shadow-sm inset-shadow-xs outline-hidden transition-[box-shadow,background] select-none focus-within:ring-2 hover:z-10 hover:shadow-xl focus:ring-2 focus:ring-offset-2;
+  @apply ring-ring ring-offset-background bg-card hover:bg-popover inset-shadow-highlight relative z-0 flex w-full cursor-pointer rounded-xs border border-transparent shadow-sm inset-shadow-xs outline-hidden transition-[box-shadow,background] select-none focus-within:ring-2 hover:z-10 hover:shadow-xl focus:ring-2 focus:ring-offset-2;
 }
 
 .action-item-short {
-  @apply rounded-sm text-xs;
+  @apply  text-xs;
 }
 
 .action-item-block {

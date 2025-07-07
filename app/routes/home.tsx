@@ -100,8 +100,16 @@ export default function Home() {
             onMouseLeave={(e) => mouseOver(e.currentTarget, true)}
             onClick={(e) => {
               e.preventDefault();
-              gsap.to(".overlay", {
+              gsap.to("#overlay", {
                 duration: 1,
+                height: `100%`,
+                ease: "expo.inOut",
+                onComplete: () => {
+                  navigate(item.href);
+                },
+              });
+              gsap.to("#overlay-2", {
+                duration: 1.2,
                 height: `100%`,
                 ease: "expo.inOut",
                 onComplete: () => {
@@ -127,7 +135,11 @@ export default function Home() {
         <div className="line bg-border absolute top-0 h-[1px] w-full origin-right"></div>
         CNVT®
       </div>
-      <LoaderTransition className="h-0" />
+      <LoaderTransition className="h-0 origin-bottom" />
+      <LoaderTransition
+        className="bg-background text-foreground h-0 origin-bottom"
+        id="overlay-2"
+      />
     </div>
   );
 }

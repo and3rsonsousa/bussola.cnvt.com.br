@@ -184,12 +184,18 @@ export default function Partner() {
     params.set(key, value);
   }
 
-  const isInstagramDate = !!searchParams.get("instagram_date");
-  const showContent = !!searchParams.get("show_content");
-  const showFeed = !!searchParams.get("show_feed");
-  const short = !!searchParams.get("short");
-  const showResponsibles = !!searchParams.get("show_responsibles");
-  const [selectMultiple, setSelectMultiple] = useState(
+  const [isInstagramDate, set_isInstagramDate] = useState(
+    !!searchParams.get("instagram_date"),
+  );
+  const [showContent, set_showContent] = useState(
+    !!searchParams.get("show_content"),
+  );
+  const [showFeed, set_showFeed] = useState(!!searchParams.get("show_feed"));
+  const [short, set_short] = useState(!!searchParams.get("short"));
+  const [showResponsibles, set_showResponsibles] = useState(
+    !!searchParams.get("show_responsibles"),
+  );
+  const [selectMultiple, set_selectMultiple] = useState(
     !!searchParams.get("select_multiple"),
   );
 
@@ -278,32 +284,46 @@ export default function Partner() {
 
         if (code === "KeyC") {
           if (params.get("show_content")) {
+            set_showContent(false);
             params.delete("show_content");
           } else {
+            set_showContent(true);
             params.set("show_content", "true");
           }
           setSearchParams(params);
         } else if (code === "KeyR") {
           if (params.get("show_responsibles")) {
+            set_showResponsibles(false);
             params.delete("show_responsibles");
           } else {
+            set_showResponsibles(true);
             params.set("show_responsibles", "true");
           }
           setSearchParams(params);
         } else if (code === "KeyS") {
           if (params.get("short")) {
+            set_short(false);
             params.delete("short");
           } else {
+            set_short(true);
             params.set("short", "true");
           }
           setSearchParams(params);
           // setShort((value) => !value);
         } else if (code === "KeyI") {
           if (params.get("show_feed")) {
+            set_isInstagramDate(false);
+            set_showContent(false);
+            set_showFeed(false);
+
             params.delete("show_feed");
             params.delete("instagram_date");
             params.delete("show_content");
           } else {
+            set_isInstagramDate(true);
+            set_showContent(true);
+            set_showFeed(true);
+
             params.set("instagram_date", "true");
             params.set("show_content", "true");
             params.set("show_feed", "true");
@@ -555,10 +575,10 @@ export default function Partner() {
               onClick={() => {
                 if (selectMultiple) {
                   setSelectedActions([]);
-                  setSelectMultiple(false);
+                  set_selectMultiple(false);
                   params.delete("select_multiple");
                 } else {
-                  setSelectMultiple(true);
+                  set_selectMultiple(true);
                   params.set("select_multiple", "true");
                 }
                 setSearchParams(params);
@@ -572,15 +592,21 @@ export default function Partner() {
               variant={isInstagramDate ? "secondary" : "ghost"}
               onClick={() => {
                 if (isInstagramDate) {
+                  set_isInstagramDate(false);
+                  set_showContent(false);
+
                   params.delete("instagram_date");
                   params.delete("show_content");
                 } else {
+                  set_isInstagramDate(true);
+                  set_showContent(true);
+
                   params.set("instagram_date", "true");
                   params.set("show_content", "true");
                 }
                 setSearchParams(params);
               }}
-              title={"Organizar ações pelas datas do Instagram"}
+              title={"Organizar ações pelas datas do Instagram ( ⇧ + ⌥ + I )"}
             >
               <SiInstagram className="size-4" />
             </Button>
@@ -589,16 +615,18 @@ export default function Partner() {
               variant={showContent ? "secondary" : "ghost"}
               onClick={() => {
                 if (showContent) {
+                  set_showContent(false);
                   params.delete("show_content");
                 } else {
+                  set_showContent(true);
                   params.set("show_content", "true");
                 }
                 setSearchParams(params);
               }}
               title={
                 showContent
-                  ? "Mostrar conteúdo das postagens"
-                  : "Mostrar apenas os títulos"
+                  ? "Mostrar conteúdo das postagens (⇧ + ⌥ + C)"
+                  : "Mostrar apenas os títulos (⇧ + ⌥ + C)"
               }
             >
               <ImageIcon className="size-4" />
@@ -608,8 +636,10 @@ export default function Partner() {
               variant={showResponsibles ? "secondary" : "ghost"}
               onClick={() => {
                 if (showResponsibles) {
+                  set_showResponsibles(false);
                   params.delete("show_responsibles");
                 } else {
+                  set_showResponsibles(true);
                   params.set("show_responsibles", "true");
                 }
 
@@ -617,8 +647,8 @@ export default function Partner() {
               }}
               title={
                 showResponsibles
-                  ? "Todos os responsáveis"
-                  : "'Eu' como responsável"
+                  ? "Todos os responsáveis (⇧ + ⌥ + R) "
+                  : "'Eu' como responsável (⇧ + ⌥ + R) "
               }
             >
               {showResponsibles ? (
@@ -632,8 +662,10 @@ export default function Partner() {
               size={"sm"}
               onClick={() => {
                 if (params.get("short")) {
+                  set_short(false);
                   params.delete("short");
                 } else {
+                  set_short(true);
                   params.set("short", "true");
                 }
                 setSearchParams(params);
@@ -926,7 +958,7 @@ export default function Partner() {
               {/* Calendário Content */}
               <div
                 id="calendar"
-                className={`grid grid-cols-7 overflow-y-auto px-4 pb-32 md:px-8`}
+                className={`grid grid-cols-7 overflow-y-auto pb-32`}
               >
                 {calendar.map((day, i) => (
                   <CalendarDay
@@ -1012,131 +1044,130 @@ export const CalendarDay = ({
     id: `${format(parseISO(day.date), "yyyy-MM-dd")}`,
   });
 
-  return (
-    <div className="py-2">
-      <div
-        ref={setNodeRef}
-        id={`day_${format(parseISO(day.date), "yyyy-MM-dd")}`}
-        className={`group/day relative flex h-full flex-col rounded border-2 border-transparent px-2 pb-4 transition ${
-          Math.floor(Number(index) / 7) % 2 === 0 ? "item-even" : "item-odd"
-        } ${isOver ? "dragover" : ""}`}
-        data-date={format(parseISO(day.date), "yyyy-MM-dd")}
-      >
-        {/* Date */}
-        <div className="mb-2 flex items-center justify-between">
-          <div
-            className={`grid size-8 place-content-center rounded-full text-xl ${
-              isToday(parseISO(day.date))
-                ? "bg-primary text-primary-foreground font-medium"
-                : `${
-                    !isSameMonth(parseISO(day.date), currentDate)
-                      ? "text-muted"
-                      : ""
-                  } -ml-2 font-light`
-            }`}
-          >
-            {parseISO(day.date).getDate()}
-          </div>
-          <div className="scale-50 opacity-0 group-hover/day:scale-100 group-hover/day:opacity-100 focus-within:scale-100 focus-within:opacity-100">
-            <CreateAction mode="day" date={day.date} />
-          </div>
-        </div>
-        {/* Actions and Celebration */}
-        <div className="flex h-full flex-col justify-between">
-          <div className="relative flex h-full grow flex-col gap-3">
-            {showContent ? (
-              <div className="flex flex-col gap-3">
-                {day.actions?.filter((action) =>
-                  isInstagramFeed(action.category),
-                ).length !== 0 && (
-                  <>
-                    <div className="mb-2 flex items-center gap-1 text-[12px] font-medium">
-                      <Grid3x3Icon className="size-4" />
-                      <div>Feed</div>
-                    </div>
-                    <div className="mb-4 flex flex-col gap-3">
-                      {day.actions
-                        ?.sort((a, b) =>
-                          isAfter(a.instagram_date, b.instagram_date) ? 1 : -1,
-                        )
-                        ?.filter((action) => isInstagramFeed(action.category))
-                        .map((action) => (
-                          <ActionLine
-                            selectMultiple={selectMultiple}
-                            showContent={showContent}
-                            short={short}
-                            showResponsibles={showResponsibles}
-                            setSelectedActions={setSelectedActions}
-                            showDelay
-                            action={action}
-                            key={action.id}
-                            date={{
-                              timeFormat: 1,
-                            }}
-                          />
-                        ))}
-                    </div>
-                  </>
-                )}
-                <div className="flex flex-col gap-3">
-                  {categories
-                    .filter((category) => !isInstagramFeed(category.slug))
-                    .map((category) => ({
-                      category,
-                      actions: day.actions?.filter(
-                        (action) => category.slug === action.category,
-                      ),
-                    }))
-                    .map(({ category, actions }) => (
-                      <CategoryActions
-                        selectMultiple={selectMultiple}
-                        showResponsibles={showResponsibles}
-                        category={category}
-                        actions={actions}
-                        short={short}
-                        showContent
-                        key={category.id}
-                        setSelectedActions={setSelectedActions}
-                      />
-                    ))}
-                </div>
-              </div>
-            ) : (
-              categories
-                .map((category) => ({
-                  category,
-                  actions: day.actions?.filter(
-                    (action) => category.slug === action.category,
-                  ),
-                }))
-                .map(
-                  ({ category, actions }, i) =>
-                    actions &&
-                    actions.length > 0 && (
-                      <CategoryActions
-                        selectMultiple={selectMultiple}
-                        showResponsibles={showResponsibles}
-                        category={category}
-                        actions={actions}
-                        short={short}
-                        key={category.id}
-                        setSelectedActions={setSelectedActions}
-                      />
-                    ),
-                )
-            )}
-          </div>
+  const today = isToday(parseISO(day.date));
 
-          {day.celebrations && day.celebrations.length > 0 && (
-            <div className="mt-4 space-y-2 text-[10px] opacity-50">
-              {day.celebrations?.map((celebration) => (
-                <div key={celebration.id} className="leading-none">
-                  {celebration.title}
-                </div>
-              ))}
+  return (
+    <div
+      ref={setNodeRef}
+      id={`day_${format(parseISO(day.date), "yyyy-MM-dd")}`}
+      className={`group/day hover:bg-accent/50 relative flex h-full flex-col border-b py-2 transition ${format(day.date, "e") !== "7" ? "border-l" : ""} ${
+        Math.floor(Number(index) / 7) % 2 === 0 ? "item-even" : "item-odd"
+      } ${isOver ? "dragover" : ""} ${today && "border-t-foreground border-t"}`}
+      data-date={format(parseISO(day.date), "yyyy-MM-dd")}
+    >
+      {/* Date */}
+      <div className="mb-4 flex items-center justify-between px-4">
+        <div
+          className={`grid place-content-center rounded-full text-xl ${
+            today
+              ? "text-primary font-medium"
+              : `font-light ${
+                  !isSameMonth(parseISO(day.date), currentDate)
+                    ? "text-muted"
+                    : ""
+                } `
+          }`}
+        >
+          {parseISO(day.date).getDate()}
+        </div>
+        <div className="scale-50 opacity-0 group-hover/day:scale-100 group-hover/day:opacity-100 focus-within:scale-100 focus-within:opacity-100">
+          <CreateAction mode="day" date={day.date} />
+        </div>
+      </div>
+      {/* Actions and Celebration */}
+      <div className="flex h-full flex-col justify-between px-2">
+        <div className="relative flex h-full grow flex-col gap-3">
+          {showContent ? (
+            <div className="flex flex-col gap-3">
+              {day.actions?.filter((action) => isInstagramFeed(action.category))
+                .length !== 0 && (
+                <>
+                  {/* <div className="mb-2 flex items-center gap-1 text-lg font-medium">
+                    <Grid3x3Icon className="size-3" />
+                    <div>Feed</div>
+                  </div> */}
+                  <div className="mb-4 flex flex-col gap-3">
+                    {day.actions
+                      ?.sort((a, b) =>
+                        isAfter(a.instagram_date, b.instagram_date) ? 1 : -1,
+                      )
+                      ?.filter((action) => isInstagramFeed(action.category))
+                      .map((action) => (
+                        <ActionLine
+                          selectMultiple={selectMultiple}
+                          showContent={showContent}
+                          short={short}
+                          showResponsibles={showResponsibles}
+                          setSelectedActions={setSelectedActions}
+                          showDelay
+                          action={action}
+                          key={action.id}
+                          date={{
+                            timeFormat: 1,
+                          }}
+                        />
+                      ))}
+                  </div>
+                </>
+              )}
+              <div className="flex flex-col gap-3">
+                {categories
+                  .filter((category) => !isInstagramFeed(category.slug))
+                  .map((category) => ({
+                    category,
+                    actions: day.actions?.filter(
+                      (action) => category.slug === action.category,
+                    ),
+                  }))
+                  .map(({ category, actions }) => (
+                    <CategoryActions
+                      selectMultiple={selectMultiple}
+                      showResponsibles={showResponsibles}
+                      category={category}
+                      actions={actions}
+                      short={short}
+                      showContent
+                      key={category.id}
+                      setSelectedActions={setSelectedActions}
+                    />
+                  ))}
+              </div>
             </div>
+          ) : (
+            categories
+              .map((category) => ({
+                category,
+                actions: day.actions?.filter(
+                  (action) => category.slug === action.category,
+                ),
+              }))
+              .map(
+                ({ category, actions }, i) =>
+                  actions &&
+                  actions.length > 0 && (
+                    <CategoryActions
+                      selectMultiple={selectMultiple}
+                      showResponsibles={showResponsibles}
+                      category={category}
+                      actions={actions}
+                      short={short}
+                      key={category.id}
+                      setSelectedActions={setSelectedActions}
+                    />
+                  ),
+              )
           )}
         </div>
+
+        {day.celebrations && day.celebrations.length > 0 && (
+          <div className="mt-4 space-y-2 text-[10px] opacity-50">
+            {day.celebrations?.map((celebration) => (
+              <div key={celebration.id} className="leading-none">
+                {celebration.title}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1167,10 +1198,10 @@ function CategoryActions({
     <div key={category.slug} className="flex flex-col gap-3">
       {!(showContent && isInstagramFeed(category.slug)) && (
         <div className="mt-2 flex items-center gap-1 text-[8px] font-bold tracking-widest uppercase">
-          <div
+          {/* <div
             className={`size-1.5 rounded-full`}
             style={{ backgroundColor: category.color }}
-          ></div>
+          ></div> */}
           <div>{category.title}</div>
         </div>
       )}

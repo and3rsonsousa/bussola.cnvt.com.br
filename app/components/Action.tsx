@@ -216,13 +216,13 @@ export function ActionLine({
           >
             <div
               title={action.title}
-              className={`action ring-ring ring-offset-background relative cursor-pointer rounded ring-offset-2 outline-hidden focus-within:ring-3 ${
+              className={`ring-ring ring-offset-background relative cursor-pointer rounded-xs ring-offset-2 outline-hidden focus-within:ring-3 ${
                 showDelay &&
                 state.slug !== "finished" &&
                 (isBefore(action.instagram_date, new Date()) ||
                   isBefore(action.date, new Date()))
-                  ? "action-content-delayed rounded-md"
-                  : " "
+                  ? "action-content-delayed"
+                  : ""
               }`}
               onMouseEnter={() => {
                 setHover(true);
@@ -238,9 +238,9 @@ export function ActionLine({
                 partner={partner!}
                 showInfo
                 date={{ timeFormat: 1 }}
-                className={`the-action-content aspect-[3/4] overflow-hidden rounded-md hover:opacity-75`}
+                className={`the-action-content aspect-[3/4] overflow-hidden rounded-xs hover:opacity-75`}
               />
-              <div className="late-border border-background absolute inset-0 hidden rounded-md border ring-2 ring-rose-600"></div>
+              <div className="late-border border-background ring-error absolute inset-0 hidden rounded-xs border ring-2"></div>
 
               <div className="absolute -top-3 right-2 flex gap-2">
                 {isSprint(action.id, sprints) && (
@@ -336,7 +336,11 @@ export function ActionLine({
             )}
 
             {/* State */}
-            {short ? (
+            <div
+              className="absolute top-0 bottom-0 left-0 -ml-[1px] w-1 shrink-0 rounded-l-full"
+              style={{ backgroundColor: state.color }}
+            ></div>
+            {/* {short ? (
               <div
                 className="-my-2 -ml-2 h-6 w-1 shrink-0 rounded-l-full"
                 style={{ backgroundColor: state.color }}
@@ -346,7 +350,7 @@ export function ActionLine({
                 className="size-2 shrink-0 rounded-full"
                 style={{ backgroundColor: state.color }}
               ></div>
-            )}
+            )} */}
 
             {/* Title */}
 

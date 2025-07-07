@@ -223,9 +223,14 @@ export default function DashboardIndex() {
   }, []);
 
   useGSAP(() => {
-    gsap.to(".overlay", {
+    gsap.to("#overlay", {
       duration: 0.5,
-      height: 0,
+      opacity: 0,
+      onComplete: () => {
+        gsap.set("#overlay", {
+          visibility: "hidden",
+        });
+      },
     });
   }, []);
 
@@ -259,7 +264,7 @@ export default function DashboardIndex() {
         {/* Ações da Semana */}
         {/* <WeekView weekActions={weekActions} /> */}
       </div>
-      <LoaderTransition className="top-0 bottom-auto h-full" />
+      <LoaderTransition className="bg-background text-foreground" />
     </>
   );
 }
@@ -829,34 +834,36 @@ function Partners({ actions }: { actions?: Action[] }) {
         <Heading className="text-center">Parceiros</Heading>
 
         {partners.length > 0 ? (
-          <div className="grid w-full grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
+          <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
             {partners.map((partner) => (
-              <div key={partner.id} className="flex gap-4">
-                <div>
-                  <Link
-                    to={`/dashboard/${partner.slug}`}
-                    key={partner.slug}
-                    className="group/avatar relative flex cursor-pointer"
-                  >
-                    <Avatar
-                      item={{
-                        short: partner.short,
-                        bg: partner.colors[0],
-                        fg: partner.colors[1],
-                      }}
-                      size="xl"
-                    />
-                    <Badge
-                      value={
-                        lateActions.filter((action) =>
-                          action.partners.find((p) => p === partner.slug),
-                        ).length
-                      }
-                      isDynamic
-                      className="z-10 -mt-2 -ml-4"
-                    />
-                  </Link>
-                </div>
+              <div
+                key={partner.id}
+                className="hover:bg-accent flex gap-4 border-none p-8"
+              >
+                <Link
+                  to={`/dashboard/${partner.slug}`}
+                  key={partner.slug}
+                  className="group/avatar relative flex cursor-pointer"
+                >
+                  <Avatar
+                    item={{
+                      short: partner.short,
+                      bg: partner.colors[0],
+                      fg: partner.colors[1],
+                    }}
+                    size="xl"
+                  />
+                  <Badge
+                    value={
+                      lateActions.filter((action) =>
+                        action.partners.find((p) => p === partner.slug),
+                      ).length
+                    }
+                    isDynamic
+                    className="z-10 -mt-2 -ml-4"
+                  />
+                </Link>
+
                 <div className="overflow-hidden pt-1">
                   <div className="mb-1 w-full overflow-hidden leading-none font-medium tracking-tight text-ellipsis whitespace-nowrap md:text-xl">
                     <Link
@@ -945,14 +952,14 @@ const ActionsProgress = () => {
         <div className="text-sm tracking-wider uppercase">
           Acompanhamento do
         </div>
-        <div className="flex flex-row sm:text-7xl md:flex-col md:text-8xl lg:flex-row">
+        <div className="flex flex-row sm:text-7xl md:flex-col md:text-8xl xl:flex-row">
           <div>Pro</div>
           <div>gres</div>
           <div>so</div>
         </div>
       </Heading>
 
-      <div className="grid w-full grid-cols-3 justify-center rounded select-none md:grid-cols-3 lg:col-span-2 lg:grid-cols-6">
+      <div className="grid w-full grid-cols-3 justify-center rounded select-none md:grid-cols-3 lg:col-span-2 xl:grid-cols-6">
         {[
           {
             title: "Atrasados",
@@ -983,7 +990,7 @@ const ActionsProgress = () => {
         ].map(({ actions, title }, i) => (
           <div
             key={i}
-            className={`overflow-hidden px-8 py-8 md:border-l lg:py-12 ${i < 3 ? "border-b" : ""}`}
+            className={`overflow-hidden px-8 py-8 md:border-l lg:py-12 ${i < 3 ? "border-b xl:border-b-0" : ""}`}
           >
             <h3 className="text-xl font-medium capitalize">{title}</h3>
             <div className="my-2 text-7xl font-light">{actions.length}</div>
