@@ -1192,7 +1192,7 @@ const LateActionsCount = ({
   return length > 0 ? (
     <div
       className={cn(
-        "bg-foreground/20 border-background absolute top-0 -right-8 grid size-6 place-content-center rounded-full border-2 text-sm font-bold",
+        "bg-foreground text-background group-hover:text-foreground group-hover:bg-background absolute top-0 -right-8 grid size-6 place-content-center rounded-full text-sm font-bold",
         className,
       )}
     >
