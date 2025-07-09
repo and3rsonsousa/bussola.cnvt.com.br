@@ -827,7 +827,9 @@ function Partners({ actions }: { actions?: Action[] }) {
   actions = actions || [];
 
   return (
-    <div className="grid grid-cols-4 border-t py-8 md:grid-cols-5 lg:grid-cols-8">
+    <div
+      className={`grid grid-cols-4 border-t py-8 md:grid-cols-5 ${Math.ceil(partners.length / 2) <= 6 ? "lg:grid-cols-6" : Math.ceil(partners.length / 2) === 7 ? "lg:grid-cols-7" : "lg:grid-cols-8"} `}
+    >
       {partners.length > 0
         ? partners.map((partner) => (
             <Link
