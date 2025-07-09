@@ -43,10 +43,10 @@
     --background: 210 15% 2%;
     --foreground: 210 15% 98%;
 
-    --card: 210 15% 8%;
+    --card: 200 20% 12%;
     --card-foreground: 210 15% 98%;
 
-    --popover: 210 15% 16%;
+    --popover: 200 15% 18%;
     --popover-foreground: 210 15% 98%;
 
     --muted: 210 12% 25%;
@@ -59,8 +59,8 @@
     --secondary: 210 8% 35%;
     --secondary-foreground: 210 15% 98%;
 
-    --accent: 210 15% 20%;
-    --accent-foreground: 210 15% 98%;
+    --accent: 210 5% 20%;
+    --accent-foreground: 210 10% 98%;
 
     --destructive: 350 75% 45%;
     --destructive-foreground: 250 20% 98%;
@@ -228,7 +228,7 @@ body {
 
 .action-item {
   
-  @apply ring-ring ring-offset-background bg-card hover:bg-popover inset-shadow-highlight relative z-0 flex w-full cursor-pointer rounded-xs border border-transparent shadow-sm inset-shadow-xs outline-hidden transition-[box-shadow,background] select-none focus-within:ring-2 hover:z-10 hover:shadow-xl focus:ring-2 focus:ring-offset-2;
+  @apply ring-ring ring-offset-background bg-card hover:bg-popover relative z-0 flex w-full cursor-pointer rounded-xs border border-transparent shadow-sm outline-hidden transition-[box-shadow,background] select-none focus-within:ring-2 hover:z-10 hover:shadow-xl focus:ring-2 focus:ring-offset-2;
 }
 
 .action-item-short {
@@ -248,7 +248,7 @@ body {
 }
 
 .action-item.action-delayed {
-  @apply border-rose-300 bg-rose-50 text-rose-700;
+  @apply border-rose-300 bg-rose-50 text-rose-700 shadow-rose-700/20;
 }
 
 .dark .action-item.action-delayed {

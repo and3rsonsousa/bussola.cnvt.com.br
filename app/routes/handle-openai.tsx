@@ -228,7 +228,7 @@ O objetivo principal é gerar ${storytellingModels.legenda[model as keyof typeof
 Importante:
 - Utilize linguagem acessível e humana, adaptada para Instagram.
 - Não use expressões genéricos.
-- O texto deve ter ${length} caracteres. Nunca mais do que isso.
+- O texto deve ter ${length} palavras. Nunca mais do que isso.
 - Cada parágrafo deve ter no máximo 40 palavras.
 - Finalize com um CTA alinhado à intenção do modelo.
 - Não use tags, aspas, bullet points, markdown ou comentários adicionais.

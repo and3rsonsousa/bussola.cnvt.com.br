@@ -1,4 +1,3 @@
-import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import {
   addDays,
@@ -19,6 +18,7 @@ import {
   subDays,
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { gsap } from "gsap";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -48,7 +48,6 @@ import {
   useMatches,
   useOutletContext,
 } from "react-router";
-import { Pie, PieChart } from "recharts";
 import invariant from "tiny-invariant";
 
 import { ActionLine, BlockOfActions, ListOfActions } from "~/components/Action";
@@ -56,12 +55,8 @@ import Badge from "~/components/Badge";
 import CreateAction from "~/components/CreateAction";
 import { Heading } from "~/components/Headings";
 import Kanban from "~/components/Kanban";
+import LoaderTransition from "~/components/LoaderTransition";
 import { Button } from "~/components/ui/button";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "~/components/ui/chart";
 import { Input } from "~/components/ui/input";
 import {
   Select,
@@ -87,7 +82,7 @@ import {
   usePendingData,
 } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
-import LoaderTransition from "~/components/LoaderTransition";
+import { cn } from "~/lib/utils";
 
 export const config = { runtime: "edge" };
 gsap.registerPlugin(useGSAP);
@@ -224,8 +219,9 @@ export default function DashboardIndex() {
 
   useGSAP(() => {
     gsap.to("#overlay", {
-      duration: 0.5,
-      opacity: 0,
+      duration: 1,
+      clipPath: "inset(100% 0 0 0)",
+      ease: "expo.inOut",
       onComplete: () => {
         gsap.set("#overlay", {
           visibility: "hidden",
@@ -264,7 +260,10 @@ export default function DashboardIndex() {
         {/* Ações da Semana */}
         {/* <WeekView weekActions={weekActions} /> */}
       </div>
-      <LoaderTransition className="bg-background text-foreground" />
+      <LoaderTransition
+        fakePCT={100}
+        className="bg-foreground text-background"
+      />
     </>
   );
 }
@@ -828,6 +827,60 @@ function Partners({ actions }: { actions?: Action[] }) {
   actions = actions || [];
 
   return (
+    <div className="grid grid-cols-4 border-t py-8 md:grid-cols-5 lg:grid-cols-8">
+      {partners.length > 0
+        ? partners.map((partner) => (
+            <Link
+              to={`/dashboard/${partner.slug}`}
+              className="hover:bg-foreground hover:text-background group flex justify-center p-8"
+              key={partner.id}
+            >
+              <div className="text-center text-xl leading-none font-bold uppercase sm:text-3xl">
+                {partner.short.length > 4 ? (
+                  <>
+                    <div className="relative">
+                      {partner.short.substring(0, 3)}
+                      <LateActionsCount
+                        length={
+                          lateActions.filter((action) =>
+                            action.partners.find((p) => p === partner.slug),
+                          ).length
+                        }
+                      />
+                    </div>
+                    <div> {partner.short.substring(3)} </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="relative">
+                      {partner.short.substring(0, 2)}
+                      <LateActionsCount
+                        length={
+                          lateActions.filter((action) =>
+                            action.partners.find((p) => p === partner.slug),
+                          ).length
+                        }
+                      />
+                    </div>
+                    <div> {partner.short.substring(2)} </div>
+                  </>
+                )}
+              </div>
+
+              <div className="mt-4 opacity-0 group-hover:opacity-100">
+                <ProgressBar
+                  actions={actions.filter((action) =>
+                    action.partners.find((p) => p === partner.slug),
+                  )}
+                />
+              </div>
+            </Link>
+          ))
+        : null}
+    </div>
+  );
+
+  return (
     <>
       <div className="border-b"></div>
       <div className="px-2 py-8 md:px-8 lg:py-24">
@@ -877,7 +930,7 @@ function Partners({ actions }: { actions?: Action[] }) {
                   <div className="text-sm leading-none opacity-50">
                     <div>
                       {
-                        actions.filter((action) =>
+                        actions?.filter((action) =>
                           action.partners.find((p) => p === partner.slug),
                         ).length
                       }{" "}
@@ -936,7 +989,6 @@ function CategoriesView({ actions }: { actions: Action[] }) {
 const ActionsProgress = () => {
   const matches = useMatches();
 
-  const { states } = matches[1].data as DashboardRootType;
   const { actions, actionsChart } = matches[2].data as DashboardIndexType;
 
   const todayActions = getTodayActions(actions);
@@ -994,27 +1046,8 @@ const ActionsProgress = () => {
           >
             <h3 className="text-xl font-medium capitalize">{title}</h3>
             <div className="my-2 text-7xl font-light">{actions.length}</div>
-            <div className="bg-foreground flex h-1 w-full">
-              {states
-                .map((state) => {
-                  return {
-                    state: state.title,
-                    actions: actions.filter(
-                      (action) => action.state === state.slug,
-                    ).length,
-                    fill: state.color,
-                  };
-                })
-                .map((progress) => (
-                  <div
-                    key={progress.state}
-                    style={{
-                      width: `${(progress.actions / actions.length) * 100}%`,
-                      backgroundColor: progress.fill,
-                    }}
-                  ></div>
-                ))}
-            </div>
+
+            <ProgressBar actions={actions} />
           </div>
         ))}
       </div>
@@ -1120,3 +1153,50 @@ function Sprint() {
     </>
   ) : null;
 }
+
+const ProgressBar = ({ actions }: { actions: ActionChart[] }) => {
+  const matches = useMatches();
+  const { states } = matches[1].data as DashboardRootType;
+
+  return (
+    <div className="bg-foreground/20 flex h-1 w-full">
+      {states
+        .map((state) => {
+          return {
+            state: state.title,
+            actions: actions.filter((action) => action.state === state.slug)
+              .length,
+            fill: state.color,
+          };
+        })
+        .map((progress) => (
+          <div
+            key={progress.state}
+            style={{
+              width: `${(progress.actions / actions.length) * 100}%`,
+              backgroundColor: progress.fill,
+            }}
+          ></div>
+        ))}
+    </div>
+  );
+};
+
+const LateActionsCount = ({
+  length,
+  className,
+}: {
+  length: number;
+  className?: string;
+}) => {
+  return length > 0 ? (
+    <div
+      className={cn(
+        "bg-foreground/20 border-background absolute top-0 -right-8 grid size-6 place-content-center rounded-full border-2 text-sm font-bold",
+        className,
+      )}
+    >
+      {length}
+    </div>
+  ) : null;
+};

@@ -105,7 +105,6 @@ export function ActionLine({
   const matches = useMatches();
   const [searchParams] = useSearchParams();
   const isInstagramDate = searchParams.get("instagram_date");
-  // const selectMultiple = searchParams.get("select_multiple") === "true";
 
   const [edit, setEdit] = useState(false);
   const [isHover, setHover] = useState(false);
@@ -263,14 +262,17 @@ export function ActionLine({
 
                 {state.slug !== "finished" ? (
                   <div
-                    className={`border-background rounded-md border-2 px-2 py-0.5 text-[10px] font-bold tracking-wider text-white uppercase`}
-                    style={{ backgroundColor: state.color }}
+                    className={`border-background rounded-md border-2 px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase`}
+                    style={{
+                      backgroundColor: state.color,
+                      color: state.foreground,
+                    }}
                   >
                     <span>{state.title}</span>
                   </div>
                 ) : (
                   <div
-                    className="border-background mt-1 grid size-4 place-content-center rounded-md border-2 text-black"
+                    className="border-background grid size-6 place-content-center rounded-md border-2 text-black"
                     style={{ backgroundColor: state.color }}
                   >
                     <CheckIcon className="size-3" />
@@ -958,7 +960,7 @@ export function GridOfActions({
 
   return (
     <div className="scrollbars-v">
-      <div className="grid grid-cols-3 gap-[2px] overflow-hidden rounded-xl">
+      <div className="grid grid-cols-3 gap-[2px] overflow-hidden rounded-xs">
         {actions?.map((action, index) => (
           <Link
             to={`/dashboard/action/${action.id}${getQueryString()}`}

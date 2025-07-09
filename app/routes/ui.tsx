@@ -1,5 +1,4 @@
 import { redirect, useLoaderData, type LoaderFunctionArgs } from "react-router";
-import invariant from "tiny-invariant";
 import Loader from "~/components/Loader";
 import { ThemeToggle } from "~/components/ThemeToggle";
 import { Button } from "~/components/ui/button";
@@ -63,8 +62,6 @@ export default function UI() {
     <div className="flex flex-col gap-8 p-8">
       <div className="flex justify-between">
         <h1 className="text-5xl font-bold">UI</h1>
-
-        <ThemeToggle iconClassName="size-6" />
       </div>
       <div className="h-2 overflow-hidden rounded-sm">
         <div className="flex w-[110%] -translate-y-8 blur-xl">
@@ -112,7 +109,7 @@ export default function UI() {
       </div>
       <div>
         <h1 className="text-3xl font-bold">Cores</h1>
-        <div className="mt-4 grid grid-cols-3 gap-2">
+        <div className="mt-4 grid grid-cols-3 gap-2 xl:grid-cols-8">
           <div className="bg-background text-foreground grid place-content-center rounded-lg border p-4">
             <div>.bg-background</div>
             <div>.text-foreground</div>

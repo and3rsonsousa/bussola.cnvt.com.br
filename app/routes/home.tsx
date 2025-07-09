@@ -4,6 +4,7 @@ import { Link, NavLink, useNavigate, type MetaFunction } from "react-router";
 import type { Route } from "./+types/home";
 import { gsap } from "gsap";
 import LoaderTransition from "~/components/LoaderTransition";
+import { useState } from "react";
 
 gsap.registerPlugin(useGSAP);
 
@@ -23,6 +24,7 @@ export function loader({ context }: Route.LoaderArgs) {
 
 export default function Home() {
   let navigate = useNavigate();
+  let [start, setStart] = useState(false);
 
   useGSAP(() => {
     gsap.from(".header", {
@@ -43,6 +45,9 @@ export default function Home() {
       scaleX: 0,
       delay: 0.4,
       stagger: 0.2,
+    });
+    gsap.set("#overlay", {
+      clipPath: "inset(0 0 100% 0)",
     });
   }, []);
 
@@ -100,17 +105,10 @@ export default function Home() {
             onMouseLeave={(e) => mouseOver(e.currentTarget, true)}
             onClick={(e) => {
               e.preventDefault();
+              setStart(true);
               gsap.to("#overlay", {
                 duration: 1,
-                height: `100%`,
-                ease: "expo.inOut",
-                onComplete: () => {
-                  navigate(item.href);
-                },
-              });
-              gsap.to("#overlay-2", {
-                duration: 1.2,
-                height: `100%`,
+                clipPath: "inset(0 0 0% 0)",
                 ease: "expo.inOut",
                 onComplete: () => {
                   navigate(item.href);
@@ -135,10 +133,10 @@ export default function Home() {
         <div className="line bg-border absolute top-0 h-[1px] w-full origin-right"></div>
         CNVT®
       </div>
-      <LoaderTransition className="h-0 origin-bottom" />
+
       <LoaderTransition
-        className="bg-background text-foreground h-0 origin-bottom"
-        id="overlay-2"
+        start={start}
+        className="bg-foreground text-background"
       />
     </div>
   );

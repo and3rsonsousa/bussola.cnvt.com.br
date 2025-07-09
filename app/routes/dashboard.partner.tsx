@@ -1050,9 +1050,9 @@ export const CalendarDay = ({
     <div
       ref={setNodeRef}
       id={`day_${format(parseISO(day.date), "yyyy-MM-dd")}`}
-      className={`group/day hover:bg-accent/50 relative flex h-full flex-col border-b py-2 transition ${format(day.date, "e") !== "7" ? "border-l" : ""} ${
+      className={`group/day hover:bg-accent/50 relative flex h-full flex-col border-b py-2 transition ${
         Math.floor(Number(index) / 7) % 2 === 0 ? "item-even" : "item-odd"
-      } ${isOver ? "dragover" : ""} ${today && "border-t-foreground border-t"}`}
+      } ${isOver ? "dragover" : ""} ${today && "bg-accent/75 border-t-foreground border-t"}`}
       data-date={format(parseISO(day.date), "yyyy-MM-dd")}
     >
       {/* Date */}

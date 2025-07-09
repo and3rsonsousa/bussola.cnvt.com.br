@@ -46,7 +46,7 @@ import {
   UsersIcon,
   type LucideIcon,
 } from "lucide-react";
-import React, { useEffect, useState, type CSSProperties } from "react";
+import React, { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { type DateRange } from "react-day-picker";
 import invariant from "tiny-invariant";
 import { formatActionDatetime } from "~/components/Action";
@@ -234,7 +234,7 @@ export function Avatar({
         <AvatarImage src={item.image} />
       ) : (
         <AvatarFallback
-          className="bg-white"
+          className="bg-accent text-foreground"
           style={{
             backgroundColor: item.bg,
             color: item.fg,
@@ -953,27 +953,46 @@ export function LikeFooter({
     },
   };
 
-  // const likes = useMemo(() => Math.ceil(Math.random() * 200) + 50, []);
+  const engagement = useMemo(
+    () => [
+      Math.ceil(Math.random() * 200) + 50,
+      Math.ceil(Math.random() * 130) + 10,
+      Math.ceil(Math.random() * 20) + 5,
+    ],
+    [],
+  );
 
   return (
     <div className={`flex justify-between py-2`}>
       <div className={`flex ${sizes[size].parentClassName}`}>
-        <div className="flex gap-1">
+        <div className="flex items-center gap-1">
           {liked ? (
             <>
               <Heart className={cn(sizes[size].className)} />
-              {/* <div className={`${sizes[size].textClassName} font-bold`}>
-                {likes}
-              </div> */}
+              <div className={`${sizes[size].textClassName}`}>
+                {engagement[0]}
+              </div>
+              <MessageCircleIcon
+                className={cn(sizes[size].className, "-scale-x-100")}
+              />
+              <div className={`${sizes[size].textClassName}`}>
+                {engagement[1]}
+              </div>
+              <SendIcon className={cn(sizes[size].className)} />
+              <div className={`${sizes[size].textClassName}`}>
+                {engagement[2]}
+              </div>
             </>
           ) : (
-            <HeartIcon className={cn(sizes[size].className)} />
+            <>
+              <HeartIcon className={cn(sizes[size].className)} />
+              <MessageCircleIcon
+                className={cn(sizes[size].className, "-scale-x-100")}
+              />
+              <SendIcon className={cn(sizes[size].className)} />
+            </>
           )}
         </div>
-        <MessageCircleIcon
-          className={cn(sizes[size].className, "-scale-x-100")}
-        />
-        <SendIcon className={cn(sizes[size].className)} />
       </div>
       <div>
         <BookmarkIcon className={cn(sizes[size].className)} />

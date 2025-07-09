@@ -25,7 +25,6 @@ import {
 
 import { ptBR } from "date-fns/locale";
 import {
-  ChevronsDownUpIcon,
   ChevronsUpDownIcon,
   ImageIcon,
   LightbulbIcon,
@@ -71,6 +70,7 @@ import {
 import { Label } from "~/components/ui/label";
 import { Popover, PopoverContent } from "~/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
+import { Slider } from "~/components/ui/slider";
 import { ToastAction } from "~/components/ui/toast";
 import { useToast } from "~/components/ui/use-toast";
 import { FRAMEWORKS, INTENTS, TRIGGERS } from "~/lib/constants";
@@ -90,8 +90,6 @@ import {
 import { createClient } from "~/lib/supabase";
 import { cn } from "~/lib/utils";
 import { storytellingModels } from "./handle-openai";
-import OpenAI from "openai";
-import { Slider } from "~/components/ui/slider";
 
 export const config = { runtime: "edge" };
 const ACCESS_KEY = process.env.BUNNY_ACCESS_KEY;
@@ -864,58 +862,6 @@ function RightSide({
 
           <span className="block w-8 text-center text-xs">{length}</span>
 
-          {/* {isInstagramFeed(action.category) &&
-            action.caption &&
-            action.caption.length > 0 && (
-              <div className="flex items-center gap-1">
-                <Button
-                  variant={"ghost"}
-                  size="sm"
-                  title="Reduzir o Texto"
-                  className="h-8"
-                  onClick={async (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    fetcher.submit(
-                      {
-                        description: action.caption,
-                        intent: "shrink",
-                      },
-                      {
-                        action: "/handle-openai",
-                        method: "post",
-                      },
-                    );
-                  }}
-                >
-                  <ChevronsDownUpIcon className="size-4" />
-                </Button>
-                <Button
-                  variant={"ghost"}
-                  size={"sm"}
-                  className="h-8"
-                  title="Aumentar o texto"
-                  onClick={async (event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    fetcher.submit(
-                      {
-                        description: action.caption,
-                        intent: "expand",
-                      },
-                      {
-                        action: "/handle-openai",
-                        method: "post",
-                      },
-                    );
-                  }}
-                >
-                  <ChevronsUpDownIcon className="size-4" />
-                </Button>
-              </div>
-            )} */}
           {action.category === "stories" ? (
             <Popover>
               <PopoverTrigger asChild>
@@ -1005,10 +951,7 @@ function RightSide({
                 <Command>
                   <CommandInput placeholder="Qual legenda você quer gerar?" />
                   <CommandList>
-                    <CommandEmpty>
-                      {" "}
-                      Nenhuma legenda foi encontrada{" "}
-                    </CommandEmpty>
+                    <CommandEmpty>Nenhuma legenda foi encontrada</CommandEmpty>
 
                     <CommandGroup>
                       {Object.keys(storytellingModels.legenda).map((k) => {
