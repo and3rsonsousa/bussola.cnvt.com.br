@@ -56,6 +56,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 import { Theme, useTheme } from "remix-themes";
 import { getMonthsActions } from "~/lib/helpers";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 export default function Header({
   setOpen,
@@ -95,6 +97,7 @@ export default function Header({
       : partner;
 
   const lateActions = getDelayedActions({ actions: actionsChart });
+  const [start, setStart] = useState(false);
 
   return (
     <header
@@ -102,13 +105,31 @@ export default function Header({
     >
       {/* Logo */}
       <div className="flex items-center gap-1">
-        <Link
-          to="/dashboard"
+        <a
+          href="/dashboard"
           className="ring-ring ring-offset-background rounded px-4 py-2 outline-hidden focus:ring-2"
+          onClick={(e) => {
+            e.preventDefault();
+
+            gsap.fromTo(
+              "#overlay",
+              {
+                clipPath: "inset(0% 0% 100% 0%)",
+              },
+              {
+                duration: 1,
+                clipPath: "inset(0% 0% 0% 0%)",
+                ease: "expo.inOut",
+                onComplete: () => {
+                  navigate("/dashboard");
+                },
+              },
+            );
+          }}
         >
           <Bussola className="md:hidden" size="md" short />
           <Bussola className="hidden md:block" size="xs" />
-        </Link>
+        </a>
         {/* Atrasados */}
         {lateActions.length > 0 && (
           <Link

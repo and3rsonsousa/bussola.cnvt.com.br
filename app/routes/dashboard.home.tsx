@@ -587,64 +587,6 @@ function NextActions({ actions }: { actions: Action[] }) {
   );
 }
 
-function WeekView({
-  weekActions,
-}: {
-  weekActions: { date: Date; actions: Action[] }[];
-}) {
-  return weekActions.reduce(
-    (acc, currentValue) => acc + currentValue.actions.length,
-    0,
-  ) > 0 ? (
-    <>
-      <div className="border-b"></div>
-      <div className="py-8 lg:py-24">
-        <div className="px-2 pb-8 text-center md:px-8">
-          <Heading>Semana</Heading>
-        </div>
-        <div className="scrollbars-h mb-8 flex max-h-[50vh] flex-nowrap overflow-x-auto overflow-y-hidden px-2 md:px-8">
-          {weekActions.map(({ date, actions }) => (
-            <div
-              className="group flex max-h-full w-full min-w-72 flex-col overflow-hidden"
-              key={date.getDate()}
-              data-date={format(date, "yyyy-MM-dd")}
-            >
-              {/* Dia */}
-              <div className="flex shrink-0 items-center justify-between">
-                <div className="font-medium text-nowrap text-ellipsis first-letter:capitalize">
-                  {format(date, "EEEE ", {
-                    locale: ptBR,
-                  })}
-                </div>
-                <div className="text-center opacity-0 group-hover:opacity-100">
-                  <CreateAction mode="day" date={format(date, "yyyy-MM-dd")} />
-                </div>
-              </div>
-              {/* Data */}
-              <div className="text-muted-foreground mb-4 text-[10px] font-medium tracking-widest uppercase">
-                {format(date, "d 'de' MMMM", {
-                  locale: ptBR,
-                })}
-              </div>
-
-              {/* Lista de Ações do dia */}
-              <div className="overflow-hidden p-1">
-                <ListOfActions
-                  actions={actions}
-                  date={{ timeFormat: 1 }}
-                  showCategory={true}
-                  short
-                  scroll
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
-  ) : null;
-}
-
 export function HoursView({ actions }: { actions: Action[] }) {
   return (
     <div className="gap-4 md:grid md:grid-cols-2 xl:grid-cols-4">
@@ -881,84 +823,6 @@ function Partners({ actions }: { actions?: Action[] }) {
         : null}
     </div>
   );
-
-  return (
-    <>
-      <div className="border-b"></div>
-      <div className="px-2 py-8 md:px-8 lg:py-24">
-        <Heading className="text-center">Parceiros</Heading>
-
-        {partners.length > 0 ? (
-          <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
-            {partners.map((partner) => (
-              <div
-                key={partner.id}
-                className="hover:bg-accent flex gap-4 border-none p-8"
-              >
-                <Link
-                  to={`/dashboard/${partner.slug}`}
-                  key={partner.slug}
-                  className="group/avatar relative flex cursor-pointer"
-                >
-                  <Avatar
-                    item={{
-                      short: partner.short,
-                      bg: partner.colors[0],
-                      fg: partner.colors[1],
-                    }}
-                    size="xl"
-                  />
-                  <Badge
-                    value={
-                      lateActions.filter((action) =>
-                        action.partners.find((p) => p === partner.slug),
-                      ).length
-                    }
-                    isDynamic
-                    className="z-10 -mt-2 -ml-4"
-                  />
-                </Link>
-
-                <div className="overflow-hidden pt-1">
-                  <div className="mb-1 w-full overflow-hidden leading-none font-medium tracking-tight text-ellipsis whitespace-nowrap md:text-xl">
-                    <Link
-                      tabIndex={0}
-                      to={`/dashboard/${partner.slug}`}
-                      key={partner.slug}
-                    >
-                      {partner.title}
-                    </Link>
-                  </div>
-                  <div className="text-sm leading-none opacity-50">
-                    <div>
-                      {
-                        actions?.filter((action) =>
-                          action.partners.find((p) => p === partner.slug),
-                        ).length
-                      }{" "}
-                      ações
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid place-content-center p-4 text-center">
-            <div className="mb-2 text-4xl font-semibold tracking-tighter text-rose-600">
-              Nenhum <span className="font-bold">PARCEIRO</span> está designado
-              para você.
-            </div>
-            <div className="text-lg tracking-tight">
-              Fale com o seu Head para viabilizar o seu acesso
-              <br />
-              aos parceiros da empresa que você deve ter acesso.
-            </div>
-          </div>
-        )}
-      </div>
-    </>
-  );
 }
 
 function CategoriesView({ actions }: { actions: Action[] }) {
@@ -1006,14 +870,14 @@ const ActionsProgress = () => {
         <div className="text-sm tracking-wider uppercase">
           Acompanhamento do
         </div>
-        <div className="flex flex-row sm:text-7xl md:flex-col md:text-8xl xl:flex-row">
+        <div className="flex flex-row sm:text-7xl md:flex-col md:text-8xl 2xl:flex-row">
           <div>Pro</div>
           <div>gres</div>
           <div>so</div>
         </div>
       </Heading>
 
-      <div className="grid w-full grid-cols-3 justify-center rounded select-none md:grid-cols-3 lg:col-span-2 xl:grid-cols-6">
+      <div className="grid w-full grid-cols-3 justify-center rounded select-none md:grid-cols-3 lg:col-span-2 2xl:grid-cols-6">
         {[
           {
             title: "Atrasados",

@@ -16,7 +16,7 @@ import { useState } from "react";
 import type { Route } from "./+types/root";
 
 import stylesheet from "./app.css?url";
-import font from "../public/object-sans/object-sans.css?url";
+import font from "/object-sans/object-sans.css?url";
 
 import { themeSessionResolver } from "./lib/session.server";
 import {
@@ -86,32 +86,39 @@ export function App({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Layout({ children }: { children: React.ReactNode }) {
-  const data = useLoaderData<typeof loader>();
-  return (
-    <ThemeProvider specifiedTheme={data.theme} themeAction="/set-theme">
-      <App>{children}</App>
-    </ThemeProvider>
-  );
-}
+// export function Layouet({ children }: { children: React.ReactNode }) {
+//   const data = useLoaderData<typeof loader>();
+//   // console.log({ data });
+
+//   return (
+//     <ThemeProvider specifiedTheme={data.theme} themeAction="/set-theme">
+//       <App>{children}</App>
+//     </ThemeProvider>
+//   );
+// }
 
 export default function AppWithProviders() {
   const [showFeed, setShowFeed] = useState(false);
   const [isTransitioning, setTransitioning] = useState(false);
   const [stateFilter, setStateFilter] = useState<State>();
+
   const data = useLoaderData<typeof loader>();
 
   return (
-    <Outlet
-      context={{
-        showFeed,
-        isTransitioning,
-        stateFilter,
-        setShowFeed,
-        setTransitioning,
-        setStateFilter,
-      }}
-    />
+    <ThemeProvider specifiedTheme={data.theme} themeAction="/set-theme">
+      <App>
+        <Outlet
+          context={{
+            showFeed,
+            isTransitioning,
+            stateFilter,
+            setShowFeed,
+            setTransitioning,
+            setStateFilter,
+          }}
+        />
+      </App>
+    </ThemeProvider>
   );
 }
 

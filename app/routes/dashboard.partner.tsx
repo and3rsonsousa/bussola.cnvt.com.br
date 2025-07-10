@@ -85,8 +85,12 @@ import {
   usePendingData,
 } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
+import LoaderTransition from "~/components/LoaderTransition";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 
 export const config = { runtime: "edge" };
+gsap.registerPlugin(useGSAP);
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   let _date = new URL(request.url).searchParams.get("date");
@@ -393,6 +397,22 @@ export default function Partner() {
       },
     }),
   );
+
+  useGSAP(() => {
+    // gsap.set("#overlay", {
+    //   clipPath: "inset(0 0 100% 0)",
+    // });
+    gsap.to("#overlay", {
+      duration: 1,
+      clipPath: "inset(100% 0 0 0)",
+      ease: "expo.inOut",
+      onComplete: () => {
+        // gsap.set("#overlay", {
+        //   visibility: "hidden",
+        // });
+      },
+    });
+  }, []);
 
   return (
     <div className="flex overflow-hidden" id="partner-page">
@@ -1013,6 +1033,10 @@ export default function Partner() {
           </div>
         </div>
       )}
+      <LoaderTransition
+        fakePCT={100}
+        className="bg-foreground text-background"
+      />
     </div>
   );
 }
