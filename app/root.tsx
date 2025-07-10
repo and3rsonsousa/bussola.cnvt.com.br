@@ -16,7 +16,7 @@ import { useState } from "react";
 import type { Route } from "./+types/root";
 
 import stylesheet from "./app.css?url";
-import font from "/object-sans/object-sans.css?url";
+import font from "../public/object-sans/object-sans.css?url";
 
 import { themeSessionResolver } from "./lib/session.server";
 import {
