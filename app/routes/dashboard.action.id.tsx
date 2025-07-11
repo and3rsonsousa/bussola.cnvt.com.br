@@ -745,7 +745,7 @@ function RightSide({
     files: string[];
   } | null>(null);
 
-  const [length, setLength] = useState([150]);
+  const [length, setLength] = useState([60]);
 
   const fetcher = useFetcher({ key: "action-page" });
   const { getInputProps, getRootProps, isDragActive } = useDropzone({

@@ -1,7 +1,9 @@
+import { MoonIcon, SunIcon } from "lucide-react";
 import { redirect, useLoaderData, type LoaderFunctionArgs } from "react-router";
+import { Theme, useTheme } from "remix-themes";
 import Loader from "~/components/Loader";
-import { ThemeToggle } from "~/components/ThemeToggle";
 import { Button } from "~/components/ui/button";
+import { Toggle } from "~/components/ui/toggle";
 import { Avatar, AvatarGroup, Icons } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
 
@@ -58,10 +60,29 @@ export default function UI() {
     states: State[];
   }>();
 
+  const [theme, setTheme] = useTheme();
+
   return (
     <div className="flex flex-col gap-8 p-8">
       <div className="flex justify-between">
         <h1 className="text-5xl font-bold">UI</h1>
+        <div>
+          <Toggle
+            onPressedChange={() => {
+              if (theme === Theme.LIGHT) {
+                setTheme(Theme.DARK);
+              } else {
+                setTheme(Theme.LIGHT);
+              }
+            }}
+          >
+            {theme === Theme.LIGHT ? (
+              <SunIcon className="size-4 opacity-50" />
+            ) : (
+              <MoonIcon className="size-4 opacity-50" />
+            )}
+          </Toggle>
+        </div>
       </div>
       <div className="h-2 overflow-hidden rounded-sm">
         <div className="flex w-[110%] -translate-y-8 blur-xl">
@@ -109,39 +130,62 @@ export default function UI() {
       </div>
       <div>
         <h1 className="text-3xl font-bold">Cores</h1>
-        <div className="mt-4 grid grid-cols-3 gap-2 xl:grid-cols-8">
-          <div className="bg-background text-foreground grid place-content-center rounded-lg border p-4">
-            <div>.bg-background</div>
-            <div>.text-foreground</div>
-          </div>
-          <div className="bg-card text-card-foreground grid place-content-center rounded-lg border p-4">
-            <div>.bg-card</div>
-            <div>.text-card-foreground</div>
-          </div>
-          <div className="bg-popover text-popover-foreground grid place-content-center rounded-lg border p-4">
-            <div>.bg-popover</div>
-            <div>.text-popover-foreground</div>
-          </div>
-          <div className="bg-primary text-primary-foreground grid place-content-center rounded-lg p-4">
-            <div>.bg-primary</div>
-            <div>.text-primary-foreground</div>
-          </div>
-          <div className="bg-secondary text-secondary-foreground grid place-content-center rounded-lg p-4">
-            <div>.bg-secondary</div>
-            <div>.text-secondary-foreground</div>
-          </div>
-          <div className="bg-muted text-muted-foreground grid place-content-center rounded-lg p-4">
-            <div>.bg-muted</div>
-            <div>.text-muted-foreground</div>
-          </div>
-          <div className="bg-accent text-accent-foreground grid place-content-center rounded-lg p-4">
-            <div>.bg-accent</div>
-            <div>.text-accent-foreground</div>
-          </div>
-          <div className="bg-destructive text-destructive-foreground grid place-content-center rounded-lg p-4">
-            <div>.bg-destructive</div>
-            <div>.text-destructive-foreground</div>
-          </div>
+        <div className="mt-4 grid grid-cols-2 lg:grid-cols-3">
+          {[
+            {
+              bg: "bg-background",
+              fg: "text-foreground",
+              title: "Base",
+            },
+            {
+              bg: "bg-card",
+              fg: "text-card-foreground",
+              title: "Card",
+            },
+            {
+              bg: "bg-popover",
+              fg: "text-popover-foreground",
+              title: "Popover",
+            },
+            {
+              bg: "bg-primary",
+              fg: "text-primary-foreground",
+              title: "Primary",
+            },
+            {
+              bg: "bg-secondary",
+              fg: "text-secondary-foreground",
+              title: "Secondary",
+            },
+            {
+              bg: "bg-accent",
+              fg: "text-accent-foreground",
+              title: "Accent",
+            },
+            {
+              bg: "bg-muted",
+              fg: "text-muted-foreground",
+              title: "Muted",
+            },
+            {
+              bg: "bg-input",
+              fg: "text-input-foreground",
+              title: "Input",
+            },
+            {
+              bg: "bg-destructive",
+              fg: "text-destructive-foreground",
+              title: "Destructive",
+            },
+          ].map((item, i) => (
+            <div key={i} className={`${item.bg} ${item.fg} p-8`}>
+              <div className="text-xl font-medium">{item.title}</div>
+              <div className="text-sm">
+                <div>{item.fg}</div>
+                <div>{item.bg}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
       <div className="grid gap-8 lg:grid-cols-2">

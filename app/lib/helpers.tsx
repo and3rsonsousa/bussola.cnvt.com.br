@@ -234,7 +234,7 @@ export function Avatar({
         <AvatarImage src={item.image} />
       ) : (
         <AvatarFallback
-          className="bg-accent text-foreground"
+          className="bg-secondary text-secondary-foreground"
           style={{
             backgroundColor: item.bg,
             color: item.fg,

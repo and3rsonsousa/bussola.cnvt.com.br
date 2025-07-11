@@ -15,16 +15,16 @@ import { Theme, ThemeColor } from "~/lib/theme-provider";
 import { useState } from "react";
 import type { Route } from "./+types/root";
 
-import stylesheet from "./app.css?url";
 import font from "../public/object-sans/object-sans.css?url";
+import stylesheet from "./app.css?url";
 
-import { themeSessionResolver } from "./lib/session.server";
+import clsx from "clsx";
 import {
   PreventFlashOnWrongTheme,
   ThemeProvider,
   useTheme,
 } from "remix-themes";
-import clsx from "clsx";
+import { themeSessionResolver } from "./lib/session.server";
 
 export type LoaderData = {
   theme: Theme | null;
