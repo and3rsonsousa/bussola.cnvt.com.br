@@ -16,13 +16,13 @@ export default function LoaderTransition({
 }) {
   const [pct, setPCT] = useState(fakePCT);
 
-  useGSAP(() => {
-    if (fakePCT < 100) {
-      gsap.set("#numbers", {
-        y: "-100%",
-      });
-    }
-  }, [fakePCT]);
+  // useGSAP(() => {
+  //   if (fakePCT < 100) {
+  //     gsap.set("#numbers", {
+  //       y: "-100%",
+  //     });
+  //   }
+  // }, [fakePCT]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
@@ -39,26 +39,26 @@ export default function LoaderTransition({
     return () => clearInterval(interval);
   }, [start, pct]);
 
-  useEffect(() => {
-    if (start) {
-      gsap.to("#numbers", {
-        duration: 0.8,
-        delay: 0.2,
-        y: 0,
-        ease: "expo.inOut",
-      });
-    }
-  }, [start]);
+  // useEffect(() => {
+  //   if (start) {
+  //     gsap.to("#numbers", {
+  //       duration: 0.8,
+  //       delay: 0.2,
+  //       y: 0,
+  //       ease: "expo.inOut",
+  //     });
+  //   }
+  // }, [start]);
 
-  useEffect(() => {
-    if (fakePCT === 100) {
-      gsap.to("#numbers", {
-        duration: 1,
-        y: "100%",
-        ease: "expo.inOut",
-      });
-    }
-  }, [fakePCT]);
+  // useEffect(() => {
+  //   if (fakePCT === 100) {
+  //     gsap.to("#numbers", {
+  //       duration: 1,
+  //       y: "100%",
+  //       ease: "expo.inOut",
+  //     });
+  //   }
+  // }, [fakePCT]);
 
   return (
     <div

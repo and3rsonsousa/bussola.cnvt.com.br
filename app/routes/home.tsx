@@ -5,6 +5,7 @@ import type { Route } from "./+types/home";
 import { gsap } from "gsap";
 import LoaderTransition from "~/components/LoaderTransition";
 import { useState } from "react";
+import { motion } from "motion/react";
 
 gsap.registerPlugin(useGSAP);
 
@@ -24,7 +25,6 @@ export function loader({ context }: Route.LoaderArgs) {
 
 export default function Home() {
   let navigate = useNavigate();
-  let [start, setStart] = useState(false);
 
   useGSAP(() => {
     gsap.from(".header", {
@@ -45,9 +45,6 @@ export default function Home() {
       scaleX: 0,
       delay: 0.4,
       stagger: 0.2,
-    });
-    gsap.set("#overlay", {
-      clipPath: "inset(0 0 100% 0)",
     });
   }, []);
 
@@ -97,24 +94,12 @@ export default function Home() {
             href: "https://cnvt.com.br",
           },
         ].map((item, i) => (
-          <a
+          <Link
             key={i}
             className="home-link hover:bg-foreground hover:text-background relative flex h-[20vh] items-center justify-between transition-colors md:h-[20vh]"
-            href={item.href}
+            to={item.href}
             onMouseEnter={(e) => mouseOver(e.currentTarget)}
             onMouseLeave={(e) => mouseOver(e.currentTarget, true)}
-            onClick={(e) => {
-              e.preventDefault();
-              setStart(true);
-              gsap.to("#overlay", {
-                duration: 1,
-                clipPath: "inset(0 0 0% 0)",
-                ease: "expo.inOut",
-                onComplete: () => {
-                  navigate(item.href);
-                },
-              });
-            }}
           >
             <span className="home-link__info flex -translate-x-[100px] items-center gap-4 opacity-0">
               <ArrowRightIcon className="size-16" />
@@ -126,18 +111,13 @@ export default function Home() {
             </span>
             <span className="home-link__name absolute pr-16">{item.title}</span>
             <div className="line bg-border absolute bottom-0 h-[1px] w-full"></div>
-          </a>
+          </Link>
         ))}
       </div>
       <div className="footer relative pt-8 text-right font-medium">
         <div className="line bg-border absolute top-0 h-[1px] w-full origin-right"></div>
         CNVT®
       </div>
-
-      <LoaderTransition
-        start={start}
-        className="bg-foreground text-background"
-      />
     </div>
   );
 }

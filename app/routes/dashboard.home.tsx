@@ -38,6 +38,7 @@ import {
   TimerIcon,
   XIcon,
 } from "lucide-react";
+import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import {
   Link,
@@ -52,10 +53,8 @@ import invariant from "tiny-invariant";
 
 import { ActionLine, BlockOfActions, ListOfActions } from "~/components/Action";
 import Badge from "~/components/Badge";
-import CreateAction from "~/components/CreateAction";
 import { Heading } from "~/components/Headings";
 import Kanban from "~/components/Kanban";
-import LoaderTransition from "~/components/LoaderTransition";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
@@ -217,54 +216,35 @@ export default function DashboardIndex() {
     setTransitioning(false);
   }, []);
 
-  useGSAP(() => {
-    gsap.to("#overlay", {
-      duration: 1,
-      clipPath: "inset(100% 0 0 0)",
-      ease: "expo.inOut",
-      onComplete: () => {
-        gsap.set("#overlay", {
-          visibility: "hidden",
-        });
-      },
-    });
-  }, []);
-
   return (
-    <>
-      <div className="overflow-y-auto">
-        {/* Progresso  */}
+    <div className="overflow-y-auto">
+      {/* Progresso  */}
 
-        {person.admin && <ActionsProgress />}
+      {person.admin && <ActionsProgress />}
 
-        {/* Sprint */}
-        <Sprint />
+      {/* Sprint */}
+      <Sprint />
 
-        {/* Parceiros */}
-        <Partners actions={actions as Action[]} />
+      {/* Parceiros */}
+      <Partners actions={actions as Action[]} />
 
-        {/* Ações em Atraso */}
+      {/* Ações em Atraso */}
 
-        <DelayedActions actions={lateActions} />
+      <DelayedActions actions={lateActions} />
 
-        {/* Hoje */}
-        <TodayViews actions={actions as Action[]} />
+      {/* Hoje */}
+      <TodayViews actions={actions as Action[]} />
 
-        {/* Mês */}
+      {/* Mês */}
 
-        <CalendarMonth actions={actions} />
+      <CalendarMonth actions={actions} />
 
-        {/* Próximas Ações */}
-        <NextActions actions={nextActions as Action[]} />
+      {/* Próximas Ações */}
+      <NextActions actions={nextActions as Action[]} />
 
-        {/* Ações da Semana */}
-        {/* <WeekView weekActions={weekActions} /> */}
-      </div>
-      <LoaderTransition
-        fakePCT={100}
-        className="bg-foreground text-background"
-      />
-    </>
+      {/* Ações da Semana */}
+      {/* <WeekView weekActions={weekActions} /> */}
+    </div>
   );
 }
 

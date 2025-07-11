@@ -105,31 +105,13 @@ export default function Header({
     >
       {/* Logo */}
       <div className="flex items-center gap-1">
-        <a
-          href="/dashboard"
+        <Link
+          to="/dashboard"
           className="ring-ring ring-offset-background rounded px-4 py-2 outline-hidden focus:ring-2"
-          onClick={(e) => {
-            e.preventDefault();
-
-            gsap.fromTo(
-              "#overlay",
-              {
-                clipPath: "inset(0% 0% 100% 0%)",
-              },
-              {
-                duration: 1,
-                clipPath: "inset(0% 0% 0% 0%)",
-                ease: "expo.inOut",
-                onComplete: () => {
-                  navigate("/dashboard");
-                },
-              },
-            );
-          }}
         >
           <Bussola className="md:hidden" size="md" short />
           <Bussola className="hidden md:block" size="xs" />
-        </a>
+        </Link>
         {/* Atrasados */}
         {lateActions.length > 0 && (
           <Link

@@ -88,6 +88,7 @@ import { createClient } from "~/lib/supabase";
 import LoaderTransition from "~/components/LoaderTransition";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { motion } from "motion/react";
 
 export const config = { runtime: "edge" };
 gsap.registerPlugin(useGSAP);
@@ -397,22 +398,6 @@ export default function Partner() {
       },
     }),
   );
-
-  useGSAP(() => {
-    // gsap.set("#overlay", {
-    //   clipPath: "inset(0 0 100% 0)",
-    // });
-    gsap.to("#overlay", {
-      duration: 1,
-      clipPath: "inset(100% 0 0 0)",
-      ease: "expo.inOut",
-      onComplete: () => {
-        // gsap.set("#overlay", {
-        //   visibility: "hidden",
-        // });
-      },
-    });
-  }, []);
 
   return (
     <div className="flex overflow-hidden">
@@ -1033,10 +1018,6 @@ export default function Partner() {
           </div>
         </div>
       )}
-      <LoaderTransition
-        fakePCT={100}
-        className="bg-foreground text-background"
-      />
     </div>
   );
 }

@@ -6,19 +6,23 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useLocation,
+  useNavigation,
   type LoaderFunctionArgs,
 } from "react-router";
 
 import { Theme, ThemeColor } from "~/lib/theme-provider";
 
 //@ts-ignore
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Route } from "./+types/root";
 
 import font from "../public/object-sans/object-sans.css?url";
 import stylesheet from "./app.css?url";
 
 import clsx from "clsx";
+import { AnimatePresence, motion } from "motion/react";
+import React from "react";
 import {
   PreventFlashOnWrongTheme,
   ThemeProvider,
@@ -85,17 +89,6 @@ export function App({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
-
-// export function Layouet({ children }: { children: React.ReactNode }) {
-//   const data = useLoaderData<typeof loader>();
-//   // console.log({ data });
-
-//   return (
-//     <ThemeProvider specifiedTheme={data.theme} themeAction="/set-theme">
-//       <App>{children}</App>
-//     </ThemeProvider>
-//   );
-// }
 
 export default function AppWithProviders() {
   const [showFeed, setShowFeed] = useState(false);
