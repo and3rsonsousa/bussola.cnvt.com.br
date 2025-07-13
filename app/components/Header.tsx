@@ -58,6 +58,7 @@ import { Theme, useTheme } from "remix-themes";
 import { getMonthsActions } from "~/lib/helpers";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import Badge from "./Badge";
 
 export default function Header({
   setOpen,
@@ -104,23 +105,21 @@ export default function Header({
       className={`flex items-center justify-between gap-4 border-b px-6 py-2`}
     >
       {/* Logo */}
-      <div className="flex items-center gap-1">
+      <div className="relative flex items-center gap-1">
         <Link
           to="/dashboard"
-          className="ring-ring ring-offset-background rounded px-4 py-2 outline-hidden focus:ring-2"
+          className="ring-ring ring-offset-background -ml-2 rounded px-4 py-2 outline-hidden focus:ring-2"
         >
           <Bussola className="md:hidden" size="md" short />
           <Bussola className="hidden md:block" size="xs" />
         </Link>
         {/* Atrasados */}
-        {lateActions.length > 0 && (
-          <Link
-            to={`/dashboard/late${partner ? `?partner_slug=${partner?.slug}` : ""}`}
-            className="-ml-4 grid -translate-y-2 place-content-center rounded bg-rose-600 px-1.5 py-0.5 text-xs font-semibold text-white"
-          >
-            {lateActions.length}
-          </Link>
-        )}
+        <Link
+          to={`/dashboard/late${partner ? `?partner_slug=${partner?.slug}` : ""}`}
+          className="ring-ring ring-offset-background absolute top-0 right-1 translate-x-full rounded-full ring-offset-2 outline-none focus:ring-2"
+        >
+          <Badge value={lateActions.length} isDynamic size="sm" />
+        </Link>
       </div>
       <div className="flex items-center gap-4 md:gap-4">
         {/* Revisão e Instagram */}
