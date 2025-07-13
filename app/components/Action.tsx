@@ -215,7 +215,7 @@ export function ActionLine({
           >
             <div
               title={action.title}
-              className={`ring-ring ring-offset-background relative cursor-pointer rounded-xs ring-offset-2 outline-hidden focus-within:ring-3 ${
+              className={`ring-ring ring-offset-background relative cursor-pointer ring-offset-2 outline-hidden focus-within:ring-3 ${
                 showDelay &&
                 state.slug !== "finished" &&
                 (isBefore(action.instagram_date, new Date()) ||
@@ -237,9 +237,9 @@ export function ActionLine({
                 partner={partner!}
                 showInfo
                 date={{ timeFormat: 1 }}
-                className={`the-action-content aspect-[3/4] overflow-hidden rounded-xs hover:opacity-75`}
+                className={`the-action-content aspect-[3/4] overflow-hidden rounded-md hover:opacity-75`}
               />
-              <div className="late-border border-background ring-error absolute inset-0 hidden rounded-xs border ring-2"></div>
+              <div className="late-border border-background ring-error absolute inset-0 hidden rounded-md border ring-2"></div>
 
               <div className="absolute -top-3 right-2 flex gap-2">
                 {isSprint(action.id, sprints) && (
@@ -861,20 +861,18 @@ export function ListOfActions({
                 : "grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6"
         } ${scroll ? "scrollbars-v pt-1 pb-8" : ""} ${isHair ? "gap-y-[1px]" : "gap-y-1"} @container h-full gap-x-4`}
       >
-        {actions
-          ?.slice(0, fold)
-          .map((action) => (
-            <ActionLine
-              short={short}
-              long={long}
-              key={action.id}
-              action={action}
-              showCategory={showCategory}
-              showPartner={showPartner}
-              date={date}
-              isHair={isHair}
-            />
-          ))}
+        {actions?.slice(0, fold).map((action) => (
+          <ActionLine
+            short={short}
+            long={long}
+            key={action.id}
+            action={action}
+            showCategory={showCategory}
+            showPartner={showPartner}
+            date={date}
+            isHair={isHair}
+          />
+        ))}
       </div>
 
       {actions && isFoldable && actions.length > foldCount ? (

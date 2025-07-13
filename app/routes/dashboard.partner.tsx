@@ -992,7 +992,7 @@ export default function Partner() {
           id="instagram-grid"
         >
           {/* Instagram Grid Header */}
-          <div className="bg-card flex items-center gap-2 border-b px-4 py-3 leading-none">
+          <div className="flex items-center gap-2 border-b px-4 py-3 leading-none">
             <div>
               <Avatar
                 item={{
@@ -1055,9 +1055,9 @@ export const CalendarDay = ({
     <div
       ref={setNodeRef}
       id={`day_${format(parseISO(day.date), "yyyy-MM-dd")}`}
-      className={`group/day hover:bg-accent/50 relative flex h-full flex-col border-b py-2 transition ${
+      className={`group/day hover:bg-secondary/20 relative flex h-full flex-col border-b py-2 transition ${
         Math.floor(Number(index) / 7) % 2 === 0 ? "item-even" : "item-odd"
-      } ${isOver ? "dragover" : ""} ${today && "bg-accent/75 border-t-foreground border-t"}`}
+      } ${isOver ? "dragover" : ""} ${today && "bg-secondary/50 border-t-foreground border-t"}`}
       data-date={format(parseISO(day.date), "yyyy-MM-dd")}
     >
       {/* Date */}

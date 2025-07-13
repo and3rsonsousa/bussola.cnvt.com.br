@@ -750,26 +750,29 @@ function Partners({ actions }: { actions?: Action[] }) {
 
   return (
     <div
-      className={`grid grid-cols-4 border-t py-8 md:grid-cols-5 ${Math.ceil(partners.length / 2) <= 6 ? "lg:grid-cols-6" : Math.ceil(partners.length / 2) === 7 ? "lg:grid-cols-7" : "lg:grid-cols-8"} `}
+      className={`grid grid-cols-4 border-t md:grid-cols-5 ${Math.ceil(partners.length / 2) <= 6 ? "lg:grid-cols-6" : Math.ceil(partners.length / 2) === 7 ? "lg:grid-cols-7" : "lg:grid-cols-8"} `}
     >
       {partners.length > 0
         ? partners.map((partner) => (
             <Link
               to={`/dashboard/${partner.slug}`}
-              className="hover:bg-foreground hover:text-background group flex justify-center p-8"
+              className="hover:bg-foreground hover:text-background group flex flex-col justify-center p-8"
               key={partner.id}
             >
-              <div className="text-center text-xl leading-none font-bold uppercase sm:text-3xl">
+              <div className="self-center text-center text-xl leading-none font-bold uppercase sm:text-3xl">
                 {partner.short.length > 4 ? (
                   <>
                     <div className="relative">
                       {partner.short.substring(0, 3)}
-                      <LateActionsCount
-                        length={
+
+                      <Badge
+                        className="absolute top-0 -right-8"
+                        value={
                           lateActions.filter((action) =>
                             action.partners.find((p) => p === partner.slug),
                           ).length
                         }
+                        isDynamic
                       />
                     </div>
                     <div> {partner.short.substring(3)} </div>
@@ -778,12 +781,14 @@ function Partners({ actions }: { actions?: Action[] }) {
                   <>
                     <div className="relative">
                       {partner.short.substring(0, 2)}
-                      <LateActionsCount
-                        length={
+                      <Badge
+                        className="absolute top-0 -right-8"
+                        value={
                           lateActions.filter((action) =>
                             action.partners.find((p) => p === partner.slug),
                           ).length
                         }
+                        isDynamic
                       />
                     </div>
                     <div> {partner.short.substring(2)} </div>
@@ -791,7 +796,7 @@ function Partners({ actions }: { actions?: Action[] }) {
                 )}
               </div>
 
-              <div className="mt-4 opacity-0 group-hover:opacity-100">
+              <div className="mt-4 hidden w-full opacity-0 group-hover:opacity-100">
                 <ProgressBar
                   actions={actions.filter((action) =>
                     action.partners.find((p) => p === partner.slug),

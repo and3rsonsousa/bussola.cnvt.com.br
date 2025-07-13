@@ -749,7 +749,9 @@ export const Post = ({
   factor = factor === 1 ? factor - 1 : factor;
 
   const bgColor =
-    action.color && action.color != "null" ? action.color : colors[factor];
+    action.color && action.color != "null" && action.color !== "undefined"
+      ? action.color
+      : colors[factor];
 
   return (
     <div
