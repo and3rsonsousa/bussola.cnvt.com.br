@@ -10,6 +10,7 @@ import {
   isAfter,
   isSameDay,
   isSameMonth,
+  isSameYear,
   isToday,
   parseISO,
   startOfMonth,
@@ -409,17 +410,21 @@ export default function Partner() {
           <div className="flex items-center gap-1">
             <div className="mr-1">
               <DropdownMenu>
-                <DropdownMenuTrigger
-                  className="capitalize outline-hidden"
-                  asChild
-                >
+                <DropdownMenuTrigger className="outline-hidden" asChild>
                   <Button
                     variant={"ghost"}
-                    className="cursor-pointer text-xl font-bold md:w-40"
+                    className={`cursor-pointer text-xl font-medium ${!isSameYear(currentDate, new Date()) ? "md:w-56" : "md:w-40"}`}
                   >
-                    {format(currentDate, "MMMM", {
-                      locale: ptBR,
-                    })}
+                    <span className="shrink-0 capitalize">
+                      {format(currentDate, "MMMM", {
+                        locale: ptBR,
+                      })}
+                    </span>
+                    {!isSameYear(currentDate, new Date()) && (
+                      <span>
+                        {format(currentDate, " 'de' yyyy", { locale: ptBR })}
+                      </span>
+                    )}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-content">
@@ -711,7 +716,7 @@ export default function Partner() {
                             partner.users_ids.length !==
                             responsiblesFilter.length
                               ? "ring-secondary"
-                              : "ring-card",
+                              : "ring-background",
                         }),
                       )}
                     />
@@ -719,7 +724,20 @@ export default function Partner() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuPortal>
-                <DropdownMenuContent>
+                <DropdownMenuContent className="bg-content">
+                  <DropdownMenuCheckboxItem
+                    className="bg-select-item flex items-center gap-2"
+                    checked={
+                      responsiblesFilter.length ===
+                      getResponsibles(people, partner.users_ids).length
+                    }
+                    onClick={() => {
+                      setResponsiblesFilter(partner.users_ids);
+                    }}
+                  >
+                    Todos os Responsáveis
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuSeparator className="border-foreground/20" />
                   {getResponsibles(people, partner.users_ids).map((person) => {
                     return (
                       <DropdownMenuCheckboxItem

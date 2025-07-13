@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 @layer base {
   :root {
     --background: 200 5% 94%;
@@ -21,7 +20,7 @@
     --secondary: 220 10% 85%;
     --secondary-foreground: 200 10% 10%;
 
-    --accent: 220 10% 75%;
+    --accent: 220 10% 90%;
     --accent-foreground: 200 10% 10%;
 
     --destructive: 355 85% 60%;
@@ -60,7 +59,6 @@
     --accent: 200 10% 12%;
     --accent-foreground: 200 15% 98%;
 
-
     --destructive: 350 85% 55%;
     --destructive-foreground: 250 20% 98%;
 
@@ -72,13 +70,9 @@
     --error: theme(--color-rose-400);
   }
 
-
-
   * {
     @apply border-border;
   }
-
-  
 }
 
 @theme {
@@ -155,15 +149,12 @@
   }
 }
 
-
-
 body {
   @apply bg-background text-foreground antialiased;
 }
 
 .bg-content {
-  
-  @apply bg-popover/50 backdrop-blur-3xl ring-border/50 rounded-xl border-0 shadow-2xl ;
+  @apply bg-popover/50 ring-border/50 rounded-xl border-0 shadow-2xl backdrop-blur-3xl;
 }
 
 .dark .bg-content {
@@ -207,12 +198,11 @@ body {
 }
 
 .action-item {
-  
   @apply ring-ring ring-offset-background bg-card hover:bg-popover relative z-0 flex w-full cursor-pointer rounded-xs border border-transparent shadow-sm outline-hidden transition-[box-shadow,background] select-none focus-within:ring-2 hover:z-10 hover:shadow-xl focus:ring-2 focus:ring-offset-2;
 }
 
 .action-item-short {
-  @apply  text-xs;
+  @apply text-xs;
 }
 
 .action-item-block {

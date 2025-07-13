@@ -222,7 +222,7 @@ export function Avatar({
               : size === "lg"
                 ? "size-12"
                 : "size-16",
-        ring ? "ring-background ring-2" : "",
+        ring ? "ring-2 ring-white" : "",
 
         "block border",
 
