@@ -126,6 +126,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   let start = startOfWeek(startOfMonth(new Date()));
   let end = endOfDay(endOfWeek(endOfMonth(addMonths(new Date(), 1))));
 
+  console.log(
+    format(start, "yyyy-MM-dd HH:mm:ss"),
+    format(end, "yyyy-MM-dd HH:mm:ss"),
+  );
+
   const [{ data: actions }, { data: actionsChart }] = await Promise.all([
     supabase
       .from("actions")
@@ -138,12 +143,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .returns<Action[]>(),
     supabase
       .from("actions")
-      .select("category, state, date, partners")
+      .select("category, state, date, partners, instagram_date")
       .is("archived", false)
       .contains("responsibles", person?.admin ? [] : [user.id])
       .containedBy("partners", partners.map((p) => p.slug)!)
+      .gte("date", format(start, "yyyy-MM-dd HH:mm:ss"))
+      .lte("date", format(end, "yyyy-MM-dd HH:mm:ss"))
       .returns<
-        { category: string; state: string; date: string; partners: string[] }[]
+        {
+          category: string;
+          state: string;
+          date: string;
+          partners: string[];
+          instagram_date: string;
+        }[]
       >(),
   ]);
 
@@ -759,41 +772,27 @@ function Partners({ actions }: { actions?: Action[] }) {
               className="hover:bg-foreground hover:text-background group flex flex-col justify-center p-8"
               key={partner.id}
             >
-              <div className="self-center text-center text-xl leading-none font-bold uppercase sm:text-3xl">
+              <div className="relative self-center text-center text-xl leading-none font-bold uppercase sm:text-3xl">
                 {partner.short.length > 4 ? (
                   <>
-                    <div className="relative">
-                      {partner.short.substring(0, 3)}
-
-                      <Badge
-                        className="absolute top-0 -right-8"
-                        value={
-                          lateActions.filter((action) =>
-                            action.partners.find((p) => p === partner.slug),
-                          ).length
-                        }
-                        isDynamic
-                      />
-                    </div>
+                    <div>{partner.short.substring(0, 3)}</div>
                     <div> {partner.short.substring(3)} </div>
                   </>
                 ) : (
                   <>
-                    <div className="relative">
-                      {partner.short.substring(0, 2)}
-                      <Badge
-                        className="absolute top-0 -right-8"
-                        value={
-                          lateActions.filter((action) =>
-                            action.partners.find((p) => p === partner.slug),
-                          ).length
-                        }
-                        isDynamic
-                      />
-                    </div>
+                    <div>{partner.short.substring(0, 2)}</div>
                     <div> {partner.short.substring(2)} </div>
                   </>
                 )}
+                <Badge
+                  className="absolute top-0 -right-8"
+                  value={
+                    lateActions.filter((action) =>
+                      action.partners.find((p) => p === partner.slug),
+                    ).length
+                  }
+                  isDynamic
+                />
               </div>
 
               <div className="mt-4 hidden w-full opacity-0 group-hover:opacity-100">

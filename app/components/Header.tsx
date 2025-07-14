@@ -56,8 +56,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 import { Theme, useTheme } from "remix-themes";
 import { getMonthsActions } from "~/lib/helpers";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
 import Badge from "./Badge";
 
 export default function Header({
@@ -98,7 +96,6 @@ export default function Header({
       : partner;
 
   const lateActions = getDelayedActions({ actions: actionsChart });
-  const [start, setStart] = useState(false);
 
   return (
     <header

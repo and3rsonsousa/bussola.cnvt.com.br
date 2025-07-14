@@ -42,7 +42,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       : supabase
           .from("partners")
           .select("slug")
-
           .match({ archived: false })
           .returns<Partner[]>(),
   ]);
@@ -52,6 +51,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(person);
   invariant(partners);
 
+  console.log(partners.map((p) => p.slug));
+
   const [{ data: actions }, { data: actionsChart }, { data: partner }] =
     await Promise.all([
       supabase
@@ -59,7 +60,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .select("*")
         .is("archived", false)
         .contains("responsibles", person?.admin ? [] : [user.id])
-        .containedBy("partners", partners.map((p) => p.slug)!)
+        .contains("partners", partners.map((p) => p.slug)!)
         //@ts-ignore
         .neq("state", "finished")
         .lte("date", format(new Date(), "yyyy-MM-dd HH:mm:ss"))
@@ -69,8 +70,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
         .from("actions")
         .select("state, date")
         .is("archived", false)
-        .containedBy("partners", [partner_slug])
         .contains("responsibles", person?.admin ? [] : [user.id])
+        .contains("partners", [partner_slug])
         //@ts-ignore
         .neq("state", "finished")
         .lte("date", format(new Date(), "yyyy-MM-dd HH:mm:ss"))
