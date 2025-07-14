@@ -51,8 +51,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   invariant(person);
   invariant(partners);
 
-  console.log(partners.map((p) => p.slug));
-
   const [{ data: actions }, { data: actionsChart }, { data: partner }] =
     await Promise.all([
       supabase

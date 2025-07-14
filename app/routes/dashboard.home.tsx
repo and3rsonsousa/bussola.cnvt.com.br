@@ -126,11 +126,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   let start = startOfWeek(startOfMonth(new Date()));
   let end = endOfDay(endOfWeek(endOfMonth(addMonths(new Date(), 1))));
 
-  console.log(
-    format(start, "yyyy-MM-dd HH:mm:ss"),
-    format(end, "yyyy-MM-dd HH:mm:ss"),
-  );
-
   const [{ data: actions }, { data: actionsChart }] = await Promise.all([
     supabase
       .from("actions")
