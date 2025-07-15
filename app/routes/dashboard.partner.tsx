@@ -179,7 +179,8 @@ export default function Partner() {
 
   const [categoryFilter, setCategoryFilter] = useState<Category[]>([]);
 
-  const { stateFilter, setStateFilter } = useOutletContext() as ContextType;
+  const { stateFilter, setStateFilter, showFeed, set_showFeed } =
+    useOutletContext() as ContextType;
 
   const { categories, states, person, people, celebrations } = matches[1]
     .data as DashboardRootType;
@@ -196,7 +197,6 @@ export default function Partner() {
   const [showContent, set_showContent] = useState(
     !!searchParams.get("show_content"),
   );
-  const [showFeed, set_showFeed] = useState(!!searchParams.get("show_feed"));
   const [short, set_short] = useState(!!searchParams.get("short"));
   const [showResponsibles, set_showResponsibles] = useState(
     !!searchParams.get("show_responsibles"),

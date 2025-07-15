@@ -57,6 +57,7 @@ import {
   Avatar,
   AvatarGroup,
   Content,
+  FinishedCheck,
   getActionsByPriority,
   getActionsByState,
   getActionsByTime,
@@ -271,12 +272,10 @@ export function ActionLine({
                     <span>{state.title}</span>
                   </div>
                 ) : (
-                  <div
-                    className="border-background grid size-6 place-content-center rounded-md border-2 text-black"
-                    style={{ backgroundColor: state.color }}
-                  >
-                    <CheckIcon className="size-3" />
-                  </div>
+                  <FinishedCheck
+                    className="border-background border-2"
+                    size="lg"
+                  />
                 )}
               </div>
             </div>
@@ -958,7 +957,7 @@ export function GridOfActions({
 
   return (
     <div className="scrollbars-v">
-      <div className="grid grid-cols-3 gap-[2px] overflow-hidden rounded-xs">
+      <div className="grid grid-cols-3 overflow-hidden rounded-xs">
         {actions?.map((action, index) => (
           <Link
             to={`/dashboard/action/${action.id}${getQueryString()}`}

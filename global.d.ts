@@ -4,9 +4,7 @@ import type { DateRange } from "react-day-picker";
 import type { Theme, ThemeColor } from "~/lib/theme-provider";
 
 declare global {
-  type OutletContextType = {
-    supabase: SupabaseClient;
-  };
+
 
   type Partner = Database["public"]["Tables"]["partners"]["Row"];
   type Person = Database["public"]["Tables"]["people"]["Row"];
@@ -102,7 +100,7 @@ declare global {
 
   type ContextType = {
     showFeed: boolean;
-    setShowFeed: React.Dispatch<React.SetStateAction<boolean>>;
+    set_showFeed: React.Dispatch<React.SetStateAction<boolean>>;
     isTransitioning: boolean;
     setTransitioning: React.Dispatch<React.SetStateAction<boolean>>;
     stateFilter: State;

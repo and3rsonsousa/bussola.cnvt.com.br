@@ -6,22 +6,20 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-  useLocation,
-  useNavigation,
+  useSearchParams,
   type LoaderFunctionArgs,
 } from "react-router";
 
 import { Theme, ThemeColor } from "~/lib/theme-provider";
 
 //@ts-ignore
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Route } from "./+types/root";
 
 import font from "../public/object-sans/object-sans.css?url";
 import stylesheet from "./app.css?url";
 
 import clsx from "clsx";
-import { AnimatePresence, motion } from "motion/react";
 import React from "react";
 import {
   PreventFlashOnWrongTheme,
@@ -91,7 +89,9 @@ export function App({ children }: { children: React.ReactNode }) {
 }
 
 export default function AppWithProviders() {
-  const [showFeed, setShowFeed] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  const [showFeed, set_showFeed] = useState(!!searchParams.get("show_feed"));
   const [isTransitioning, setTransitioning] = useState(false);
   const [stateFilter, setStateFilter] = useState<State>();
 
@@ -105,7 +105,7 @@ export default function AppWithProviders() {
             showFeed,
             isTransitioning,
             stateFilter,
-            setShowFeed,
+            set_showFeed,
             setTransitioning,
             setStateFilter,
           }}

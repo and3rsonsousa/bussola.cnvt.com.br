@@ -723,11 +723,7 @@ export const Content = ({
         <Post className={className} action={action} colors={partner!.colors} />
       )}
       {showFinished && action.state === "finished" && (
-        <div className="absolute top-0 left-0 p-2">
-          <div className="grid size-4 place-content-center rounded-full bg-lime-500">
-            <CheckIcon className="size-3 text-white" />
-          </div>
-        </div>
+        <FinishedCheck className="absolute top-2 left-2" size="sm" />
       )}
       {showInfo && (
         <ContentLowerBar action={action} date={date} isOverlay={isFile} />
@@ -1091,4 +1087,34 @@ export function getCategoriesQueryString(category?: string) {
   }
 
   return categories;
+}
+
+export function FinishedCheck({
+  className,
+  size = "md",
+}: {
+  className?: string;
+  size?: "sm" | "md" | "lg";
+}) {
+  const matches = useMatches();
+  const { states } = matches[1].data as DashboardRootType;
+  const sizes = {
+    sm: { wrapper: "size-3", icon: "size-2" },
+    md: { wrapper: "size-4", icon: "size-3" },
+    lg: { wrapper: "size-6", icon: "size-4" },
+  };
+  return (
+    <div
+      className={cn(
+        "grid place-content-center rounded-full",
+        sizes[size].wrapper,
+        className,
+      )}
+      style={{
+        backgroundColor: states.find((s) => s.slug === "finished")?.color,
+      }}
+    >
+      <CheckIcon className={sizes[size].icon} />
+    </div>
+  );
 }

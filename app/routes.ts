@@ -6,6 +6,7 @@ export default [
     index("./routes/dashboard.home.tsx"),
     route("late", "routes/dashboard.late.tsx"),
 
+    route("cnvt6", "routes/dashboard.cnvt6.tsx"),
     route(":partner", "routes/dashboard.partner.tsx"),
     route(":partner/archived", "routes/dashboard.partner.archived.tsx"),
     route("action/:id", "routes/dashboard.action.id.tsx"),

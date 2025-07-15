@@ -55,6 +55,7 @@ import { ActionLine, BlockOfActions, ListOfActions } from "~/components/Action";
 import Badge from "~/components/Badge";
 import { Heading } from "~/components/Headings";
 import Kanban from "~/components/Kanban";
+import LenisScrollContainer from "~/components/LenisScrollContainer";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
@@ -225,7 +226,7 @@ export default function DashboardIndex() {
   }, []);
 
   return (
-    <div className="overflow-y-auto">
+    <LenisScrollContainer>
       {/* Progresso  */}
 
       {person.admin && <ActionsProgress />}
@@ -252,7 +253,7 @@ export default function DashboardIndex() {
 
       {/* Ações da Semana */}
       {/* <WeekView weekActions={weekActions} /> */}
-    </div>
+    </LenisScrollContainer>
   );
 }
 

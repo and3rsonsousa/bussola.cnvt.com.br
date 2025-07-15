@@ -6,6 +6,7 @@ import {
   Grid3x3Icon,
   HandshakeIcon,
   HelpCircle,
+  HexagonIcon,
   LogOutIcon,
   MoonIcon,
   PlusIcon,
@@ -22,6 +23,7 @@ import {
   useMatches,
   useNavigate,
   useNavigation,
+  useOutletContext,
   useSearchParams,
 } from "react-router";
 import { SOW } from "~/lib/constants";
@@ -70,7 +72,8 @@ export default function Header({
   const [searchParams, setSearchParams] = useSearchParams();
   const [theme, setTheme] = useTheme();
 
-  const showFeed = !!searchParams.get("show_feed");
+  const { showFeed, set_showFeed } = useOutletContext() as ContextType;
+
   const params = new URLSearchParams(searchParams);
 
   const { person } = matches[1].data as DashboardRootType;
@@ -129,8 +132,10 @@ export default function Header({
                 onClick={() => {
                   if (showFeed) {
                     params.delete("show_feed");
+                    set_showFeed(false);
                   } else {
                     params.set("show_feed", "true");
+                    set_showFeed(true);
                   }
 
                   setSearchParams(params);
@@ -193,7 +198,7 @@ export default function Header({
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="bg-content">
+            <DropdownMenuContent className="bg-content mr-4">
               {theme === Theme.LIGHT ? (
                 <DropdownMenuItem
                   onSelect={() => setTheme(Theme.DARK)}
@@ -255,6 +260,15 @@ export default function Header({
               </DropdownMenuItem>
               {person.admin && (
                 <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="bg-item"
+                    id="partners"
+                    onSelect={() => navigate("/dashboard/cnvt6")}
+                  >
+                    <HexagonIcon className="size-4 opacity-50" />
+                    <div>CNVT.6</div>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="bg-item"

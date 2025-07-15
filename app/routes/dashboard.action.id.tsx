@@ -947,7 +947,7 @@ function RightSide({
                   <SparklesIcon className="size-4" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="p-0 md:w-90">
+              <PopoverContent className="bg-content p-0 md:w-90">
                 <Command>
                   <CommandInput placeholder="Qual legenda você quer gerar?" />
                   <CommandList>
