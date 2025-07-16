@@ -1,43 +1,16 @@
-import Lenis from "lenis";
-import { ReactLenis, useLenis } from "lenis/react";
-import { useEffect, useRef } from "react";
 import LenisScrollContainer from "~/components/LenisScrollContainer";
 
 export default function Process() {
-  //   const containerRef = useRef<HTMLDivElement>(null);
-
-  //   useEffect(() => {
-  //     if (!containerRef.current) return;
-
-  //     const lenis = new Lenis({
-  //       wrapper: containerRef.current,
-  //       content: containerRef.current.firstElementChild as HTMLElement,
-  //       gestureOrientation: "vertical",
-  //       lerp: 0.1,
-  //     });
-
-  //     const raf = (time: number) => {
-  //       lenis.raf(time);
-  //       requestAnimationFrame(raf);
-  //     };
-
-  //     requestAnimationFrame(raf);
-
-  //     return () => {
-  //       lenis.destroy();
-  //     };
-  //   }, []);
-
   return (
-    <LenisScrollContainer className="scrollbars-v">
-      <div className="flex flex-col border-b">
-        <div className="flex flex-col items-stretch gap-4 border-b md:flex-row">
-          <div className="flex w-full items-center p-8 md:w-1/2 lg:p-16">
-            <h1 className="w-ful text-7xl font-bold tracking-tighter lg:text-9xl">
+    <LenisScrollContainer>
+      <div className="items-stretch border-b">
+        <div className="flex w-full flex-col items-stretch gap-4 border-b md:flex-row">
+          <div className="flex items-center p-8 lg:p-16">
+            <h1 className="text-7xl font-bold tracking-tighter xl:text-9xl">
               CNVT.6
             </h1>
           </div>
-          <div className="flex flex-col justify-center border-l p-8 text-lg font-medium md:w-1/2 md:text-right lg:p-16">
+          <div className="flex w-full flex-col justify-center border-l p-8 text-lg font-medium md:text-right lg:p-16">
             O Processo Criativo <br /> que Transforma <br /> Conteúdo em
             Resultado
           </div>
