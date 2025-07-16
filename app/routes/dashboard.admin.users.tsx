@@ -14,7 +14,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { data: people } = await supabase
     .from("people")
     .select("*")
-    .order("name", { ascending: true });
+    .order("name", { ascending: true })
+    .returns<Person[]>();
 
   return { people };
 };

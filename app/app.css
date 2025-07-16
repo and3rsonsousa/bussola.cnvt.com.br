@@ -64,7 +64,7 @@
 
     --highlight: 200 10% 30%;
     --border: 200 10% 25%;
-    --input: 200 10% 10%;
+    --input: 200 10% 16%;
     /* --ring: 200 10% 90%; */
 
     --error: theme(--color-rose-400);

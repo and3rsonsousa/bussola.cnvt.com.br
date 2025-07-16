@@ -14,6 +14,7 @@ export default [
     route("admin/users", "routes/dashboard.admin.users.tsx"),
     route("admin/user/:id/actions", "routes/dashboard.admin.user.actions.tsx"),
     route("admin/user/:id", "routes/dashboard.admin.user.tsx"),
+    route("admin/user/new", "routes/dashboard.admin.user.new.tsx"),
 
     route("admin/partners", "routes/dashboard.admin.partners.tsx"),
     route("admin/partner/:slug", "routes/dashboard.admin.partner.slug.tsx"),

@@ -53,12 +53,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const { data: partner, error } = await supabase
     .from("partners")
+    //@ts-ignore
     .insert(data)
     .select()
-    .single();
-
+    .returns<Partner[]>();
   if (partner) {
-    return redirect(`/dashboard/${partner.slug}`);
+    return redirect(`/dashboard/${partner[0].slug}`);
   } else {
     console.log(error);
   }
