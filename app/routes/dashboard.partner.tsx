@@ -86,13 +86,8 @@ import {
   usePendingData,
 } from "~/lib/helpers";
 import { createClient } from "~/lib/supabase";
-import LoaderTransition from "~/components/LoaderTransition";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { motion } from "motion/react";
 
 export const config = { runtime: "edge" };
-gsap.registerPlugin(useGSAP);
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   let _date = new URL(request.url).searchParams.get("date");
